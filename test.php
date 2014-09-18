@@ -7,5 +7,10 @@
 	$quan = $_POST['quan'];
 	$band = $_POST['band'];
 
-	echo mysql_query("insert into product value(\"$name\",\"$code\",\"$tag\",\"$quan\",\"$band\")");
+	if (mysql_query("insert into product value(\"$name\",\"$code\",\"$tag\",\"$quan\",\"$band\")")) {
+         header('location: /tsp/index.php');
+    }
+    else {
+        echo "what did you do?, i wont obey you!";
+    }
 ?>	
