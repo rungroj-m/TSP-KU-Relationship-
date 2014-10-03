@@ -1,10 +1,17 @@
 <?php
 
-    class ProductDao {
 	
+
+    class ProductDao {
+    	
+    	private $host="localhost";
+    	private $user = "tsp";
+    	private $password="RhErMxQsnsu4BT4e";
+    	private $database="ecomerce";
+    	
 	protected $db;
 	public function __construct(){
-	    $this->db = new PDO('mysql:host=localhost;dbname=ecomerce;charset=utf8', 'benzsuankularb', 'xEGS8NAERm2c6m9K');
+	    $this->db = new PDO("mysql:host=$this->host;dbname=$this->database;charset=utf8", $this->user, $this->password);
 	}
 	
 	public static function GetInstance() {
