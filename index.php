@@ -1,5 +1,9 @@
 <html>
 <body>
+    
+    <div style="b">
+        header    
+    </div>
 Add Product 
 <form action = "index.php" method = "GET">
 <input name="searchbox" type="text" placeholder="input please"><br>
