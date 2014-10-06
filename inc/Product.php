@@ -1,7 +1,9 @@
-ko
+
 <?php
-echo 'dskfjhhkdjsafhkj';
-    /*class Product {
+	
+	class Product {
+	
+		
 	public $id;
 	public $productDescription;
 	public $price;
@@ -37,6 +39,6 @@ echo 'dskfjhhkdjsafhkj';
 	    $instance->createDate = new DateTime( $data['CreateDate'] );
 	    return $instance;
 	}
-    }*/
+    }
 
 ?>

@@ -1,33 +1,56 @@
 <html>
 <body>
 <?php
-	include ("db.php");
-	connectdb();
-	
+require_once ('inc/Product.php');
+require_once ('inc/ProductDao.php');
 	if (isset($_GET['edit'])) {
-		$query = "SELECT * FROM product WHERE id={$_GET['edit']}";
-		$result = mysql_fetch_array(mysql_query($query));
+		$result = Product::GetProduct($_GET['edit']);
 	}
 	
 	
 ?>
 
 Add Product 
-<form action = "test.php" method = "POST">
-<?php if (isset($_GET['edit'])) echo "<input type=\"hidden\" name=\"id\" value=\"{$result['id']}\">" ?>
-name:	<input name="name" type="text" value="<?php if (isset($_GET['edit'])) echo $result['name']; ?>"><br>
--code:	<input name="code" type="text" value="<?php if (isset($_GET['edit'])) echo $result['code']; ?>"><br>
--price: <input name="price" type="number" value="<?php if (isset($_GET['edit'])) echo $result['price']; ?>"><br>
--description:	<input name="desc" type="text" value="<?php if (isset($_GET['edit'])) echo $result['description']; ?>"><br>
--category   <input name="category" type="text" value="<?php if (isset($_GET['edit'])) echo $result['category']; ?>"><br>
--tag:	<input name="tag" type="text" value="<?php if (isset($_GET['edit'])) echo $result['tag']; ?>"><br>
--quantity:	<input name="quan" type="text" value="<?php if (isset($_GET['edit'])) echo $result['quantity']; ?>"><br>
--band:	<input name="band" type="text" value="<?php if (isset($_GET['edit'])) echo $result['band']; ?>"><br>
+<form action = "add.php" method = "POST">
+<?php if (isset($_GET['edit'])) echo "<input type=\"hidden\" name=\"id\" value=\"{$result->id}\">" ?>
+name:	<input name="name" type="text" value="<?php if (isset($_GET['edit'])) echo "{$result->productDescription->productName}"; ?>"><br>
+-code:	<input name="code" type="text" value="<?php if (isset($_GET['edit'])) echo "{$result->productDescription->modelCode}"; ?>"><br>
+-price: <input name="price" type="number" value="<?php if (isset($_GET['edit'])) echo "{$result->price}"; ?>"><br>
+-description:	<input name="desc" type="text" value="<?php if (isset($_GET['edit'])) echo "{$result->productDescription->description}"; ?>"><br>
+<!-- category,brand need get and tag / quantity doesn't have attribute. -->
+-category   <input name="category" type="text" value="<?php if (isset($_GET['edit'])) echo "{result->productDescription->category}"; ?>"><br>
+-tag:	<input name="tag" type="text" value="<?php if (isset($_GET['edit'])) echo "something like tag"; ?>"><br>
+-quantity:	<input name="quan" type="text" value="<?php if (isset($_GET['edit'])) echo "something like quantity"; ?>"><br>
+-brand:	<input name="brand" type="text" value="<?php if (isset($_GET['edit'])) echo "{result->productDescription->brand}"; ?>"><br>
 <input name ="submit" type="submit" value="<?php echo (isset($_GET['edit']) ? "Save" : "Add"); ?>">
+<!-- Cannot clear in edit mode -->
 <input name ="reset" type="reset" value="Clear">
 <?php if (isset($_GET['edit'])) echo "<input type=\"submit\" name=\"action\" value=\"Delete\" />"; ?>
 </form>
     
+
+
+<?php 
+
+
+// 	require_once ('inc/Product.php');
+	require_once ('inc/ProductDescription.php');
+	require_once ('inc/Category.php');
+	require_once ('inc/Brand.php');
+	
+	if (isset($_POST['submit'])) {
+		$brand = Brand::CreateBrand($_POST['brand']);
+		$category = Category::CreateCategory($_POST['category']);
+		$productDesc = ProductDescription::CreateProductDescription($category, $brand, $_POST['desc'], $_POST['code'], $_POST['name']);
+		Product::CreateProduct($productDesc, $_POST['price']);
+		
+		echo ("Product Added");
+	}
+	
+	if (isset($_POST['action']))
+			echo "kuy benz delete gu la";
+		//NEED fucking delete method u dick
+?>
 
 </body>
 </head>
