@@ -4,9 +4,19 @@
 </head>
 
 <style>
-
 body {
 	background-image: url(http://i.imgur.com/KjfSAxM.png)
+}
+.tftextinput{
+	margin: 0;
+	padding: 5px 15px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:17px;
+	border:1px solid #0076a3; border-right:1px solid #0076a3;
+	border-top-left-radius: 5px 5px;
+	border-bottom-left-radius: 5px 5px;
+	border-top-right-radius: 5px 5px;
+	border-bottom-right-radius: 5px 5px;
 }
 
 </style>
@@ -24,15 +34,21 @@ body {
 		</div>
     </div>
     
-	<div style="margin: 10px">
+	<div style="margin: 10px; padding : 5px">
 	
-			<div align="center">
+		<div align="center">
 			
-			<a href="?page=login"><img src="http://i.imgur.com/E1EINEg.png" /></a>
-			<a> <- Category here [searchbar here] -> button pic </a>
-			<a href="?page=search"><img src="http://i.imgur.com/E1EINEg.png" /></a></div>
-			
-			
+			<form name="input" action="search" method="get" >
+			 <select class = "tftextinput">
+				<option value="volvo">Shirt</option>
+				<option value="saab">Equipment</option>
+				<option value="mercedes">Balls</option>
+				<option value="audi">Forbidden stuffs</option>
+			</select> 
+			<input type="text" class = "tftextinput" name="user" size = "40" placeholder="Search for an item">
+				<input type="image" src="http://i.imgur.com/YQMZRzI.png" alt="Submit Form" >
+			</form> 
+		</div>
 
 	</div>
     
