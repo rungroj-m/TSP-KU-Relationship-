@@ -2,13 +2,24 @@
 <html>
 <head>
 </head>
+
+<style>
+body{
+background-image: url(http://i.imgur.com/KjfSAxM.png)
+}
+</style>
+
 <body>
 
     <!-- static for each page -->
     <div style="background-color: pink; margin: 10px">
-        header<br>
-        <a href="?page=shopping">Shopping:front</a>
-        <a href="?page=inventory">Inventory:back</a>
+        <Center><font size = "25">SHOPPING</font></Center><br>
+			<div align="right">
+
+			<a href="?page=shopping"><img src="http://i.imgur.com/KePc1Ps.png" />  </a>
+			<a href="?page=inventory"><img src="http://i.imgur.com/FRzI8aj.png" />  </a> </div>
+
+			</div>
     </div>
     
 	<!-- for content -->
