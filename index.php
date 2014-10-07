@@ -12,12 +12,12 @@ background-image: url(http://i.imgur.com/KjfSAxM.png)
 <body>
 
     <!-- static for each page -->
-    <div style="background-color: pink; margin: 10px">
-        <Center><font size = "25">SHOPPING</font></Center><br>
+   <div style="background-color: pink; margin: 20px">
+        <Center><font size = "25">KU-RELATIONSHIP</font></Center><br>
 			<div align="right">
 
-			<a href="?page=shopping"><img src="http://i.imgur.com/KePc1Ps.png" />  </a>
-			<a href="?page=inventory"><img src="http://i.imgur.com/FRzI8aj.png" />  </a> </div>
+			<a href="?page=login"><img src="http://i.imgur.com/ivQ59CY.png" />  </a>
+			<a href="?page=signup"><img src="http://i.imgur.com/c9GPkX7.png" />  </a> </div>
 
 			</div>
     </div>
