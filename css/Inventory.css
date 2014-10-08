@@ -1,0 +1,36 @@
+body {
+    background-image: url(http://i.imgur.com/KjfSAxM.png)
+}
+
+h1 {
+    color: white;
+    font-size: 46px;
+    text-align: center;
+    font-family: 'Cabin';
+    font-weight: 700;
+}
+
+p {
+    font-family: 'Cabin';
+    font-size: 32px;
+}
+
+
+.itembox{
+    font-family: 'Calibri';
+    Font-size: 20px;
+    width: 200px;
+    height: 250px;
+    background-color: pink;
+    padding-top: 10px; 
+    margin: 20px;
+    border: 2px solid black;
+}
+
+.itemboxpicture{
+    font-family: 'Calibri';
+    width: 180px;
+    height: 180px;
+    background-color: white;
+    border: 1px solid black;
+}
