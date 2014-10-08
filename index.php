@@ -19,12 +19,25 @@ body {
 	border-bottom-right-radius: 5px 5px;
 }
 
+h1{
+background-color: pink;
+margin: 10px; 
+padding : 5px; 
+border: 1px solid black;
+}
+
+h2{
+margin: 10px;
+padding : 5px
+}
+
 </style>
 
 <body>
 
+	<h1>
     <!-- static for each page -->
-    <div style="background-color: pink; margin: 10px; padding : 5px;  border: 1px solid black;">
+
         <Center><font size = "25">KU-RELATIONSHIP</font></Center><br>
 		<div align="right" >
 			<a href="?page=shopping"><img src="http://i.imgur.com/KePc1Ps.png"/></a>
@@ -32,9 +45,10 @@ body {
 			<a href="?page=login"><img src="http://i.imgur.com/ivQ59CY.png"/></a>
 			<a href="?page=signup"><img src="http://i.imgur.com/c9GPkX7.png"/></a>
 		</div>
-    </div>
+
+	</h1>
     
-	<div style="margin: 10px; padding : 5px">
+	<h2>
 	
 		<div align="center">
 			
@@ -50,7 +64,7 @@ body {
 			</form> 
 		</div>
 
-	</div>
+	</h2>
     
 	<!-- for content -->
 	<div id="content" style="background-color: gray; margin: 10px">
