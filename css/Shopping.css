@@ -1,0 +1,50 @@
+body {
+    background-color: rgba(0, 90, 195, 0.4);
+}
+
+h1 {
+    color: white;
+    font-size: 46px;
+    text-align: center;
+    font-family: 'Cabin';
+    font-weight: 700;
+}
+
+p {
+    font-family: 'Cabin';
+    font-size: 32px;
+}
+
+.box {
+    width:300px;
+    height:600px;
+    background: rgba(0, 115, 195, 0.9);
+    border: 10px solid black;
+}
+
+a {
+    position: relative;
+    color: white;
+    text-decoration: none;
+    background-color:  rgba(0, 0, 0, 0.5);
+    font-family: 'Cabin';
+    font-weight: 700;
+    font-size: 12px;
+    display: block;
+    padding: 4px;
+    border-radius: 8px;
+
+    box-shadow: 0px 9px 0px rgba(23, 24, 24, 0.9);, 0px 9px 25px rgba(0,0,0,.7);
+    margin: 100px auto;
+    width: 160px;
+    text-align: center;
+    bottom: -350px;
+
+}
+
+a:active {
+ 
+    box-shadow: 0px 3px 0px rgba(23, 24, 24, 0.9);, 0px 3px 6px rgba(0,0,0,.9);
+    position: relative;
+    bottom: -355px;
+}
