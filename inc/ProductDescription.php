@@ -8,14 +8,15 @@
 	public $modelCode;
 	public $productName;
 	public $createDate;
+	public $additionTags;
 	
 	public function __construct(){
 	}
 	
-	public static function CreateProductDescription( $category, $brand, $description, $modelCode, $productName ) {
+	public static function CreateProductDescription( $category, $brand, $description, $modelCode, $additionTags, $productName ) {
 	    $dao = ProductDao::GetInstance();
 	    $now = new DateTime( 'now' );
-	    $pdid = $dao->addProductDescription( $category->id, $brand->id, $productName, $modelCode, $description, $now->format('Y-m-d H:i:s') );
+	    $pdid = $dao->addProductDescription( $category->id, $brand->id, $productName, $modelCode, $description , $additionTags, $now->format('Y-m-d H:i:s') );
 	    
 	    $instance = new self();
 	    $instance->id = $pdid;
@@ -25,6 +26,7 @@
 	    $instance->modelCode = $modelCode;
 	    $instance->productName = $productName;
 	    $instance->createDate = $now;
+	    $instance->additionTags = $additionTags;
 	    return $instance;
 	}
 	
@@ -43,6 +45,16 @@
 	    return $instance;
 	}
 	
+	public static function GetProductDescriptionsByCategoryId ( $categoryId ) {
+	    $array = array();
+	    $dao = ProductDao::GetInstance();
+	    $data = $dao->getProductDescriptionIdByCategoryId( $categoryId );
+	    print_r( $data );
+	    foreach ( $data as &$value ) {
+		array_push( $array, ProductDescription::GetProductDescription( $value[0] ) );
+	    }
+	    return $array;
+	}
     }
 
 ?>

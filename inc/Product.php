@@ -40,6 +40,12 @@
 	    return $instance;
 	}
 	
+	public static function GetEnabledProductByProductDescriptionId ( $pid ) {
+		$dao = ProductDao::GetInstance();
+		$data = $dao->getEnabledProductByProductDescriptionId( $pid );
+		return Product::GetProduct( $data );
+	}
+	
     }
 
 ?>

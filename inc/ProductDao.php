@@ -26,13 +26,15 @@
 	    
 	}
 	
-	function addProductDescription( $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $CreateDate ) {
+	function addProductDescription( $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $AdditionTags, $CreateDate ) {
 	    $STH = $this->db->prepare("insert into `ProductDescriptions`( `CategoryId`, `BrandId`, `ProductName`, `ModelCode`, `Description`, `CreateDate` ) values ( ?,?,?,?,?,? );");
 	    $STH->execute( array( $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $CreateDate ) );
 	    $id = $this->db->lastInsertId();
 	
 	    $tagIdArray = $this->addTags( array( $this->getCategoryById( $CategoryId ), $this->getBrandById( $BrandId ), $ProductName, $ModelCode ) );
 	    $this->addProductDescriptionTagId( $id, $tagIdArray );
+	    $addtionTagIdArray = $this->addTags( $AdditionTags );
+	    $this->addAdditionProductDescriptionTagId( $id, $addtionTagIdArray );
 	    return $id;
 	}
 	
@@ -96,6 +98,14 @@
 	    return $result;
 	}
 	
+	function getEnabledProductByProductDescriptionId ( $pdid ) {
+	    $STH = $this->db->prepare("SELECT `ProductId` FROM `Products` WHERE `ProductDescriptionId` = :id AND `status` = true");
+	    $STH->bindParam(':id', $pdid );
+	    $STH->execute();
+	    $result = $STH->fetch();
+	    return $result[0];
+	}
+	
 	function disableProductFromProductDescriptionID( $productDescriptionId ) {
 	    $STH = $this->db->prepare("SELECT `ProductId` FROM `Products` WHERE `Status` = 1");
 	    $STH->execute();
@@ -105,6 +115,12 @@
 	    $STH = $this->db->prepare("update `Products` set `Status`=0 where `ProductDescriptionId`=:id and `Status`=1");
 	    $STH->bindParam(':id', $productDescriptionId);
 	    $STH->execute();
+	}
+	
+	function getProductDescriptionIdByCategoryId( $categoryId ) {
+	    $STH = $this->db->prepare( "SELECT ProductDescriptionId FROM ProductDescriptions WHERE CategoryId = $categoryId" );
+	    $STH->execute();
+	    return $STH->fetchAll();
 	}
 	
 	private function addProductTagId( $productId, $tagIdArray ) {
@@ -211,6 +227,8 @@
 	    $STH->bindParam(':id', $primaryId);
 	    $STH->execute();
 	}
+	
+	
 	
     }
     

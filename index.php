@@ -73,10 +73,12 @@ padding : 5px
 		if (isset($_GET['page']))
 		include_once $_GET['page'] .".php";
 		include_once "inc/ProductDao.php";
-		$p = new ProductDao();
-		$p->addAdditionProductDescriptionTagId( 1, array( 1,3,4,5 ) );
-		$p->addProductDescriptionTagId( 1, array( 1,3,4,5 ) );
-		//$p->addAdditionProductDescriptionTagId( 1, array( 1,3,4,5 ) );
+		include_once "inc/Product.php";
+		include_once "inc/Category.php";
+		include_once "inc/Brand.php";
+		include_once "inc/ProductDescription.php";
+		$d = Product::GetEnabledProductByProductDescriptionId ( 1 );
+		print_r( $d );
 		
 	?>
 		
