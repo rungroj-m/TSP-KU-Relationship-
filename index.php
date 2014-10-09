@@ -1,11 +1,20 @@
 
 <html>
 <head>
+	<link href="bootstrap/css/bootstrap.css" rel="stylesheet"> 
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato">
+	<script src="js/jquery.js"></script>
+	<script src="js/bootstrap-dropdown.js"></script>
+	<script>
+	   $(function(){
+	      $(".dropdown-toggle").dropdown('toggle');
+	      }); 
+	</script>
 </head>
 
 <style>
 body {
-	background-image: url(http://i.imgur.com/KjfSAxM.png)
+	background-color: rgba(2, 2, 0, 0.5);
 }
 .tftextinput{
 	margin: 0;
@@ -18,40 +27,66 @@ body {
 	border-top-right-radius: 5px 5px;
 	border-bottom-right-radius: 5px 5px;
 }
-
-h1{
-background-color: pink;
-margin: 10px; 
-padding : 5px; 
-border: 1px solid black;
+*{
+	font-family: Lato;
 }
-
-h2{
-margin: 10px;
-padding : 5px
-}
-
 </style>
 
 <body>
 
-	<h1>
     <!-- static for each page -->
+			<nav class="navbar navbar-inverse" role="navigation">
+			  	<div class="container-fluid">
+			    <!-- Brand and toggle get grouped for better mobile display -->
+				    <div class="navbar-header">
+					      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						        <span class="sr-only">Toggle navigation</span>
+						        <span class="icon-bar"></span>
+						        <span class="icon-bar"></span>
+						        <span class="icon-bar"></span>
+					      </button>
+					      <a class="navbar-brand" href="?page=index">Ku Realtionship</a>
+				 	</div>
+					    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      				<ul class="nav navbar-nav">
+					        <?php if (isset($_GET['page']) && $_GET['page'] == "shopping") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=shopping">Shopping</a></li>
+					        <?php if (isset($_GET['page']) && $_GET['page'] == "inventory") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=inventory">Inventory</a></li>
+					        <?php if (isset($_GET['page']) && $_GET['page'] == "login") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=login">Login</a></li>
+					        <?php if (isset($_GET['page']) && $_GET['page'] == "signups") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=signups">SignUp</a></li>
+					    </div>
+				</div>
+			</nav>
+			<div align = "center">
+			 <img src="logo.png" alt="logo" style="width:304px;height:228px">
+    		</div>
 
-        <Center><font size = "25">KU-RELATIONSHIP</font></Center><br>
-		<div align="right" >
-			<a href="?page=shopping"><img src="http://i.imgur.com/KePc1Ps.png"/></a>
-			<a href="?page=inventory"><img src="http://i.imgur.com/FRzI8aj.png"/></a>
-			<a href="?page=login"><img src="http://i.imgur.com/ivQ59CY.png"/></a>
-			<a href="?page=signup"><img src="http://i.imgur.com/c9GPkX7.png"/></a>
+	<div style="margin: 10px; padding : 5px">
+		<div class="row">
+			<div class="col-xs-6 col-sm-4" align = "right" >
+  				<div class="btn-group btn-group-sm" >
+				  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" align = right>
+				    Category <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" style="background-color: black" role="menu">
+				    <li><a value="volvo" href="#" style = "color : white">Shirt</a></li>
+				    <li><a value="saab" href="#" style = "color : white">Equipment</a></li>
+				    <li><a value="mercedes" href="#" style = "color : white">Balls</a></li>
+				    <li><a value="audi" href="#" style = "color : white">Forbidden stuffs</a></li>
+				  </ul>
+				</div>      
+			</div> 
+
+
+  				<div class="col-xs-6 col-sm-4">
+  					<div class="input-group input-group-sm">
+					     <input type="text" class="form-control">
+					     <span class="input-group-btn">
+					     	<button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"/></button>
+					     </span>
+					</div>
+				</div>	    
 		</div>
-
-	</h1>
-    
-	<h2>
-	
-		<div align="center">
-			
+		<!--
 			<form name="input" action="search" method="get" >
 			 <select class = "tftextinput">
 				<option value="volvo">Shirt</option>
@@ -62,21 +97,16 @@ padding : 5px
 			<input type="text" class = "tftextinput" name="user" size = "40" placeholder="Search for an item">
 				<input type="image" src="http://i.imgur.com/YQMZRzI.png" alt="Submit Form" >
 			</form> 
-		</div>
-
-	</h2>
-    
+		-->
+	</div>
 	<!-- for content -->
 	<div id="content" style="background-color: gray; margin: 10px">
 	<?php
 	
 		if (isset($_GET['page']))
 		include_once $_GET['page'] .".php";
-		include_once "inc/ProductDao.php";
-		include_once "inc/Product.php";
-		include_once "inc/Category.php";
-		include_once "inc/Brand.php";
-		include_once "inc/ProductDescription.php";
+		
+	
 		
 	?>
 		
@@ -84,4 +114,3 @@ padding : 5px
 	</div>
 
 </body>
-</head>
