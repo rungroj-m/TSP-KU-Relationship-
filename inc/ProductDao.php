@@ -6,7 +6,7 @@
     	
     	private $host="localhost";
     	private $user = "tsp";
-    	private $password="RhErMxQsnsu4BT4e";
+    	private $password="aMvMBhCDajTJVVzH";
     	private $database="ecomerce";
     	
 	protected $db;
@@ -64,7 +64,6 @@
 	    return $result['BrandId'];
 	}
 	
-	
 	function getCategoryById( $categoryId ) {
 	    $STH = $this->db->prepare("SELECT `Name` FROM `Categories` WHERE `CategoryId` = :id");
 	    $STH->bindParam(':id', $categoryId );
@@ -112,22 +111,6 @@
 	    $query = "insert into `ProductTags` (Key) values ";
 	    foreach ( $tagIdArray as &$value ) {
 		$query .= "( $productId , $value ),";
-	    }
-	    $query = substr($query, 0, -1);
-	    $STH = $this->db->prepare( $query );
-	    $STH->execute();
-	}
-	
-	private function removeProductDescriptionTag( $productId ) {
-	    $STH = $this->db->prepare("delete from `ProductDescriptionTags` where `ProductDescriptionId` = :id");
-	    $STH->bindParam(':id', $productId);
-	    $STH->execute();
-	}
-	
-	private function addProductDescriptionTagId( $productDescriptionId, $tagIdArray ) {
-	    $query = "insert into `ProductDescriptionTags` (`ProductDescriptionId`, `TagId`) values ";
-	    foreach ( $tagIdArray as &$value ) {
-		$query .= "( $productDescriptionId , $value ),";
 	    }
 	    $query = substr($query, 0, -1);
 	    $STH = $this->db->prepare( $query );
@@ -198,6 +181,35 @@
 	    $STH = $this->db->prepare( $query );
 	    $STH->execute();
 	    return $STH->fetchAll();
+	}
+	
+	public function addAdditionProductDescriptionTagId ( $productDescriptionId, $tagIdArray ) {
+	    $this->addTagIdByTable( 'AdditionProductDescriptionTags', $productDescriptionId, $tagIdArray );
+	}
+	
+	public function addProductDescriptionTagId( $productDescriptionId, $tagIdArray ) {
+	    $this->addTagIdByTable( 'ProductDescriptionTags', $productDescriptionId, $tagIdArray );
+	}
+	
+	private function addTagIdByTable ( $table, $productDescriptionId, $tagIdArray ) {
+	    $query = "insert into `$table` (`ProductDescriptionId`, `TagId`) values ";
+	    foreach ( $tagIdArray as &$value ) {
+		$query .= "( $productDescriptionId , $value ),";
+	    }
+	    $query = substr($query, 0, -1);
+	    $STH = $this->db->prepare( $query );
+	    $STH->execute();
+	}
+	
+	private function removeProductDescriptionTag( $productId ) {
+	    $this->removeItemByTable( 'ProductDescriptionTags', $productId );
+	    $this->removeItemByTable( 'AdditionProductDescriptionTags', $productId );
+	}
+	
+	private function removeItemByTable( $table, $primaryId ) {
+	    $STH = $this->db->prepare("delete from `$table` where `$primaryId` = :id");
+	    $STH->bindParam(':id', $primaryId);
+	    $STH->execute();
 	}
 	
     }
