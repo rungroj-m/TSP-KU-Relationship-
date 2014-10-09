@@ -77,8 +77,6 @@ padding : 5px
 		include_once "inc/Category.php";
 		include_once "inc/Brand.php";
 		include_once "inc/ProductDescription.php";
-		$d = Product::GetEnabledProductByProductDescriptionId ( 1 );
-		print_r( $d );
 		
 	?>
 		

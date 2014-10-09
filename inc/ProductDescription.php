@@ -49,7 +49,6 @@
 	    $array = array();
 	    $dao = ProductDao::GetInstance();
 	    $data = $dao->getProductDescriptionIdByCategoryId( $categoryId );
-	    print_r( $data );
 	    foreach ( $data as &$value ) {
 		array_push( $array, ProductDescription::GetProductDescription( $value[0] ) );
 	    }

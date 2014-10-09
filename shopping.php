@@ -10,12 +10,13 @@
 	require_once ('inc/ProductDescription.php');
 	require_once ('inc/Category.php');
 	require_once ('inc/Brand.php');
+
 	
-	// test
-	$pro = Product::GetProduct(1);
-	createProductBox($pro);
-	$pro = Product::GetProduct(3);
-	createProductBox($pro);
+	$productdescs = ProductDescription::GetProductDescriptionsByCategoryId(3);
+	foreach ($productdescs as $p) {
+		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
+		createProductBox($product);
+	}
 
 	function createProductBox($product) {
 		echo "
@@ -36,18 +37,7 @@
 		</div>
 				
 		";
-	}
-	
-	/*$c = Category::CreateCategory("catName");
-	print_r ( $c );
-	
-	
-	$b = Brand::CreateBrand("brandName");
-	
-	$pd = ProductDescription::CreateProductDescription($c, $b, "description", "modelCode", "productName");
-	$p = Product::CreateProduct($pd, 100);
-	print_r($p); */
-	
+	}	
 ?>
 </div>
 

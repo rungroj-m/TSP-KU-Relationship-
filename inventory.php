@@ -39,11 +39,12 @@ function newPopup(url) {
 	require_once ('inc/Category.php');
 	require_once ('inc/Brand.php');
 	
-	// test
-	$pro = Product::GetProduct(1);
-	createProductBox($pro);
-	$pro = Product::GetProduct(3);
-	createProductBox($pro);
+	$productdescs = ProductDescription::GetProductDescriptionsByCategoryId(3);	
+	foreach ($productdescs as $p) {
+		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
+		createProductBox($product);
+	}
+	
 	
 	function createProductBox($product) {
 		echo "

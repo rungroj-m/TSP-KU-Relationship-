@@ -18,10 +18,10 @@ name:	<input name="name" type="text" value="<?php if (isset($_GET['edit'])) echo
 -price: <input name="price" type="number" value="<?php if (isset($_GET['edit'])) echo "{$result->price}"; ?>"><br>
 -description:	<input name="desc" type="text" value="<?php if (isset($_GET['edit'])) echo "{$result->productDescription->description}"; ?>"><br>
 <!-- category,brand need get and tag / quantity doesn't have attribute. -->
--category   <input name="category" type="text" value="<?php if (isset($_GET['edit'])) echo "{result->productDescription->category}"; ?>"><br>
+-category   <input name="category" type="text" value="<?php if (isset($_GET['edit'])) echo "{$result->productDescription->category->value}"; ?>"><br>
 -tag:	<input name="tag" type="text" value="<?php if (isset($_GET['edit'])) echo "something like tag"; ?>"><br>
 -quantity:	<input name="quan" type="text" value="<?php if (isset($_GET['edit'])) echo "something like quantity"; ?>"><br>
--brand:	<input name="brand" type="text" value="<?php if (isset($_GET['edit'])) echo "{result->productDescription->brand}"; ?>"><br>
+-brand:	<input name="brand" type="text" value="<?php if (isset($_GET['edit'])) echo "{$result->productDescription->brand->value}"; ?>"><br>
 <input name ="submit" type="submit" value="<?php echo (isset($_GET['edit']) ? "Save" : "Add"); ?>">
 <!-- Cannot clear in edit mode -->
 <input name ="reset" type="reset" value="Clear">
@@ -41,7 +41,7 @@ name:	<input name="name" type="text" value="<?php if (isset($_GET['edit'])) echo
 	if (isset($_POST['submit'])) {
 		$brand = Brand::CreateBrand($_POST['brand']);
 		$category = Category::CreateCategory($_POST['category']);
-		$productDesc = ProductDescription::CreateProductDescription($category, $brand, $_POST['desc'], $_POST['code'], $_POST['name']);
+		$productDesc = ProductDescription::CreateProductDescription($category, $brand, $_POST['desc'], $_POST['code'], explode(',', $_POST['tag']), $_POST['name']);
 		Product::CreateProduct($productDesc, $_POST['price']);
 		
 		echo ("Product Added");
