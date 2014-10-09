@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 09, 2014 at 06:45 AM
+-- Generation Time: Oct 09, 2014 at 08:28 AM
 -- Server version: 5.6.20
 -- PHP Version: 5.5.15
 
@@ -33,13 +33,6 @@ CREATE TABLE IF NOT EXISTS `Products` (
   `CreateDate` datetime NOT NULL,
   `Status` tinyint(1) NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `Products`
---
-
-INSERT INTO `Products` (`ProductId`, `ProductDescriptionId`, `Price`, `CreateDate`, `Status`) VALUES
-(1, '1', 10, '2014-10-09 11:40:45', 1);
 
 --
 -- Indexes for dumped tables
