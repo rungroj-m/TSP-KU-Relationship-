@@ -48,7 +48,7 @@ function newPopup(url) {
 	
 	function createProductBox($product) {
 		echo "
-		<div style=\"width: 200px; height: 250px; background-color: green; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
+		<div id = \"inventory\" style=\"width: 200px; height: 250px; background-color: green; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
 		<div id=\"pic\" style=\"width: 180px; height: 180px; background-color: red\">
 		pic
 		</div>

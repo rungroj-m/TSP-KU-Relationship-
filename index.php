@@ -79,13 +79,31 @@ body {
 
   				<div class="col-xs-6 col-sm-4">
   					<div class="input-group input-group-sm">
-					     <input type="text" class="form-control">
+  						
+					     <input type="text" class="form-control" id="search-box">
 					     <span class="input-group-btn">
-					     	<button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"/></button>
+					     	<button id="search-button" class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"/></button>
 					     </span>
+
+					     
 					</div>
 				</div>	    
 		</div>
+		
+		<script type="text/javascript">
+			$("#search-button").click(function() {
+				//$.post("/inventory.php", {search: $("#search-box")}, function(r) {
+				alert($("#search-box").val());
+
+ 				//$("#show").html(r);
+
+				//});
+				
+			});
+		
+		</script>
+		
+		
 		<!--
 			<form name="input" action="search" method="get" >
 			 <select class = "tftextinput">
