@@ -1,101 +1,101 @@
-<form>
-<input name="searchbox" type="search" placeholder="input please"><br>
-</form>
+<br>
 
-<div id="productBoxContainer" style="background-color: aqua;">
+<div class="row">
+	<div class="col-md-2">
+		<div class="btn-group btn-group-sm" style="width: 100%">
+			<button type="button" id="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%">
+				Category <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" id="category-dropdown"style="background-color: black" role="menu">
+				<li><a style = "color: white">Shirt</a></li>
+			    <li><a style = "color: white">Equipment</a></li>
+			    <li><a style = "color: white">Balls</a></li>
+			    <li><a style = "color: white">Forbidden stuffs</a></li>
+			</ul>
+		</div>      
+	</div> 
 
-<?php
+	<div class="col-md-10">
+		<div class="input-group input-group-sm">
+			<input type="text" class="form-control" id="search-box">
+			<span class="input-group-btn">
+				<button id="search-button" class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"/></button>
+			</span>
+		</div>
+	</div>	    
+</div>
 
-	require_once ('inc/Product.php');
-	require_once ('inc/ProductDescription.php');
-	require_once ('inc/Category.php');
-	require_once ('inc/Brand.php');
+<br>
 
+<div class="row">
+	<div class="col-md-9">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Shopping</h3>
+			</div>
+			<div class="panel-body">
+				<div id="productBoxContainer">
+				</div>
+			</div>
+		</div>
+	</div>
 	
-	$productdescs = ProductDescription::GetProductDescriptionsByCategoryId(3);
-	foreach ($productdescs as $p) {
-		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
-		createProductBox($product);
-	}
-
-	function createProductBox($product) {
-		echo "
-		<div style=\"width: 200px; height: 250px; background-color: green; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
-		<div id=\"pic\" style=\"width: 180px; height: 180px; background-color: red\">
-		pic
-		</div>
-		
-		<div id=\"name\">
-		{$product->productDescription->productName}
-		</div>
-		
-		<div id=\"price\">
-		$product->price
-		</div>
-		
-		<button type=\"button\" onclick=\"addThisToCart($product->id,$product->price);\">ADD</button>
-		</div>
+	<div class="col-md-3">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Cart</h3>
+			</div>
+			<div class="panel-body">
+				<table class="table" id="cart">
+					<tr>
+						<th>Product</th>
+						<th>Q.</th>
+						<th>UP.</th>
+					</tr>
+				</table>
 				
-		";
-	}	
-?>
+				<table class="table">
+					<tr>
+						<th>Total</th>
+						<th>&#3647;</th>
+					</tr>
+				</table>
+				
+				<table class="table">
+					<tr>
+						<th><button type="button" class="btn btn-success">Check Out</button></th>
+						<th><button type="button" class="btn btn-danger">Clear</button></th>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
 
-<script language="JavaScript">
-// var cartList = [];
 
-var cartID = [];
-var cartPrice = [];
+<script type="text/javascript">
+	$.ajax({
+		url: 'forjscallphp.php',
+		type: "POST",
+		data: { "get_product_by_category": "3" }
+	}).done(function(response) {
+	    $("#productBoxContainer").html(response);
+	});
 
-function addThisToCart(id,price) {
-	cartID.push(id);
-	cartPrice.push(price);
+	function addThisToCart($productName, $price) {
+		console.log($productName + $price);
+	}
 
-	alert(cartID +" "+ cartPrice ) ;
-// 	cartList.push({id: id, 'price': price});
-// 	alert (cartList[0]);
-// 	cartList.add(product);
-	var divtest = document.createElement("div");        
-// 	divtest.innerHTML = "<div id=\"" + id + "\"><a onclick=\"remove(" + id + ")\">rm</a>" + id + " " + price + "</div>";   
-	divtest.innerHTML = "<div>" + id + " " + price + "</div>";   
-	document.getElementById("cart").appendChild(divtest);
+	$("#category-dropdown li").click(function() {
+		alert($(this).text());
+	});
 
-	document.getElementById("sum").innerHTML = "Price : " + getAllPrice();
-		
+	$("#search-button").click(function() {
+		alert($("#search-box").val());
+	});
+
 	
-}
-
-function remove(id) {
-	for(var i = 0 ; i<cartID.length;i++){
-		if(cartID[i] == id){
-			cartID.remove[i];
-			cartPrice.remove[i];
-
-// 			document.getElementById("\"" + id + "\"").removeNode(true);
-// 			alert("ss");
-// 			document.getElementById("sum").innerHTML = "Price : " + getAllPrice();
-			return ;
-		}
-	}
-}
-
-function getAllPrice() {
-	var sum = 0;
-	for(var i = 0 ; i < cartID.length ; i++ ){
-		sum += cartPrice[i];
-	}
-	return sum;
-}
 </script>
-
-
-<div id="cart" style="background-color: pink">
-	
-</div>
-
-<div id="sum"></div>
-
-
 
 
 

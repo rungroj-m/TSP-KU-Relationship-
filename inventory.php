@@ -1,85 +1,115 @@
-<form>
-<input name="searchbox" type="search" placeholder="input please"><br>
-</form>
+<br>
 
-<a href="JavaScript:newPopup('add.php');">Add</a><br><br>
+<div class="row">
+	<div class="col-md-2">
+		<div class="btn-group btn-group-sm" style="width: 100%">
+			<button type="button" id="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%">
+				Category <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" id="category-dropdown"style="background-color: black" role="menu">
+				<li><a style = "color: white">Shirt</a></li>
+			    <li><a style = "color: white">Equipment</a></li>
+			    <li><a style = "color: white">Balls</a></li>
+			    <li><a style = "color: white">Forbidden stuffs</a></li>
+			</ul>
+		</div>      
+	</div> 
+
+	<div class="col-md-10">
+		<div class="input-group input-group-sm">
+			<input type="text" class="form-control" id="search-box">
+			<span class="input-group-btn">
+				<button id="search-button" class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"/></button>
+			</span>
+		</div>
+	</div>	    
+</div>
+
+<br>
+
+<div class="row">
+	<div class="col-md-3">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Menu</h3>
+			</div>
+			<div class="panel-body">
+				<ul class="nav nav-pills nav-stacked" id="menu">
+					<li><a id="menu-add">Add Product</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-9">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Inventory</h3>
+			</div>
+			<div class="panel-body">
+				<div id="productBoxContainer">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel">Add Product</h4>
+			</div>
+			<div class="modal-body">
+				<iframe id="frame" src="" frameborder="0" style="width: 550px; height: 525px"></iframe>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+		</div>
+</div>
+
+
+
 
 <script type="text/javascript">
-// Popup window code
-function newPopup(url) {
-	popupWindow = window.open(
-		url,'popUpWindow','height=700,width=800,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes')
-}
+	$.ajax({
+		url: 'forjscallphp.php',
+		type: "POST",
+		data: { "get_product_by_category": "3" }
+	}).done(function(response) {
+	    $("#productBoxContainer").html(response);
+	});
+	
+	$("#category-dropdown li").click(function() {
+		alert($(this).text());
+	});
+
+	$("#search-button").click(function() {
+		alert($("#search-box").val());
+	});
+
+	$("#menu-add").click(function() {
+		$("#popup").on("shown.bs.modal", function () {
+	        $("#frame").attr("src", "add.php");
+		});
+		
+	    $("#popup").modal({
+		    show: true
+		});
+	});
+
+	window.closeModal = function(){
+	    $("#popup").modal('hide');
+	};
+
+	
 </script>
 
-<!-- productbox template
-<div style="width: 200px; height: 250px; background-color: green; padding-top: 10px; margin: 20px" align="center">
-	<div id="pic" style="width: 180px; height: 180px; background-color: red">
-	pic
-	</div>
-	
-	<div id="name">
-	productName
-	</div>
-	
-	<div id="price">
-	10$
-	</div>
-	
-	<button type="button">SELECT</button>
-</div>
--->
-
-<div id="productBoxContainer" style="background-color: aqua;">
-
-<?php
-
-	require_once ('inc/Product.php');
-	require_once ('inc/ProductDescription.php');
-	require_once ('inc/Category.php');
-	require_once ('inc/Brand.php');
-	
-	$productdescs = ProductDescription::GetProductDescriptionsByCategoryId(3);	
-	foreach ($productdescs as $p) {
-		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
-		createProductBox($product);
-	}
-	
-	
-	function createProductBox($product) {
-		echo "
-		<div id = \"inventory\" style=\"width: 200px; height: 250px; background-color: green; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
-		<div id=\"pic\" style=\"width: 180px; height: 180px; background-color: red\">
-		pic
-		</div>
-		
-		<div id=\"name\">
-		{$product->productDescription->productName}
-		</div>
-		
-		<div id=\"price\">
-		$product->price
-		</div>
-
-		
-		<button type=\"button\" onclick=\"newPopup('add.php?edit=" . $product->id . "');\">EDIT</button>
-		</div>
-				
-		";
-	}
-	
-	/*$c = Category::CreateCategory("catName");
-	print_r ( $c );
-	
-	
-	$b = Brand::CreateBrand("brandName");
-	
-	$pd = ProductDescription::CreateProductDescription($c, $b, "description", "modelCode", "productName");
-	$p = Product::CreateProduct($pd, 100);
-	print_r($p); */
-
-?>
-</div>
 
 
-</form>
+
+
