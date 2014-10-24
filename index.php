@@ -3,6 +3,7 @@
 	<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato">
 	<script src="js/jquery.js"></script>
+	<script src="js/jquery.cookie.js"></script>
 	<script src="js/bootstrap-dropdown.js"></script>
 	<script src="bootstrap/js/bootstrap.js"></script>
 </head>

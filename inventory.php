@@ -54,7 +54,7 @@
 	</div>
 </div>
 
-
+<!-- Add Product popup -->
 <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -113,9 +113,9 @@
 	    $("#popup").modal('hide');
 	};
 
-	function editProduct($productId, $price) {
+	function editProduct(productId, price) {
 		$("#popup").on("shown.bs.modal", function () {
-	        $("#frame").attr("src", "add.php?id=" + $productId);
+	        $("#frame").attr("src", "add.php?id=" + productId);
 		});
 		
 	    $("#popup").modal({
