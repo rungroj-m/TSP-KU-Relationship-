@@ -63,6 +63,7 @@
 				
 				<table class="table">
 					<tr>
+					
 						<th><button type="button" class="btn btn-success">Check Out</button></th>
 						<th><button type="button" class="btn btn-danger">Clear</button></th>
 					</tr>
@@ -77,13 +78,13 @@
 	$.ajax({
 		url: 'forjscallphp.php',
 		type: "POST",
-		data: { "get_product_by_category": "3" }
+		data: { "get_product_by_category_for_shopping": "3" }
 	}).done(function(response) {
 	    $("#productBoxContainer").html(response);
 	});
 
-	function addThisToCart($productName, $price) {
-		console.log($productName + $price);
+	function addToCart($productName, $price) {
+		alert($productName + $price);
 	}
 
 	$("#category-dropdown li").click(function() {

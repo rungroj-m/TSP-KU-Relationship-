@@ -41,7 +41,7 @@ body {
 				</div>
 			</nav>
 			<div align = "center">
-			 <img src="logo.png" alt="logo" style="width:304px;height:228px">
+			 <img src="image/logo.png" alt="Ku Relationship" style="width:304px;height:228px">
     		</div>
 
 	<!-- for content -->

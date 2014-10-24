@@ -9,8 +9,8 @@
 <?php
 require_once ('inc/Product.php');
 require_once ('inc/ProductDao.php');
-	if (isset($_GET['edit'])) {
-		$result = Product::GetProduct($_GET['edit']);
+	if (isset($_GET["id"])) {
+		$result = Product::GetProduct($_GET["id"]);
 	}
 	
 	
@@ -31,7 +31,7 @@ Code:
 
 Price:
 <div class="input-group">
-	<span class="input-group-addon"><span class="glyphicon glyphicon-tag"></span></span>
+	<span class="input-group-addon"><span class="glyphicon glyphicon-usd"></span></span>
 	<input type="number" class="form-control" id="price" placeholder="Number">
 </div>
 
@@ -43,7 +43,7 @@ Description:
 
 Category:
 <div class="input-group">
-	<span class="input-group-addon"><span class="glyphicon glyphicon-tag"></span></span>
+	<span class="input-group-addon"><span class="glyphicon glyphicon-th-list"></span></span>
 	<input type="text" class="form-control" id="category" placeholder="(Select below or input for a new category)">
 	<div class="btn-group btn-group-sm" style="width: 100%">
 			<button type="button" id="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%">
@@ -60,13 +60,13 @@ Category:
 
 Tag:
 <div class="input-group">
-	<span class="input-group-addon"><span class="glyphicon glyphicon-tag"></span></span>
+	<span class="input-group-addon"><span class="glyphicon glyphicon-tags"></span></span>
 	<input type="text" class="form-control" id="tag" placeholder="Separated with comma ,">
 </div>
 
-Price:
+Quantity:
 <div class="input-group">
-	<span class="input-group-addon"><span class="glyphicon glyphicon-tag"></span></span>
+	<span class="input-group-addon"><span class="glyphicon glyphicon-plus"></span></span>
 	<input type="number" class="form-control" id="quan" placeholder="Integer">
 </div>
 
@@ -78,7 +78,14 @@ Brand:
 
 <table class="table">
 	<tr>
-		<th><button type="button" class="btn btn-success" id="button-add" style="width: 100%">Add</button></th>
+		<?php
+			if (isset($_GET["id"])) {
+				echo "<th><button type=\"button\" class=\"btn btn-info\" id=\"button-save\" style=\"width: 100%\">Edit</button></th>";
+			}
+			else {
+				echo "<th><button type=\"button\" class=\"btn btn-success\" id=\"button-add\" style=\"width: 100%\">Add</button></th>";
+			}
+		?>
 		<th><button type="button" class="btn btn-danger" id="button-clear" style="width: 100%">Clear</button></th>
 	</tr>
 </table>
@@ -104,7 +111,15 @@ Brand:
 		$.ajax({
 			url: 'forjscallphp.php',
 			type: "POST",
-			data: JSON.stringify(data)
+			data: {"submit":"add","name": $("#name").val(),
+				"code": $("#code").val(),
+				"price": $("#price").val(),
+				"desc": $("#desc").val(),
+				"category": $("#category").val(),
+				"tag": $("#tag").val(),
+				"quan": $("#quan").val(),
+				"brand": $("#brand").val()}
+// 				JSON.stringify(data)
 		}).done(function(response) {
 			alert(response);
 			console.log(response);
@@ -112,51 +127,44 @@ Brand:
 		});
 	});
 
+	$("#button-clear").click(function() {
+		$("#name").val(""); 
+		$("#code").val("") ;
+		$("#price").val("") ;
+		$("#desc").val("") ;
+		$("#category").val("") ;
+		$("#tag").val("") ;
+		$("#quan").val("") ;
+		$("#brand").val("") ;		
+	});
+
+	$("#button-save").click(function() {
+
+	});
+
 	
 </script>
 
-<form action = "add.php" method = "POST">
-<?php if (isset($_GET['edit'])) echo "<input type=\"hidden\" name=\"id\" value=\"{$result->id}\">" ?>
-name:	<input name="name" type="text" value="<?php if (isset($_GET['edit'])) echo "{$result->productDescription->productName}"; ?>"><br>
--code:	<input name="code" type="text" value="<?php if (isset($_GET['edit'])) echo "{$result->productDescription->modelCode}"; ?>"><br>
--price: <input name="price" type="number" value="<?php if (isset($_GET['edit'])) echo "{$result->price}"; ?>"><br>
--description:	<input name="desc" type="text" value="<?php if (isset($_GET['edit'])) echo "{$result->productDescription->description}"; ?>"><br>
-<!-- category,brand need get and tag / quantity doesn't have attribute. -->
--category   <input name="category" type="text" value="<?php if (isset($_GET['edit'])) echo "{$result->productDescription->category->value}"; ?>"><br>
--tag:	<input name="tag" type="text" value="<?php if (isset($_GET['edit'])) echo "something like tag"; ?>"><br>
--quantity:	<input name="quan" type="text" value="<?php if (isset($_GET['edit'])) echo "something like quantity"; ?>"><br>
--brand:	<input name="brand" type="text" value="<?php if (isset($_GET['edit'])) echo "{$result->productDescription->brand->value}"; ?>"><br>
-<input name ="submit" type="submit" value="<?php echo (isset($_GET['edit']) ? "Save" : "Add"); ?>">
-<!-- Cannot clear in edit mode -->
-<input name ="reset" type="reset" value="Clear">
-<?php if (isset($_GET['edit'])) echo "<input type=\"submit\" name=\"action\" value=\"Delete\" />"; ?>
-</form>
-
-</div>
+<?php
+	if (isset($_GET["id"])) {
+		require_once ('inc/Product.php');
+		require_once ('inc/ProductDescription.php');
+		require_once ('inc/Category.php');
+		require_once ('inc/Brand.php');
 	
-	
-
-    
-
-
-<?php 
-
-
-// 	require_once ('inc/Product.php');
-	require_once ('inc/ProductDescription.php');
-	require_once ('inc/Category.php');
-	require_once ('inc/Brand.php');
-	
-	if (isset($_POST['submit'])) {
-		$brand = Brand::CreateBrand($_POST['brand']);
-		$category = Category::CreateCategory($_POST['category']);
-		$productDesc = ProductDescription::CreateProductDescription($category, $brand, $_POST['desc'], $_POST['code'], explode(',', $_POST['tag']), $_POST['name']);
-		Product::CreateProduct($productDesc, $_POST['price']);
+		$product = Product::GetProduct($_GET["id"]);
+		$productdescs = $product->productDescription;	
 		
-		echo ("Product Added");
+		echo " 
+			<script>
+				$(\"#name\").val(\"{$productdescs->productName}\");
+				$(\"#price\").val(\"{$product->price}\");
+				$(\"#desc\").val(\"{$productdescs->description}\");
+				$(\"#category\").val(\"{$productdescs->category->value}\");
+				$(\"#tag\").val(\"{$productdescs->additiontag}\");
+				$(\"#quan\").val(\"0\");
+				$(\"#brand\").val(\"{$productdescs->brand->value}\");
+			</script>
+		";
 	}
-	
-	if (isset($_POST['action']))
-			echo "kuy benz delete gu la";
-		//NEED fucking delete method u dick
 ?>

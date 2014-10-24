@@ -79,7 +79,7 @@
 	$.ajax({
 		url: 'forjscallphp.php',
 		type: "POST",
-		data: { "get_product_by_category": "3" }
+		data: { "get_product_by_category_for_inventory": "3" }
 	}).done(function(response) {
 	    $("#productBoxContainer").html(response);
 	});
@@ -105,6 +105,16 @@
 	window.closeModal = function(){
 	    $("#popup").modal('hide');
 	};
+
+	function editProduct($productId, $price) {
+		$("#popup").on("shown.bs.modal", function () {
+	        $("#frame").attr("src", "add.php?id=" + $productId);
+		});
+		
+	    $("#popup").modal({
+		    show: true
+		});
+	}
 
 	
 </script>
