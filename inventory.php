@@ -88,6 +88,13 @@
 		alert($(this).text());
 	});
 
+	$("#search-box").keypress(function(event) {
+		// 13 means ENTER
+		if (event.which == 13) {
+			alert($("#search-box").val());
+		}
+	});
+	
 	$("#search-button").click(function() {
 		alert($("#search-box").val());
 	});
