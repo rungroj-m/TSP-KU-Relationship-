@@ -36,8 +36,7 @@ body {
 		      				<ul class="nav navbar-nav">
 					        <?php if (isset($_GET['page']) && $_GET['page'] == "shopping") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=shopping">Shopping</a></li>
 					        <?php if (isset($_GET['page']) && $_GET['page'] == "inventory") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=inventory">Inventory</a></li>
-					        <?php if (isset($_GET['page']) && $_GET['page'] == "login") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=login">Login</a></li>
-					        <?php if (isset($_GET['page']) && $_GET['page'] == "signups") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=signups">SignUp</a></li>
+					        <?php if (isset($_GET['page']) && $_GET['page'] == "member") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=member">Member</a></li>
 					    </div>
 				</div>
 			</nav>
