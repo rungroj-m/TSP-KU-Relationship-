@@ -38,7 +38,7 @@ Price:
 Description:
 <div class="input-group">
 	<span class="input-group-addon"><span class="glyphicon glyphicon-tag"></span></span>
-	<input type="text" class="form-control" id="desc" placeholder="Description (should change to textarea)">
+	<input type="text" class="form-control" id="desc" placeholder="Description (should change to textarea?)">
 </div>
 
 Category:
@@ -80,7 +80,7 @@ Brand:
 	<tr>
 		<?php
 			if (isset($_GET["id"])) {
-				echo "<th><button type=\"button\" class=\"btn btn-info\" id=\"button-save\" style=\"width: 100%\">Edit</button></th>";
+				echo "<th><button type=\"button\" class=\"btn btn-info\" id=\"button-save\" style=\"width: 100%\">Save</button></th>";
 			}
 			else {
 				echo "<th><button type=\"button\" class=\"btn btn-success\" id=\"button-add\" style=\"width: 100%\">Add</button></th>";

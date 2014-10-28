@@ -4,9 +4,10 @@
 	<div class="col-md-2">
 		<div class="btn-group btn-group-sm" style="width: 100%">
 			<button type="button" id="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%">
-				Category <span class="caret"></span>
+				<qq>Category</qq> <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu" id="category-dropdown"style="background-color: black" role="menu">
+			<li><a style = "color: white">All</a></li>
 				<li><a style = "color: white">Shirt</a></li>
 			    <li><a style = "color: white">Equipment</a></li>
 			    <li><a style = "color: white">Balls</a></li>
@@ -85,7 +86,15 @@
 	});
 	
 	$("#category-dropdown li").click(function() {
+		if ($(this).text() == "all" || $(this).text() == "category") {
+// 			pass ""
+		}
+		else {
+// 			pass real value
+		}
+		
 		alert($(this).text());
+		$("#dropdown qq").text($(this).text());
 	});
 
 	$("#search-box").keypress(function(event) {

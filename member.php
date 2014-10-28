@@ -46,9 +46,6 @@
 		<label>
 			Forget password? <a id="recovery">Recovery</a>
 		</label>
-		<br>
-		help me think, how to do if user don't get confirm email.
-		provide button "Don't get confirm email? Resend" ?
 	</div>
 
 	<!-- Recovery password form -->
@@ -67,7 +64,6 @@
 		<label>
 			You already have an account. <a id="login">Login</a>
 		</label>
-		
 	</div>
 </div>
 
