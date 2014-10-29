@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 09, 2014 at 08:32 AM
+-- Generation Time: Oct 29, 2014 at 10:11 AM
 -- Server version: 5.6.20
 -- PHP Version: 5.5.15
 
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `AdditionProductDescriptionTags` (
 CREATE TABLE IF NOT EXISTS `Brands` (
 `BrandId` int(11) NOT NULL,
   `Name` varchar(50) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `Brands` (
 CREATE TABLE IF NOT EXISTS `Categories` (
 `CategoryId` int(11) NOT NULL,
   `Name` varchar(50) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -83,6 +83,18 @@ CREATE TABLE IF NOT EXISTS `ProductDescriptionTags` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `ProductImages`
+--
+
+CREATE TABLE IF NOT EXISTS `ProductImages` (
+`ImageId` int(11) NOT NULL,
+  `ProductDescriptionId` int(11) NOT NULL,
+  `ImageAddress` text NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `Products`
 --
 
@@ -103,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `Products` (
 CREATE TABLE IF NOT EXISTS `Tags` (
 `TagId` int(11) NOT NULL,
   `Key` varchar(100) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=45 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 --
 -- Indexes for dumped tables
@@ -134,6 +146,12 @@ ALTER TABLE `ProductDescriptions`
  ADD PRIMARY KEY (`ProductDescriptionId`);
 
 --
+-- Indexes for table `ProductImages`
+--
+ALTER TABLE `ProductImages`
+ ADD PRIMARY KEY (`ImageId`);
+
+--
 -- Indexes for table `Products`
 --
 ALTER TABLE `Products`
@@ -153,17 +171,22 @@ ALTER TABLE `Tags`
 -- AUTO_INCREMENT for table `Brands`
 --
 ALTER TABLE `Brands`
-MODIFY `BrandId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `BrandId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `Categories`
 --
 ALTER TABLE `Categories`
-MODIFY `CategoryId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `CategoryId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `ProductDescriptions`
 --
 ALTER TABLE `ProductDescriptions`
 MODIFY `ProductDescriptionId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `ProductImages`
+--
+ALTER TABLE `ProductImages`
+MODIFY `ImageId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `Products`
 --
@@ -173,7 +196,7 @@ MODIFY `ProductId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `Tags`
 --
 ALTER TABLE `Tags`
-MODIFY `TagId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=45;
+MODIFY `TagId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

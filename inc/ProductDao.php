@@ -5,8 +5,8 @@
     class ProductDao {
     	
     	private $host="localhost";
-    	private $user = "tsp";
-    	private $password="MKp3cK5u9pHntF7B";
+    	private $user = "benzsuankularb";
+    	private $password="benzsk130";
     	private $database="ecomerce";
     	
 	protected $db;
@@ -22,8 +22,20 @@
 	    return $dao;
 	}
 	
-	private function addProductWithDescription( $categoryId, $brandId, $description, $modelCode, $productName ) {
-	    
+	public function addProductDescriptionImages( $pdid, $images ) {
+	    $val = "";
+	    foreach ( $tagIdArray as &$value ) {
+		$val .= "( $pdid , $value ),";
+	    }
+	    $val = substr($query, 0, -1);
+	    $STH = $this->db->prepare(  "INSERT INTO `ProductImages`(`ProductDescriptionId`, `ImageAddress`) VALUES $val" );
+	    $STH->execute();
+	}
+	
+	public function getImagesByProductDescriptionId( $pdid ) {
+	    $STH = $this->db->prepare(  "SELECT * FROM `ProductImages` WHERE `ProductDescriptionId` = $pdid" );
+	    $STH->execute();
+	    return $STH->fetchAll();
 	}
 	
 	function addProductDescription( $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $AdditionTags, $CreateDate ) {
@@ -181,7 +193,7 @@
 		$orQuery .= " PDT.TagId = $value OR";
 	    }
 	    $orQuery = substr($orQuery, 0, -2);
-	    $query = "SELECT PD.ProductDescriptionId, PD.CategoryId, C.Name, PD.BrandId, B.Name, PD.ProductName, PD.ModelCode, PD.Description, PD.CreateDate 
+	    /*$query = "SELECT PD.ProductDescriptionId, PD.CategoryId, C.Name, PD.BrandId, B.Name, PD.ProductName, PD.ModelCode, PD.Description, PD.CreateDate 
 		    FROM (SELECT TCD.ProductDescriptionId
 			FROM (SELECT PDT.ProductDescriptionId, Count( PDT.TagId ) as TC
 				FROM ProductDescriptionTags PDT
@@ -193,7 +205,12 @@
 			    JOIN ProductDescriptions PD
 			    ON B.BrandId = PD.BrandId)
 			ON C.CategoryId = PD.CategoryId)
-		    ON PD2.ProductDescriptionId = PD.ProductDescriptionId";
+		    ON PD2.ProductDescriptionId = PD.ProductDescriptionId";*/
+	    $query = "SELECT PDT.ProductDescriptionId, Count( PDT.TagId ) as TC FROM
+			( SELECT * FROM AdditionProductDescriptionTags UNION SELECT * FROM ProductDescriptionTags ) PDT
+			WHERE$orQuery
+			GROUP BY PDT.ProductDescriptionId
+			HAVING TC = $tagCount";
 	    $STH = $this->db->prepare( $query );
 	    $STH->execute();
 	    return $STH->fetchAll();
@@ -227,8 +244,6 @@
 	    $STH->bindParam(':id', $primaryId);
 	    $STH->execute();
 	}
-	
-	
 	
     }
     
