@@ -102,6 +102,12 @@
 	    return $result;
 	}
 	
+	function getActiveProducts() {
+	    $STH = $this->db->prepare("SELECT * FROM `Products` WHERE `Status` = 1 ORDER BY `CreateDate`");
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
 	function getProductDescriptionById( $pdid ) {
 	    $STH = $this->db->prepare("SELECT * FROM `ProductDescriptions` WHERE `ProductDescriptionId` = :id");
 	    $STH->bindParam(':id', $pdid );
@@ -122,7 +128,6 @@
 	    $STH = $this->db->prepare("SELECT `ProductId` FROM `Products` WHERE `Status` = 1");
 	    $STH->execute();
 	    $result = $STH->fetch();
-	    $this->removeProductTagId ( $result['ProductId'] );
 	    
 	    $STH = $this->db->prepare("update `Products` set `Status`=0 where `ProductDescriptionId`=:id and `Status`=1");
 	    $STH->bindParam(':id', $productDescriptionId);
