@@ -48,7 +48,7 @@
 		$dao = ProductDao::GetInstance();
 		$data = $dao->getActiveProducts();
 		foreach ( $data as &$value ) {
-			array_push( $array, Product::NewProductByData( $value ) );
+			array_push( $array, Product::NewProductByData( $data ) );
 		}
 		
 		return $array;
