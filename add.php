@@ -33,16 +33,12 @@ require_once ('inc/ProductDao.php');
 		$productdescs = $product->productDescription;
 		
 		global $product;
-		$str = <<<'EOT'
-.replace('"', '\"')
-EOT;
-		//$(\"#desc\").code(\"{$productdescs->description}\"$str);
+		
 		$product = "
-				alert('edit');
 				$(\"#name\").val(\"{$productdescs->productName}\");
 				$(\"#code\").val(\"{$productdescs->modelCode}\");
 				$(\"#price\").val(\"{$product->price}\");
-				$(\"#desc\").code(\"SSS\");
+				$(\"#desc\").code(replaceDoubleQuote('{$productdescs->description}'));
 				$(\"#category\").val(\"{$productdescs->category->value}\");
 				$(\"#tag\").val(\"{$productdescs->additiontag}\");
 				$(\"#quan\").val(\"0\");
@@ -140,7 +136,7 @@ Brand:
 			    "name": $("#name").val(),
 			    "code": $("#code").val(),
 			    "price": $("#price").val(),
-			    "desc": "desc demo",//$("#desc").code(),
+			    "desc": $("#desc").code(),
 			    "image": $("#image").val(),
 			    "category": $("#category").val(),
 			    "tag": $("#tag").val(),
@@ -154,7 +150,7 @@ Brand:
 			data: {"submit":"add","name": $("#name").val(),
 				"code": $("#code").val(),
 				"price": $("#price").val(),
-				"desc": "desc demo",//$("#desc").code(),
+				"desc": $("#desc").code(),
 				"image": $("#image").val(),
 				"category": $("#category").val(),
 				"tag": $("#tag").val(),
@@ -162,8 +158,6 @@ Brand:
 				"brand": $("#brand").val()}
 // 				JSON.stringify(data)
 		}).done(function(response) {
-			alert(response);
-			console.log(response);
 			window.parent.closeModal();
 		});
 	});
@@ -190,12 +184,14 @@ Brand:
 			  minHeight: 300,
 			  maxHeight: 300,
 			  oninit: function() {
-				  alert("lunched");
-				<?php if (isset($_GET["id"])) { global $product; echo $product; } ?>
+				<?php global $product; echo $product; ?>
 			  }
 		});
 	});
-			
+
+	function replaceDoubleQuote(str) {
+		return str.replace('"', '\\"');
+	}
 
 	
 </script>

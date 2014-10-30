@@ -38,7 +38,7 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div class="thumbnail">
-							<img style="width: 100%; background-color: white; border-radius: 3px;" src="http://cdn2.hubspot.net/hub/100473/file-1257668303-png/images/Apple.png">
+							<img id="image" style="width: 100%; background-color: white; border-radius: 3px;" src="">
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -63,7 +63,7 @@
 								<div class="input-group">
 									<input type="number" class="form-control" id="quan" value="1">
 									<span class="input-group-btn">
-										<button type="button" class="btn btn-success" onclick="addToCart();">ADD</button>
+										<button type="button" class="btn btn-success" onclick="addToCart(0);">ADD</button>
 									</span>
 								</div>
 							</div>
@@ -95,6 +95,7 @@
 							<th>Product</th>
 							<th>Q.</th>
 							<th>U.P.</th>
+							<th></th>
 						</tr>
 					</tbody>
 				</table>
@@ -108,7 +109,6 @@
 				
 				<table class="table">
 					<tr>
-					
 						<th><button type="button" class="btn btn-success" id="button-checkout" >Check Out</button></th>
 						<th><button type="button" class="btn btn-danger" id="button-clear-cart" >Clear</button></th>
 					</tr>
@@ -139,7 +139,7 @@
 
 <script type="text/javascript">
 	var product;
-	
+	function aj() {
 	$.ajax({
 		url: 'forjscallphp.php',
 		type: "POST",
@@ -151,20 +151,24 @@
 	    $("#code").html(product.code);
 	    $("#price").html(product.price);
 	    $("#description").html(product.description);
+	    $("#image").attr("src", product.image);
 	    $("#category").html(product.category);
+	    
 	    $("#tag").html(product.tag);
 	    $("#quantity").html(product.quantity);
 	    $("#brand").html(product.brand);
 	});
+	}
 
-	function addToCart() {
-		
+	function addToCart(quantity) {
+		if (quantity == 0)
+			quantity = Number($("#quan").val());
 		var productId = product.id;
 		var productName = product.name;
 		var price = product.price;
 		
 		if ($.cookie("cartItems") == undefined) {
-			var arr = [{id: productId, name: productName, quantity: Number($("#quan").val()), unitprice: price}];
+			var arr = [{id: productId, name: productName, quantity: quantity, unitprice: price}];
 			
 			$.cookie("cartItems", JSON.stringify(arr), { expires: 15 }); // in 15 days
 		}
@@ -173,19 +177,20 @@
 				var arr = $.parseJSON($.cookie('cartItems'));
 				for (var i = 0; i < arr.length; i++) {
 					if (arr[i].id == productId) {
-						arr[i].quantity += Number($("#quan").val());
+						arr[i].quantity += quantity;
+						if (arr[i].quantity == 0) {
+							arr.splice(i, 1);
+						}
 						break block;
 					}
-					console.log(i);
 				}
-				arr.push({id: productId, name: productName, quantity: Number($("#quan").val()), unitprice: price});
+				arr.push({id: productId, name: productName, quantity: quantity, unitprice: price});
 			}
 		
 			$.cookie("cartItems", JSON.stringify(arr), { expires: 15 }); // in 15 days
 		}
 		
 		var arr = $.parseJSON($.cookie('cartItems'));
-		console.log(arr);
 		
 		$("#cart").empty();
 		$("#cart").append("\
@@ -193,6 +198,7 @@
 				<th>Product</th>\
 				<th>Q.</th>\
 				<th>U.P.</th>\
+				<th></th>\
 			</tr>\
 		");
 		var total = 0;
@@ -202,6 +208,10 @@
 						"<th>" + arr[i].name.substring(0, 12) + "</th>" +
 						"<th>" + arr[i].quantity + "</th>" +
 						"<th>" + arr[i].unitprice + "</th>" +
+						"<th>" +
+							"<span class=\"label alert-danger\" onclick=\"addToCart(-1)\");\">-</span>" +
+							"<span class=\"label alert-success\" onclick=\"addToCart(1)\");\">+</span>" +
+						"</th>" +
 					"</tr>"
 			);
 			total += arr[i].quantity * arr[i].unitprice;
@@ -236,6 +246,7 @@
 	    $("#clear-cart-confirm").modal({
 		    show: true
 		});
+		$("#button-confirm-clear-cart").focus();
 	});
 
 	$("#button-confirm-clear-cart").click(function() {
@@ -261,17 +272,21 @@
 			var total = 0;
 			for (var i = 0; i < arr.length; i++) {
 				$("#cart").append(
-						"<tr>" +
-							"<th>" + arr[i].name.substring(0, 12) + "</th>" +
-							"<th>" + arr[i].quantity + "</th>" +
-							"<th>" + arr[i].unitprice + "</th>" +
-						"</tr>"
+					"<tr>" +
+						"<th>" + arr[i].name.substring(0, 12) + "</th>" +
+						"<th>" + arr[i].quantity + "</th>" +
+						"<th>" + arr[i].unitprice + "</th>" +
+						"<th>" +
+							"<span class=\"label alert-danger\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", -1)\");\">-</span>" +
+							"<span class=\"label alert-success\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", 1)\");\">+</span>" +
+						"</th>" +
+					"</tr>"
 				);
 				total += arr[i].quantity * arr[i].unitprice;
 			}
-			console.log(total);
 			$("#total").text("\u0E3F" + total);
 		}
+		aj();
 	});
 	
 </script>

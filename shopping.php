@@ -53,6 +53,7 @@
 							<th>Product</th>
 							<th>Q.</th>
 							<th>U.P.</th>
+							<th></th>
 						</tr>
 					</tbody>
 				</table>
@@ -103,9 +104,9 @@
 	    $("#productBoxContainer").html(response);
 	});
 
-	function addToCart(productId, productName, price) {
+	function addToCart(productId, productName, price, quantity) {
 		if ($.cookie("cartItems") == undefined) {
-			var arr = [{id: productId, name: productName, quantity: 1, unitprice: price}];
+			var arr = [{id: productId, name: productName, quantity: quantity, unitprice: price}];
 			
 			$.cookie("cartItems", JSON.stringify(arr), { expires: 15 }); // in 15 days
 		}
@@ -114,11 +115,14 @@
 				var arr = $.parseJSON($.cookie('cartItems'));
 				for (var i = 0; i < arr.length; i++) {
 					if (arr[i].id == productId) {
-						arr[i].quantity += 1;
+						arr[i].quantity += quantity;
+						if (arr[i].quantity == 0) {
+							arr.splice(i, 1);
+						}
 						break block;
 					}
 				}
-				arr.push({id: productId, name: productName, quantity: 1, unitprice: price});
+				arr.push({id: productId, name: productName, quantity: quantity, unitprice: price});
 			}
 		
 			$.cookie("cartItems", JSON.stringify(arr), { expires: 15 }); // in 15 days
@@ -132,6 +136,7 @@
 				<th>Product</th>\
 				<th>Q.</th>\
 				<th>U.P.</th>\
+				<th></th>\
 			</tr>\
 		");
 		var total = 0;
@@ -141,6 +146,10 @@
 						"<th>" + arr[i].name.substring(0, 12) + "</th>" +
 						"<th>" + arr[i].quantity + "</th>" +
 						"<th>" + arr[i].unitprice + "</th>" +
+						"<th>" +
+							"<span class=\"label alert-danger\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", -1)\");\">-</span>" +
+							"<span class=\"label alert-success\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", 1)\");\">+</span>" +
+						"</th>" +
 					"</tr>"
 			);
 			total += arr[i].quantity * arr[i].unitprice;
@@ -192,6 +201,7 @@
 				<th>Product</th>\
 				<th>Q.</th>\
 				<th>U.P.</th>\
+				<th></th>\
 			</tr>\
 		");
 
@@ -206,11 +216,15 @@
 			var total = 0;
 			for (var i = 0; i < arr.length; i++) {
 				$("#cart").append(
-						"<tr>" +
-							"<th>" + arr[i].name.substring(0, 12) + "</th>" +
-							"<th>" + arr[i].quantity + "</th>" +
-							"<th>" + arr[i].unitprice + "</th>" +
-						"</tr>"
+					"<tr>" +
+						"<th>" + arr[i].name.substring(0, 12) + "</th>" +
+						"<th>" + arr[i].quantity + "</th>" +
+						"<th>" + arr[i].unitprice + "</th>" +
+						"<th>" +
+							"<span class=\"label alert-danger\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", -1)\");\">-</span>" +
+							"<span class=\"label alert-success\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", 1)\");\">+</span>" +
+						"</th>" +
+					"</tr>"
 				);
 				total += arr[i].quantity * arr[i].unitprice;
 			}

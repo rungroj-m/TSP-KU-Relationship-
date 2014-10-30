@@ -1,6 +1,6 @@
 <!-- Login form -->
 <div class="container" align="center" id="container-form">
-	<div class="jumbotron" style="width: 50%" id="container-login">
+	<div class="jumbotron" style="box-shadow: 4px 4px 6px #cccccc; width: 50%" id="container-login">
 		<form class="form-signin" role="form">
 			<h2 class="form-signin-heading">Please sign in</h2>
 			<br>
@@ -23,7 +23,7 @@
 	</div>
 
 	<!-- Sign up form -->
-	<div class="jumbotron" style="width: 50%; display: none" id="container-signup">
+	<div class="jumbotron" style="box-shadow: 4px 4px 6px #cccccc; width: 50%; display: none" id="container-signup">
 		<form class="form-signin" role="form">
 			<h2 class="form-signin-heading">Login Information</h2>
 			<br>
@@ -49,7 +49,7 @@
 	</div>
 
 	<!-- Recovery password form -->
-	<div class="jumbotron" style="width: 50%; display: none" id="container-recovery">
+	<div class="jumbotron" style="box-shadow: 4px 4px 6px #cccccc; width: 50%; display: none" id="container-recovery">
 		<form class="form-signin" role="form">
 			<h2 class="form-signin-heading">Please input your email</h2>
 			<br>

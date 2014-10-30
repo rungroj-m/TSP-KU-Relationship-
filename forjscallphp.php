@@ -127,7 +127,7 @@ function createProductBoxForShopping($product) {
 	$price = $product->price;
 	
 	echo "
-	<div class=\"thumbnail\" style=\"width: 200px; height: 250px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
+	<div class=\"thumbnail\" style=\"box-shadow: 2px 2px 5px #cccccc; width: 200px; height: 250px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
 	
 	   	<a href=\"?page=detail&id=$productId\">
 	   		<!-- May change link of pic to product desc page -->
@@ -138,7 +138,7 @@ function createProductBoxForShopping($product) {
 	
 		<div id=\"price\">&#3647;$price</div>
 	
-		<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price);\">ADD</button>
+		<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price, 1);\">ADD</button>
 	</div>
 
 	";
@@ -152,7 +152,7 @@ function createProductBoxForInventory($product) {
 	
 	
 	echo "
-	<div class=\"thumbnail\" style=\"width: 200px; height: 250px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
+	<div class=\"thumbnail\" style=\"box-shadow: 2px 2px 5px #cccccc; width: 200px; height: 250px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
 
 		<!-- May change link of pic to product desc page -->
 		<img style=\"width: 180px; height: 180px; background-color: white; border-radius: 3px;\" src=\"{$product->productDescription->images[0]}\">
@@ -194,15 +194,15 @@ if (isset($_POST["get_product_detail_by_id"])) {
 
 	$product = Product::GetProduct($_POST["get_product_detail_by_id"]);
 	$productdescs = $product->productDescription;
-	
+	$desc = str_replace('"', '\"', $productdescs->description);
 	echo "
 	{
 		\"id\" : {$_POST["get_product_detail_by_id"]},
 		\"name\" : \"{$productdescs->productName}\",
 		\"code\" : \"{$productdescs->modelCode}\",
 		\"price\" : {$product->price},
-		\"description\" : \"{$productdescs->description}\",
-		\"image\" : \"{$productdescs->images[0]}\",
+		\"description\" : \"{$desc}\",
+		\"image\" : \"{$product->productDescription->images[0]}\",
 		\"category\" : \"{$productdescs->category->value}\",
 		\"tag\" : \"{$productdescs->additiontag}\",
 		\"quantity\" : 0,
