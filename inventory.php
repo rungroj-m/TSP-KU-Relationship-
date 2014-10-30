@@ -80,33 +80,39 @@
 	$.ajax({
 		url: 'forjscallphp.php',
 		type: "POST",
-		data: { "get_product_by_category_for_inventory": "3" }
+		data: { "get_product_by_category_for_inventory": "" }
 	}).done(function(response) {
 	    $("#productBoxContainer").html(response);
 	});
 	
 	$("#category-dropdown li").click(function() {
-		if ($(this).text() == "all" || $(this).text() == "category") {
-// 			pass ""
-		}
-		else {
-// 			pass real value
-		}
-		
-		alert($(this).text());
+		alert("choose catagory should refresh product list below immediately");
 		$("#dropdown qq").text($(this).text());
 	});
 
 	$("#search-box").keypress(function(event) {
 		// 13 means ENTER
 		if (event.which == 13) {
-			alert($("#search-box").val());
+			search();
 		}
 	});
 	
 	$("#search-button").click(function() {
-		alert($("#search-box").val());
+		search();
 	});
+
+	function search() {
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"search_product_for_inventory": $("#search-box").val(),
+				"category": $("#dropdown qq").text()
+			}
+		}).done(function(response) {
+		    $("#productBoxContainer").html(response);
+		});
+	}
 
 	$("#menu-add").click(function() {
 		$("#popup").on("shown.bs.modal", function () {

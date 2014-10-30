@@ -36,13 +36,13 @@ require_once ('inc/ProductDao.php');
 		$str = <<<'EOT'
 .replace('"', '\"')
 EOT;
-		
+		//$(\"#desc\").code(\"{$productdescs->description}\"$str);
 		$product = "
 				alert('edit');
 				$(\"#name\").val(\"{$productdescs->productName}\");
 				$(\"#code\").val(\"{$productdescs->modelCode}\");
 				$(\"#price\").val(\"{$product->price}\");
-				$(\"#desc\").code(\"{$productdescs->description}\"$str);
+				$(\"#desc\").code(\"SSS\");
 				$(\"#category\").val(\"{$productdescs->category->value}\");
 				$(\"#tag\").val(\"{$productdescs->additiontag}\");
 				$(\"#quan\").val(\"0\");
@@ -73,6 +73,12 @@ Price:
 
 Description:
 <div id="desc"></div>
+
+Image URL:
+<div class="input-group">
+	<span class="input-group-addon"><span class="glyphicon glyphicon-tag"></span></span>
+	<input type="text" class="form-control" id="image" placeholder="URL">
+</div>
 
 Category:
 <div class="input-group">
@@ -134,7 +140,8 @@ Brand:
 			    "name": $("#name").val(),
 			    "code": $("#code").val(),
 			    "price": $("#price").val(),
-			    "desc": $("#desc").code(),
+			    "desc": "desc demo",//$("#desc").code(),
+			    "image": $("#image").val(),
 			    "category": $("#category").val(),
 			    "tag": $("#tag").val(),
 			    "quan": $("#quan").val(),
@@ -147,7 +154,8 @@ Brand:
 			data: {"submit":"add","name": $("#name").val(),
 				"code": $("#code").val(),
 				"price": $("#price").val(),
-				"desc": $("#desc").code(),
+				"desc": "desc demo",//$("#desc").code(),
+				"image": $("#image").val(),
 				"category": $("#category").val(),
 				"tag": $("#tag").val(),
 				"quan": $("#quan").val(),
@@ -165,6 +173,7 @@ Brand:
 		$("#code").val("") ;
 		$("#price").val("") ;
 		$("#desc").code("") ;
+		$("#image").val(""),
 		$("#category").val("") ;
 		$("#tag").val("") ;
 		$("#quan").val("") ;
