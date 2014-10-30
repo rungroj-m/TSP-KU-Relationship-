@@ -1,4 +1,5 @@
 <?php
+
 if (isset($_POST["get_product_by_category_for_shopping"])) {
 	
 	require_once ('inc/Product.php');
@@ -38,16 +39,18 @@ function createProductBoxForShopping($product) {
 	
 	
 	echo "
-	<div style=\"width: 200px; height: 250px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
+	<div class=\"thumbnail\" style=\"width: 200px; height: 250px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
 	
-	<!-- May change link of pic to product desc page -->
-   	<img style=\"width: 180px; height: 180px; background-color: white; border-radius: 3px;\" src=\"http://cdn2.hubspot.net/hub/100473/file-1257668303-png/images/Apple.png\" alt=\"$productName\" href=\"#\">
-  
-	<div id=\"name\">$productName</div>
-
-	<div id=\"price\">&#3647;$price</div>
-
-	<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price);\">ADD</button>
+	   	<a href=\"?page=detail&id=$productId\">
+	   		<!-- May change link of pic to product desc page -->
+	   		<img style=\"width: 180px; height: 180px; background-color: white; border-radius: 3px;\" src=\"http://cdn2.hubspot.net/hub/100473/file-1257668303-png/images/Apple.png\" alt=\"$productName\">
+	  
+			<div id=\"name\">$productName</div>
+		</a>
+	
+		<div id=\"price\">&#3647;$price</div>
+	
+		<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price);\">ADD</button>
 	</div>
 
 	";
@@ -60,16 +63,16 @@ function createProductBoxForInventory($product) {
 
 
 	echo "
-	<div style=\"width: 200px; height: 250px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
+	<div class=\"thumbnail\" style=\"width: 200px; height: 250px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
 
-	<!-- May change link of pic to product desc page -->
-	<img style=\"width: 180px; height: 180px; background-color: white; border-radius: 3px;\" src=\"http://cdn2.hubspot.net/hub/100473/file-1257668303-png/images/Apple.png\" alt=\"$productName\" href=\"#\">
-
-	<div id=\"name\">$productName</div>
-
-	<div id=\"price\">&#3647;$price</div>
-
-	<button type=\"button\" class=\"btn btn-info\" onclick=\"editProduct('$productId', $price);\">EDIT</button>
+		<!-- May change link of pic to product desc page -->
+		<img style=\"width: 180px; height: 180px; background-color: white; border-radius: 3px;\" src=\"http://cdn2.hubspot.net/hub/100473/file-1257668303-png/images/Apple.png\" alt=\"$productName\">
+	
+		<div id=\"name\">$productName</div>
+	
+		<div id=\"price\">&#3647;$price</div>
+	
+		<button type=\"button\" class=\"btn btn-info\" onclick=\"editProduct('$productId', $price);\">EDIT</button>
 	</div>
 
 	";
@@ -90,6 +93,31 @@ if (isset($_POST["submit"])) {
 		echo ("Product Added");
 	}
 	
+}
+
+if (isset($_POST["get_product_detail_by_id"])) {
+
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDescription.php');
+	require_once ('inc/Category.php');
+	require_once ('inc/Brand.php');
+
+	$product = Product::GetProduct($_POST["get_product_detail_by_id"]);
+	$productdescs = $product->productDescription;
+	
+	echo "
+	{
+		\"id\" : {$_POST["get_product_detail_by_id"]},
+		\"name\" : \"{$productdescs->productName}\",
+		\"code\" : \"{$productdescs->modelCode}\",
+		\"price\" : {$product->price},
+		\"description\" : \"{$productdescs->description}\",
+		\"category\" : \"{$productdescs->category->value}\",
+		\"tag\" : \"{$productdescs->additiontag}\",
+		\"quantity\" : 0,
+		\"brand\" : \"{$productdescs->brand->value}\"
+	}";
+
 }
 
 

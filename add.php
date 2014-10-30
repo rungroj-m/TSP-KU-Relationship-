@@ -1,8 +1,11 @@
 <head>
 	<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+	<link href="css/summernote.css" rel="stylesheet">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato">
 	<script src="js/jquery.js"></script>
 	<script src="js/bootstrap-dropdown.js"></script>
+	<script src="js/summernote.js"></script>
 	<script src="bootstrap/js/bootstrap.js"></script>
 </head>
 
@@ -15,7 +18,40 @@ require_once ('inc/ProductDao.php');
 	
 	
 ?>
-<div style="width: 90%; height: 90%; border-radius: 6px; background-color: #eee;">
+
+<?php
+
+	$product;
+	
+	if (isset($_GET["id"])) {
+		require_once ('inc/Product.php');
+		require_once ('inc/ProductDescription.php');
+		require_once ('inc/Category.php');
+		require_once ('inc/Brand.php');
+	
+		$product = Product::GetProduct($_GET["id"]);
+		$productdescs = $product->productDescription;
+		
+		global $product;
+		$str = <<<'EOT'
+.replace('"', '\"')
+EOT;
+		
+		$product = "
+				alert('edit');
+				$(\"#name\").val(\"{$productdescs->productName}\");
+				$(\"#code\").val(\"{$productdescs->modelCode}\");
+				$(\"#price\").val(\"{$product->price}\");
+				$(\"#desc\").code(\"{$productdescs->description}\"$str);
+				$(\"#category\").val(\"{$productdescs->category->value}\");
+				$(\"#tag\").val(\"{$productdescs->additiontag}\");
+				$(\"#quan\").val(\"0\");
+				$(\"#brand\").val(\"{$productdescs->brand->value}\");
+		";
+	}
+?>
+
+<div style="width: 90%; height: 90%; border-radius: 6px;">
 
 Name:
 <div class="input-group">
@@ -36,10 +72,7 @@ Price:
 </div>
 
 Description:
-<div class="input-group">
-	<span class="input-group-addon"><span class="glyphicon glyphicon-tag"></span></span>
-	<input type="text" class="form-control" id="desc" placeholder="Description (should change to textarea?)">
-</div>
+<div id="desc"></div>
 
 Category:
 <div class="input-group">
@@ -101,7 +134,7 @@ Brand:
 			    "name": $("#name").val(),
 			    "code": $("#code").val(),
 			    "price": $("#price").val(),
-			    "desc": $("#desc").val(),
+			    "desc": $("#desc").code(),
 			    "category": $("#category").val(),
 			    "tag": $("#tag").val(),
 			    "quan": $("#quan").val(),
@@ -114,7 +147,7 @@ Brand:
 			data: {"submit":"add","name": $("#name").val(),
 				"code": $("#code").val(),
 				"price": $("#price").val(),
-				"desc": $("#desc").val(),
+				"desc": $("#desc").code(),
 				"category": $("#category").val(),
 				"tag": $("#tag").val(),
 				"quan": $("#quan").val(),
@@ -131,7 +164,7 @@ Brand:
 		$("#name").val(""); 
 		$("#code").val("") ;
 		$("#price").val("") ;
-		$("#desc").val("") ;
+		$("#desc").code("") ;
 		$("#category").val("") ;
 		$("#tag").val("") ;
 		$("#quan").val("") ;
@@ -139,32 +172,21 @@ Brand:
 	});
 
 	$("#button-save").click(function() {
-
+		alert("we want a function for saving!");
 	});
+
+	$(document).ready(function() {
+		$("#desc").summernote({
+			  height: 300,
+			  minHeight: 300,
+			  maxHeight: 300,
+			  oninit: function() {
+				  alert("lunched");
+				<?php if (isset($_GET["id"])) { global $product; echo $product; } ?>
+			  }
+		});
+	});
+			
 
 	
 </script>
-
-<?php
-	if (isset($_GET["id"])) {
-		require_once ('inc/Product.php');
-		require_once ('inc/ProductDescription.php');
-		require_once ('inc/Category.php');
-		require_once ('inc/Brand.php');
-	
-		$product = Product::GetProduct($_GET["id"]);
-		$productdescs = $product->productDescription;	
-		
-		echo " 
-			<script>
-				$(\"#name\").val(\"{$productdescs->productName}\");
-				$(\"#price\").val(\"{$product->price}\");
-				$(\"#desc\").val(\"{$productdescs->description}\");
-				$(\"#category\").val(\"{$productdescs->category->value}\");
-				$(\"#tag\").val(\"{$productdescs->additiontag}\");
-				$(\"#quan\").val(\"0\");
-				$(\"#brand\").val(\"{$productdescs->brand->value}\");
-			</script>
-		";
-	}
-?>

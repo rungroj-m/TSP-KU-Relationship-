@@ -7,7 +7,7 @@
 				<qq>Category</qq> <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu" id="category-dropdown"style="background-color: black" role="menu">
-			<li><a style = "color: white">All</a></li>
+				<li><a style = "color: white">All</a></li>
 				<li><a style = "color: white">Shirt</a></li>
 			    <li><a style = "color: white">Equipment</a></li>
 			    <li><a style = "color: white">Balls</a></li>
@@ -56,7 +56,7 @@
 </div>
 
 <!-- Add Product popup -->
-<div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">

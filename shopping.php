@@ -66,7 +66,6 @@
 				
 				<table class="table">
 					<tr>
-					
 						<th><button type="button" class="btn btn-success" id="button-checkout" >Check Out</button></th>
 						<th><button type="button" class="btn btn-danger" id="button-clear-cart" >Clear</button></th>
 					</tr>
@@ -146,7 +145,6 @@
 			);
 			total += arr[i].quantity * arr[i].unitprice;
 		}
-		console.log(total);
 		$("#total").text("\u0E3F" + total);
 	}
 
