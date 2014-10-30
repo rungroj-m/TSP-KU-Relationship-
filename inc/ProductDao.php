@@ -182,13 +182,24 @@
 	}
 	
 	public function findProductDescriptionByTags( $tagArray ) {
-	    $tagIds = $this->getTags( $tagArray );
+	    $tagIds = $this->getTags( array_unique( array_map('strtolower', $tagArray) ) );
 	    $array = $this->findProductDescriptionByTagIds( $tagIds );
 	    $returnArray = array();
 	    foreach ( $array as &$value ) {
 		array_push( $returnArray, ProductDescription::GetProductDescription( $value['ProductDescriptionId'] ) );
 	    }
 	    return $returnArray;
+	}
+	
+	public function getTagsByProductDescriptionId( $pdid ) {
+	    $STH = $this->db->prepare( "SELECT TG.Key
+		FROM ( SELECT * FROM AdditionProductDescriptionTags UNION SELECT * FROM ProductDescriptionTags ) TK
+		JOIN Tags TG
+		ON TG.TagId = TK.TagId
+		WHERE TK.ProductDescriptionId = :pdid" );
+	    $STH->bindParam(':pdid', $pdid );
+	    $STH->execute();
+	    return $STH->fetchAll();
 	}
 	
 	private function findProductDescriptionByTagIds( $tagArray ) {
