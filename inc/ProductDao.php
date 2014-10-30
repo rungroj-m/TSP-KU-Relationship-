@@ -5,8 +5,8 @@
     class ProductDao {
     	
     	private $host="localhost";
-    	private $user = "benzsuankularb";
-    	private $password="benzsk130";
+    	private $user = "tsp";
+    	private $password="4Bxce2BzUpBAcjK8";
     	private $database="ecomerce";
     	
 	protected $db;
@@ -24,11 +24,13 @@
 	
 	public function addProductDescriptionImages( $pdid, $images ) {
 	    $val = "";
-	    foreach ( $tagIdArray as &$value ) {
-		$val .= "( $pdid , $value ),";
+	    print_r( $images );
+	    foreach ( $images as &$value ) {
+			$val .= "( $pdid , '$value' ),";
 	    }
-	    $val = substr($query, 0, -1);
+	    $val = substr($val, 0, -1);
 	    $STH = $this->db->prepare(  "INSERT INTO `ProductImages`(`ProductDescriptionId`, `ImageAddress`) VALUES $val" );
+	    
 	    $STH->execute();
 	}
 	

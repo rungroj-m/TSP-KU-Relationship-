@@ -30,7 +30,7 @@
 	public static function GetProduct( $pid ){
 	    $dao = ProductDao::GetInstance();
 	    $data = $dao->getProductById( $pid );
-	    return $this->NewProductByData( $data );
+	    return Product::NewProductByData( $data );
 	}
 	
 	private static function NewProductByData( $data ) {
@@ -48,7 +48,7 @@
 		$dao = ProductDao::GetInstance();
 		$data = $dao->getActiveProducts();
 		foreach ( $data as &$value ) {
-			array_push( $array, $this->NewProductByData( $data ) );
+			array_push( $array, Product::NewProductByData( $value ) );
 		}
 		
 		return $array;

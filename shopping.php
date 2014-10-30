@@ -53,6 +53,7 @@
 							<th>Product</th>
 							<th>Q.</th>
 							<th>U.P.</th>
+							<th></th>
 						</tr>
 					</tbody>
 				</table>
@@ -66,7 +67,6 @@
 				
 				<table class="table">
 					<tr>
-					
 						<th><button type="button" class="btn btn-success" id="button-checkout" >Check Out</button></th>
 						<th><button type="button" class="btn btn-danger" id="button-clear-cart" >Clear</button></th>
 					</tr>
@@ -99,14 +99,14 @@
 	$.ajax({
 		url: 'forjscallphp.php',
 		type: "POST",
-		data: { "get_product_by_category_for_shopping": "3" }
+		data: { "get_product_by_category_for_shopping": "" }
 	}).done(function(response) {
 	    $("#productBoxContainer").html(response);
 	});
 
-	function addToCart(productId, productName, price) {
+	function addToCart(productId, productName, price, quantity) {
 		if ($.cookie("cartItems") == undefined) {
-			var arr = [{id: productId, name: productName, quantity: 1, unitprice: price}];
+			var arr = [{id: productId, name: productName, quantity: quantity, unitprice: price}];
 			
 			$.cookie("cartItems", JSON.stringify(arr), { expires: 15 }); // in 15 days
 		}
@@ -115,11 +115,14 @@
 				var arr = $.parseJSON($.cookie('cartItems'));
 				for (var i = 0; i < arr.length; i++) {
 					if (arr[i].id == productId) {
-						arr[i].quantity += 1;
+						arr[i].quantity += quantity;
+						if (arr[i].quantity == 0) {
+							arr.splice(i, 1);
+						}
 						break block;
 					}
 				}
-				arr.push({id: productId, name: productName, quantity: 1, unitprice: price});
+				arr.push({id: productId, name: productName, quantity: quantity, unitprice: price});
 			}
 		
 			$.cookie("cartItems", JSON.stringify(arr), { expires: 15 }); // in 15 days
@@ -133,6 +136,7 @@
 				<th>Product</th>\
 				<th>Q.</th>\
 				<th>U.P.</th>\
+				<th></th>\
 			</tr>\
 		");
 		var total = 0;
@@ -142,36 +146,45 @@
 						"<th>" + arr[i].name.substring(0, 12) + "</th>" +
 						"<th>" + arr[i].quantity + "</th>" +
 						"<th>" + arr[i].unitprice + "</th>" +
+						"<th>" +
+							"<span class=\"label alert-danger\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", -1)\");\">-</span>" +
+							"<span class=\"label alert-success\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", 1)\");\">+</span>" +
+						"</th>" +
 					"</tr>"
 			);
 			total += arr[i].quantity * arr[i].unitprice;
 		}
-		console.log(total);
 		$("#total").text("\u0E3F" + total);
 	}
 
 	$("#category-dropdown li").click(function() {
-		if ($(this).text() == "all" || $(this).text() == "category") {
-// 			pass ""
-		}
-		else {
-// 			pass real value
-		}
-		
-		alert($(this).text());
+		alert("choose catagory should refresh product list below immediately");
 		$("#dropdown qq").text($(this).text());
 	});
 
 	$("#search-box").keypress(function(event) {
 		// 13 means ENTER
 		if (event.which == 13) {
-			alert($("#search-box").val());
+			search();
 		}
 	});
 	
 	$("#search-button").click(function() {
-		alert($("#search-box").val());
+		search();
 	});
+
+	function search() {
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"search_product_for_shopping": $("#search-box").val(),
+				"category": $("#dropdown qq").text()
+			}
+		}).done(function(response) {
+		    $("#productBoxContainer").html(response);
+		});
+	}
 
 	$("#button-clear-cart").click(function() {
 	    $("#clear-cart-confirm").modal({
@@ -188,6 +201,7 @@
 				<th>Product</th>\
 				<th>Q.</th>\
 				<th>U.P.</th>\
+				<th></th>\
 			</tr>\
 		");
 
@@ -202,11 +216,15 @@
 			var total = 0;
 			for (var i = 0; i < arr.length; i++) {
 				$("#cart").append(
-						"<tr>" +
-							"<th>" + arr[i].name.substring(0, 12) + "</th>" +
-							"<th>" + arr[i].quantity + "</th>" +
-							"<th>" + arr[i].unitprice + "</th>" +
-						"</tr>"
+					"<tr>" +
+						"<th>" + arr[i].name.substring(0, 12) + "</th>" +
+						"<th>" + arr[i].quantity + "</th>" +
+						"<th>" + arr[i].unitprice + "</th>" +
+						"<th>" +
+							"<span class=\"label alert-danger\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", -1)\");\">-</span>" +
+							"<span class=\"label alert-success\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", 1)\");\">+</span>" +
+						"</th>" +
+					"</tr>"
 				);
 				total += arr[i].quantity * arr[i].unitprice;
 			}

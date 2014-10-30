@@ -69,7 +69,7 @@
 	
 	public static function AddImages ( $productDescriptionId, $imageAddressArray ) {
 	    $dao = ProductDao::GetInstance();
-	    $dao->addProductDescriptionImages( $productDescriptionId, $stringArray );
+	    $dao->addProductDescriptionImages( $productDescriptionId, $imageAddressArray );
 	}
     }
 

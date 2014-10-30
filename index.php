@@ -5,12 +5,13 @@
 	<script src="js/jquery.js"></script>
 	<script src="js/jquery.cookie.js"></script>
 	<script src="js/bootstrap-dropdown.js"></script>
+	<script src="js/summernote.js"></script>
 	<script src="bootstrap/js/bootstrap.js"></script>
 </head>
 
 <style>
 body {
-	background-color: rgba(2, 2, 0, 0.5);
+	background-color: rgba(252, 252, 252, 0.5);
 }
 *{
 	font-family: Lato;
@@ -20,7 +21,7 @@ body {
 <body>
 
     <!-- static for each page -->
-			<nav class="navbar navbar-inverse" role="navigation">
+			<nav class="navbar navbar-default" role="navigation">
 			  	<div class="container-fluid">
 			    <!-- Brand and toggle get grouped for better mobile display -->
 				    <div class="navbar-header">
@@ -52,13 +53,16 @@ body {
 		include_once $_GET['page'] .".php";
 		
 		require_once('inc/ProductDao.php');
-		echo "fuck";
-		print_r( ProductDescription::GetProductDescription( 1 ) );
 	?>
 		
 		
 	</div>
-
+	
+	<div class="footer">
+      <div class="container" align="center" style="margin-top: 30px; margin-bottom: 20px">
+        <p class="text-muted">Made by KU Relationship &copy; 2014</p>
+      </div>
+    </div>
 </body>
 
 
