@@ -2,11 +2,11 @@ TSP-KU-Relationship-
 ====================
 
 for Benz
-- search
-- pic image
+- search ( ทำแล้ว )
+- pic image ( ทำแล้ว )
 - quantity
 - edit
-- อยากได้ get all product มาโชว์ในหน้าแรกอ่า อาจจะ sort by added date ก็ได้ มั้ง
+- อยากได้ get all product มาโชว์ในหน้าแรกอ่า อาจจะ sort by added date ก็ได้ มั้ง ( ทำแล้ว )
 
 เพิ่มๆ ไปดูรีควายเม้นมา มันต้อง
 - เรียงสินค้าที่แสดงได้ด้วยนะ อาจตามชื่อ ราคา วันที่้เพิ่ม ทำนองนั้น แล้วแต่ออกแบบเลย

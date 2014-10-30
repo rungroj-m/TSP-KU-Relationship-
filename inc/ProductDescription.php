@@ -9,6 +9,7 @@
 	public $productName;
 	public $createDate;
 	public $additionTags;
+	public $images;
 	
 	public function __construct(){
 	}
@@ -42,6 +43,12 @@
 	    $instance->modelCode = $data['ModelCode'];
 	    $instance->description = $data['Description'];
 	    $instance->createDate = new DateTime( $data['CreateDate'] );
+	    
+	    $data = $dao->getImagesByProductDescriptionId( $pdid );
+	    $instance->images = array();
+	    foreach ( $data as &$value ) {
+		array_push( $instance->images, $value['ImageAddress'] );
+	    }
 	    return $instance;
 	}
 	
@@ -53,6 +60,16 @@
 		array_push( $array, ProductDescription::GetProductDescription( $value[0] ) );
 	    }
 	    return $array;
+	}
+	
+	public static function SearchByTags ( $stringArray ) {
+	    $dao = ProductDao::GetInstance();
+	    return $dao->findProductDescriptionByTags( $stringArray );
+	}
+	
+	public static function AddImages ( $productDescriptionId, $imageAddressArray ) {
+	    $dao = ProductDao::GetInstance();
+	    $dao->addProductDescriptionImages( $productDescriptionId, $stringArray );
 	}
     }
 

@@ -30,14 +30,28 @@
 	public static function GetProduct( $pid ){
 	    $dao = ProductDao::GetInstance();
 	    $data = $dao->getProductById( $pid );
-	    
-	    $instance = new self();
+	    return $this->NewProductByData( $data );
+	}
+	
+	private static function NewProductByData( $data ) {
+		$instance = new self();
 	    $instance->id = $data['ProductId'];
 	    $instance->price = $data['Price'];
 	    $instance->productDescription = ProductDescription::GetProductDescription( $data['ProductDescriptionId'] );
 	    $instance->status = $data['Status'];
 	    $instance->createDate = new DateTime( $data['CreateDate'] );
 	    return $instance;
+	}
+	
+	public static function GetAllProduct() {
+		$array = array();
+		$dao = ProductDao::GetInstance();
+		$data = $dao->getActiveProducts();
+		foreach ( $data as &$value ) {
+			array_push( $array, $this->NewProductByData( $data ) );
+		}
+		
+		return $array;
 	}
 	
 	public static function GetEnabledProductByProductDescriptionId ( $pid ) {

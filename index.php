@@ -52,8 +52,9 @@ body {
 		if (isset($_GET['page']))
 		include_once $_GET['page'] .".php";
 		
-	
-		
+		require_once('inc/ProductDao.php');
+		echo "fuck";
+		print_r( ProductDescription::GetProductDescription( 1 ) );
 	?>
 		
 		
