@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 30, 2014 at 08:35 PM
+-- Generation Time: Nov 01, 2014 at 08:09 PM
 -- Server version: 5.6.20
 -- PHP Version: 5.5.15
 
@@ -51,8 +51,9 @@ CREATE TABLE IF NOT EXISTS `Brands` (
 CREATE TABLE IF NOT EXISTS `Carts` (
 `CartId` int(11) NOT NULL,
   `LastUpdate` int(11) NOT NULL,
-  `CustomerId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  `CustomerId` int(11) NOT NULL,
+  `Closed` tinyint(1) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -88,7 +89,18 @@ CREATE TABLE IF NOT EXISTS `Customers` (
   `LastName` text NOT NULL,
   `Password` text NOT NULL,
   `UserName` varchar(20) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Inventory`
+--
+
+CREATE TABLE IF NOT EXISTS `Inventory` (
+  `ProductId` int(11) NOT NULL,
+  `Quantity` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -102,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `InventoryTransactions` (
   `ProductId` int(11) NOT NULL,
   `Quantity` int(11) NOT NULL,
   `Deposition` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 -- --------------------------------------------------------
 
@@ -233,6 +245,12 @@ ALTER TABLE `Customers`
  ADD PRIMARY KEY (`CustomerId`), ADD UNIQUE KEY `UserName` (`UserName`);
 
 --
+-- Indexes for table `Inventory`
+--
+ALTER TABLE `Inventory`
+ ADD PRIMARY KEY (`ProductId`);
+
+--
 -- Indexes for table `InventoryTransactions`
 --
 ALTER TABLE `InventoryTransactions`
@@ -281,7 +299,7 @@ MODIFY `BrandId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `Carts`
 --
 ALTER TABLE `Carts`
-MODIFY `CartId` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `CartId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `Categories`
 --
@@ -291,12 +309,12 @@ MODIFY `CategoryId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `Customers`
 --
 ALTER TABLE `Customers`
-MODIFY `CustomerId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `CustomerId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `InventoryTransactions`
 --
 ALTER TABLE `InventoryTransactions`
-MODIFY `TransactionId` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `TransactionId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `ProductDescriptions`
 --
