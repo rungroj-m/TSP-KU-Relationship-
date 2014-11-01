@@ -30,9 +30,17 @@
 	}
 	
 	public function authCustomer( $username, $password ) {
-	    $STH = $this->db->prepare(  "SELECT `FirstName` , `LastName` , `UserName` FROM `Customers` WHERE `UserName` = :userName AND `Password` = :pass" );
+	    $STH = $this->db->prepare(  "SELECT `CustomerId` FROM `Customers` WHERE `UserName` = :userName AND `Password` = :pass" );
 	    $STH->bindParam(':userName', $username );
 	    $STH->bindParam(':pass', md5( $password ) );
+	    $STH->execute();
+	    if ( $STH->rowCount() == 0 ) return null;
+	    return $STH->fetch()['CustomerId'];
+	}
+	
+	public function getCustomer( $customerId ) {
+	    $STH = $this->db->prepare(  "SELECT * FROM `Customers` WHERE `CustomerId` = :cusId" );
+	    $STH->bindParam(':cusId', $customerId );
 	    $STH->execute();
 	    return $STH->fetch();
 	}
