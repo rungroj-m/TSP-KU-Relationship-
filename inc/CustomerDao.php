@@ -2,8 +2,8 @@
     class CustomerDao {
     	
     	private $host="localhost";
-    	private $user = "benzsuankularb";
-    	private $password="benzsk130";
+    	private $user = "tsp";
+    	private $password="YzxfyM4A6ZrBP9xv";
     	private $database="ecomerce";
     	
 	protected $db;

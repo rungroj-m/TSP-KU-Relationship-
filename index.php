@@ -35,9 +35,13 @@ body {
 				 	</div>
 					    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		      				<ul class="nav navbar-nav">
-					        <?php if (isset($_GET['page']) && $_GET['page'] == "shopping") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=shopping">Shopping</a></li>
-					        <?php if (isset($_GET['page']) && $_GET['page'] == "inventory") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=inventory">Inventory</a></li>
-					        <?php if (isset($_GET['page']) && $_GET['page'] == "member") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=member">Member</a></li>
+		      					<?php if (isset($_GET['page']) && $_GET['page'] == "shopping") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=shopping">Shopping</a></li>
+		      					<?php if (isset($_GET['page']) && $_GET['page'] == "inventory") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=inventory">Inventory</a></li>
+		      					<?php if (isset($_GET['page']) && $_GET['page'] == "member") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=member">Member</a></li>
+		      					<?php if (isset($_GET['page']) && $_GET['page'] == "profile") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=profile">Profile</a></li>
+					        </ul>
+					        <ul class="nav navbar-nav navbar-right" id="username">
+					        </ul>
 					    </div>
 				</div>
 			</nav>
@@ -63,6 +67,25 @@ body {
         <p class="text-muted">Made by KU Relationship &copy; 2014</p>
       </div>
     </div>
+    
+    <script type="text/javascript">
+		if ($.cookie("email") != undefined) {
+			$("#username").html("<li><a>Hi, " + $.cookie("firstname") + " " + $.cookie("lastname") + "</a></li>" +
+					"<li><a href=\"#\" id=\"logout\">Logout</a></li>");
+			$('.navbar-nav li:contains("Member")').remove();
+		}
+		else {
+			$('.navbar-nav li:contains("Profile")').remove();
+		}
+
+		$("#logout").click(function() {
+			$.removeCookie("email");
+			$.removeCookie("firstname");
+			$.removeCookie("lastname");
+			window.location = window.location.pathname;
+		});
+
+    </script>
 </body>
 
 
