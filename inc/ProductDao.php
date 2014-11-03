@@ -53,7 +53,12 @@
 	function addProduct( $ProductDescriptionId, $Price, $CreateDate, $Status ) {
 	    $STH = $this->db->prepare("insert into `Products`( `ProductDescriptionId`, `Price`, `CreateDate`, `Status` ) values ( ?, ?, ?, ? );");
 	    $STH->execute( array( $ProductDescriptionId, $Price, $CreateDate, $Status ) );
-	    return $this->db->lastInsertId();
+	    
+	    $pid = $this->db->lastInsertId();
+	    InventoryDao::GetInstance()->addInventory( $pid, 0 );
+	    InventoryDao::GetInstance()->releaseInventory( $pid, 0 );
+	    
+	    return $pid;
 	}
 	
 	function addCategory( $categoryName ) {
