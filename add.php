@@ -131,23 +131,11 @@ Brand:
 	});
 
 	$("#button-add").click(function() {
-		var data = {
-			    "submit": "add",
-			    "name": $("#name").val(),
-			    "code": $("#code").val(),
-			    "price": $("#price").val(),
-			    "desc": $("#desc").code(),
-			    "image": $("#image").val(),
-			    "category": $("#category").val(),
-			    "tag": $("#tag").val(),
-			    "quan": $("#quan").val(),
-			    "brand": $("#brand").val(),
-			};
-		console.log(JSON.stringify(data));
 		$.ajax({
 			url: 'forjscallphp.php',
 			type: "POST",
-			data: {"submit":"add","name": $("#name").val(),
+			data: {"submit":"add",
+				"name": $("#name").val(),
 				"code": $("#code").val(),
 				"price": $("#price").val(),
 				"desc": $("#desc").code(),
@@ -156,8 +144,8 @@ Brand:
 				"tag": $("#tag").val(),
 				"quan": $("#quan").val(),
 				"brand": $("#brand").val()}
-// 				JSON.stringify(data)
 		}).done(function(response) {
+			alert(response);
 			window.parent.closeModal();
 		});
 	});
@@ -175,7 +163,24 @@ Brand:
 	});
 
 	$("#button-save").click(function() {
-		alert("we want a function for saving!");
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {"submit":"edit",
+				"id": $_GET["id"],
+				"name": $("#name").val(),
+				"code": $("#code").val(),
+				"price": $("#price").val(),
+				"desc": $("#desc").code(),
+				"image": $("#image").val(),
+				"category": $("#category").val(),
+				"tag": $("#tag").val(),
+				"quan": $("#quan").val(),
+				"brand": $("#brand").val()}
+		}).done(function(response) {
+			alert(response);
+			window.parent.closeModal();
+		});
 	});
 
 	$(document).ready(function() {

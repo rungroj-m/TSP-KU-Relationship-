@@ -3,7 +3,7 @@
     	
     	private $host="localhost";
     	private $user = "tsp";
-    	private $password="YzxfyM4A6ZrBP9xv";
+    	private $password="hz5qMQ7cPDd2pXyv";
     	private $database="ecomerce";
     	
 	protected $db;

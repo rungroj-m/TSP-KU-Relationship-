@@ -3,6 +3,7 @@
     	
 	public static function addProduct( $product, $amount ){
 	    InventoryDao::GetInstance()->addInventory( $product->id, $amount );
+	    return $amount;
 	}
 	
 	public static function releaseProduct( $product, $amount ){

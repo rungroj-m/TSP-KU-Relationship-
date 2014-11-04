@@ -14,6 +14,7 @@ if (isset($_POST["get_product_by_category_for_shopping"])) {
 		$productdescs = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_shopping"]);
 	
 	foreach ($productdescs as $p) {
+		print_r($p->id);
 		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
 		createProductBoxForShopping($product);
 	}
@@ -161,7 +162,8 @@ function createProductBoxForInventory($product) {
 	
 		<div id=\"price\">&#3647;$price</div>
 	
-		<button type=\"button\" class=\"btn btn-info\" onclick=\"editProduct('$productId', $price);\">EDIT</button>
+		<button type=\"button\" class=\"btn btn-info\" onclick=\"editProduct('$productId');\">EDIT</button>
+		<button type=\"button\" class=\"btn btn-Danger\" onclick=\"removeProduct('$productId');\">REMOVE</button>
 	</div>
 
 	";
@@ -174,13 +176,40 @@ if (isset($_POST["submit"])) {
 		include_once ('inc/ProductDescription.php');
 		include_once ('inc/Category.php');
 		include_once ('inc/Brand.php');
-		
+		include_once ('inc/Inventory.php');
+		include_once ('inc/InventoryDao.php');
 		$brand = Brand::CreateBrand($_POST['brand']);
 		$category = Category::CreateCategory($_POST['category']);
-		$productDesc = ProductDescription::CreateProductDescription($category, $brand, $_POST['desc'], $_POST['code'], explode(',', $_POST['tag']), $_POST['name']);
+		$productDesc = ProductDescription::CreateProductDescription( $category, $brand, $_POST['desc'], $_POST['code'], explode(',', $_POST['tag']), $_POST['name']);
 		ProductDescription::AddImages($productDesc->id, array( $_POST['image'] ));
 		Product::CreateProduct($productDesc, $_POST['price']);
+		echo($product ." ". $_POST['quan']);
+		Inventory::addProduct($product, $_POST['quan']);
 		echo ("Product Added");
+	}
+	if ($_POST["submit"] == "edit") {
+	
+		include_once ('inc/Product.php');
+		include_once ('inc/ProductDescription.php');
+		include_once ('inc/Category.php');
+		include_once ('inc/Brand.php');
+		include_once ('inc/Inventory.php');
+		include_once ('inc/InventoryDao.php');
+		
+		$id = $_POST["id"];
+		
+		Product::ReplaceActiveProduct($productdescs, $_POST["price"]);
+		Product::ReplaceActiveProduct($productdescs, $_POST["price"]);
+		Inventory::addProduct($id, $_POST["quan"] - Inventory::getQuntity($id));
+		$productdescs = ProductDescription::GetProductDescription($id);
+		$productdescs -> name = $_POST["name"];
+		$productdescs -> modelcode = $_POST["code"];
+		$productdescs -> description = $_POST["desc"];
+		$productdescs -> images = $_POST["image"];
+		$productdescs -> category = Brand::CreateBrand($_POST["category"]) -> id;
+		$productdescs -> additionTags = $_POST["tag"];
+		$productdescs -> brand = Brand::CreateBrand($_POST["brand"]) -> id;
+		echo ("Product Edited");
 	}
 	
 }
@@ -191,9 +220,12 @@ if (isset($_POST["get_product_detail_by_id"])) {
 	require_once ('inc/ProductDescription.php');
 	require_once ('inc/Category.php');
 	require_once ('inc/Brand.php');
-
+	require_once ('inc/Inventory.php');
+	include_once ('inc/InventoryDao.php');
+	
 	$product = Product::GetProduct($_POST["get_product_detail_by_id"]);
 	$productdescs = $product->productDescription;
+	$quan = Inventory::getQuntity($product->id);
 	$desc = str_replace('"', '\"', $productdescs->description);
 	echo "
 	{
@@ -205,7 +237,7 @@ if (isset($_POST["get_product_detail_by_id"])) {
 		\"image\" : \"{$product->productDescription->images[0]}\",
 		\"category\" : \"{$productdescs->category->value}\",
 		\"tag\" : \"{$productdescs->additiontag}\",
-		\"quantity\" : 0,
+		\"quantity\" : $quan,
 		\"brand\" : \"{$productdescs->brand->value}\"
 	}";
 
@@ -239,7 +271,11 @@ if (isset($_POST["sign-in"])) {
 	}";
 }
 
-
+if (isset($_POST["remove"])) {
+	require_once('inc/Product.php');
+	require_once('inc/ProductDao.php');
+	Product::GetProduct($_POST["remove"])->disable();
+}
 
 
 

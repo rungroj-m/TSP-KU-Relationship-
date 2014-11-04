@@ -70,10 +70,27 @@
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			</div>
 		</div>
-		</div>
+	</div>
 </div>
 
-
+<!-- Confirm Remove Product -->
+<div class="modal fade" id="remove-product-confirm">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Remove Product</h4>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure to remove product?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-danger" id="button-confirm-remove-product" val="" >Remove</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 <script type="text/javascript">
@@ -128,7 +145,7 @@
 	    $("#popup").modal('hide');
 	};
 
-	function editProduct(productId, price) {
+	function editProduct(productId) {
 		$("#popup").on("shown.bs.modal", function () {
 	        $("#frame").attr("src", "add.php?id=" + productId);
 		});
@@ -137,7 +154,27 @@
 		    show: true
 		});
 	}
+	
+	function removeProduct(productId) {
+		$("#remove-product-confirm").modal({
+		    show: true
+		});
+		$("#button-confirm-remove-product").attr("val", productId);
+	}
 
+	$("#button-confirm-remove-product").click(function() {
+		var productId = $("#button-confirm-remove-product").attr("val");
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"remove": productId
+			}
+		}).done(function(response) {
+			alert(productId + " removed");
+		});
+		$("#remove-product-confirm").modal('hide');
+	});
 	
 </script>
 
