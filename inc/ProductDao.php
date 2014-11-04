@@ -139,6 +139,16 @@
 	    $STH->execute();
 	}
 	
+	function disableProduct( $pid ) {
+	    $STH = $this->db->prepare("SELECT `ProductId` FROM `Products` WHERE `Status` = 1");
+	    $STH->execute();
+	    $result = $STH->fetch();
+	    
+	    $STH = $this->db->prepare("update `Products` set `Status`=0 where `ProductId`=:id and `Status`=1");
+	    $STH->bindParam(':id', $pid);
+	    $STH->execute();
+	}
+	
 	function getProductDescriptionIdByCategoryId( $categoryId ) {
 	    $STH = $this->db->prepare( "SELECT ProductDescriptionId FROM ProductDescriptions WHERE CategoryId = $categoryId" );
 	    $STH->execute();

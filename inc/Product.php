@@ -13,6 +13,18 @@
 	public function __construct(){
 	}
 	
+	public function disable() {
+		$dao = ProductDao::GetInstance();
+		$dao->disableProduct( $this->id );
+		$this->status = false;
+	}
+	
+	public static function ReplaceActiveProduct( $productDescription, $price ) {
+		$dao = ProductDao::GetInstance();
+		$dao->disableProductFromProductDescriptionID( $productDescription->id );
+		return Product::CreateProduct( $productDescription, $price );
+	}
+	
 	public static function CreateProduct( $productDescription, $price ) {
 	    $dao = ProductDao::GetInstance();
 	    $now = new DateTime( 'now' );
@@ -48,7 +60,7 @@
 		$dao = ProductDao::GetInstance();
 		$data = $dao->getActiveProducts();
 		foreach ( $data as &$value ) {
-			array_push( $array, Product::NewProductByData( $data ) );
+			array_push( $array, Product::NewProductByData( $value ) );
 		}
 		
 		return $array;
@@ -59,6 +71,7 @@
 		$data = $dao->getEnabledProductByProductDescriptionId( $pid );
 		return Product::GetProduct( $data );
 	}
+	
 	
     }
 
