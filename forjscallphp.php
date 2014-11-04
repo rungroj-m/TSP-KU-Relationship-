@@ -180,12 +180,11 @@ if (isset($_POST["submit"])) {
 		include_once ('inc/InventoryDao.php');
 		$brand = Brand::CreateBrand($_POST['brand']);
 		$category = Category::CreateCategory($_POST['category']);
-		echo("before ProductDesc".$brand->id);
 		$productDesc = ProductDescription::CreateProductDescription( $category, $brand, $_POST['desc'], $_POST['code'], explode(',', $_POST['tag']), $_POST['name']);
 		ProductDescription::AddImages($productDesc->id, array( $_POST['image'] ));
 		Product::CreateProduct($productDesc, $_POST['price']);
-		echo ">".Inventory::addProduct($product, $_POST['quan'])."<";
-		echo ("Product Added".Inventory::getQuntity($product->id));
+		Inventory::addProduct($product, $_POST['quan']);
+		echo ("Product Added");
 	}
 	if ($_POST["submit"] == "edit") {
 	
@@ -197,17 +196,16 @@ if (isset($_POST["submit"])) {
 		include_once ('inc/InventoryDao.php');
 		
 		$id = $_POST["id"];
-		echo ("getname".$_POST['name']);
-		Product::ReplaceActiveProduct($productdescs, $_POST["price"]);
 		Inventory::addProduct($id, $_POST["quan"] - Inventory::getQuntity($id));
 		$productdescs = ProductDescription::GetProductDescription($id);
+//		Product::ReplaceActiveProduct($productdescs, $_POST["price"]);
 		$productdescs -> productName = $_POST["name"];
 		$productdescs -> modelCode = $_POST["code"];
 		$productdescs -> description = $_POST["desc"];
-		$productdescs -> images = $_POST["image"];
-		$productdescs -> category = Category::CreateCategory($_POST["category"]) -> id;
-		$productdescs -> additionTags = $_POST["tag"];
-		$productdescs -> brand = Brand::CreateBrand($_POST["brand"]) -> id;
+		$productdescs -> images = array($_POST["image"]);
+		$productdescs -> category = Category::CreateCategory($_POST["category"]);
+		$productdescs -> additionTags = array($_POST["tag"]);
+		$productdescs -> brand = Brand::CreateBrand($_POST["brand"]);
 		$productdescs -> updateData();
 		echo ("Product Edited");
 	}

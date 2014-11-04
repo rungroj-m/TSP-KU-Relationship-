@@ -21,6 +21,7 @@
 	}
 	
 	public function addInventory( $pid, $amount ) {
+	    echo($amount);
 	    $STH = $this->db->prepare("INSERT INTO `InventoryTransactions`( `DateTime`, `ProductId`, `Quantity`, `Deposition` ) VALUES ( NOW(), :pid, :quantity, 1)" );
 	    $STH->bindParam(':pid', $pid );
 	    $STH->bindParam(':quantity', $amount );

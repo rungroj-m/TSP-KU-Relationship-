@@ -25,7 +25,7 @@
 	public function addProductDescriptionImages( $pdid, $images ) {
 	    $val = "";
 	    foreach ( $images as &$value ) {
-+		$val .= "( $pdid , '$value' ),";
+			$val .= "( $pdid , '$value' ),";
  	    }
 	    $val = substr($val, 0, -1);
 	    $STH = $this->db->prepare(  "INSERT INTO `ProductImages`(`ProductDescriptionId`, `ImageAddress`) VALUES $val" );
@@ -297,11 +297,11 @@
     }
     
  
-    require_once('Product.php');
+//     require_once('Product.php');
     require_once('ProductDescription.php');
     require_once('DataInfo.php');
     require_once('Brand.php');
     require_once('Category.php');
     require_once('InventoryDao.php');
-    require_once('Inventory.php');
+//     require_once('Inventory.php');
 ?>

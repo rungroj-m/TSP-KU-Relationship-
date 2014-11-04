@@ -37,11 +37,10 @@ require_once ('inc/ProductDao.php');
 		
 		
 		global $product_str;
-		echo("quan");
+		
 		$quan = Inventory::getQuntity($product->id);
-		echo("before".$quan);
-//		$cate = Category::GetCategory({$productdescs->category->value});
-		echo("after");
+		$tag_str = implode(", ", $productdescs->getTags());
+		
 		$product_str = "
 				$(\"#name\").val(\"{$productdescs->productName}\");
 				$(\"#code\").val(\"{$productdescs->modelCode}\");
@@ -49,7 +48,7 @@ require_once ('inc/ProductDao.php');
 				$(\"#desc\").code(replaceDoubleQuote('{$productdescs->description}'));
 				$(\"#image\").val(\"{$productdescs->images[0]}\");
 				$(\"#category\").val(\"{$productdescs->category->value}\");
-				$(\"#tag\").val(\"{$productdescs->get\");
+				$(\"#tag\").val(\"$tag_str\");
 				$(\"#quan\").val(\"$quan\");
 				$(\"#brand\").val(\"{$productdescs->brand->value}\");
 		";
