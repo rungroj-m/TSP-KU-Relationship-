@@ -32,6 +32,11 @@
 	    return $instance;
 	}
 	
+	public function addImages( $imageAddressArray ) {
+	    $dao = ProductDao::GetInstance();
+	    $dao->addProductDescriptionImages( $this->id, $imageAddressArray );
+	}
+	
 	public function updateData() {
 	    $dao = ProductDao::GetInstance();
 	    echo ("x" .$this->productName);
@@ -82,11 +87,6 @@
 	public static function SearchByTags ( $stringArray ) {
 	    $dao = ProductDao::GetInstance();
 	    return $dao->findProductDescriptionByTags( $stringArray );
-	}
-	
-	public static function AddImages ( $productDescriptionId, $imageAddressArray ) {
-	    $dao = ProductDao::GetInstance();
-	    $dao->addProductDescriptionImages( $productDescriptionId, $imageAddressArray );
 	}
     }
 

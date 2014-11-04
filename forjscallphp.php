@@ -151,12 +151,18 @@ function createProductBoxForInventory($product) {
 	$productName = $product->productDescription->productName;
 	$price = $product->price;
 	
-	
+	$images = $product->productDescription->images;
+	$coverImage;
+	if ( $images == null || count ( $images ) < 1 ) {
+		$coverImage = 'image/logo.png';
+	} else {
+		$coverImage = $product->productDescription->images[0];
+	}
 	echo "
 	<div class=\"thumbnail\" style=\"box-shadow: 2px 2px 5px #cccccc; width: 200px; height: 250px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
 
 		<!-- May change link of pic to product desc page -->
-		<img style=\"width: 180px; height: 180px; background-color: white; border-radius: 3px;\" src=\"{$product->productDescription->images[0]}\">
+		<img style=\"width: 180px; height: 180px; background-color: white; border-radius: 3px;\" src=\"{$coverImage}\">
 	
 		<div id=\"name\">$productName</div>
 	
@@ -181,9 +187,9 @@ if (isset($_POST["submit"])) {
 		$brand = Brand::CreateBrand($_POST['brand']);
 		$category = Category::CreateCategory($_POST['category']);
 		$productDesc = ProductDescription::CreateProductDescription( $category, $brand, $_POST['desc'], $_POST['code'], explode(',', $_POST['tag']), $_POST['name']);
-		ProductDescription::AddImages($productDesc->id, array( $_POST['image'] ));
-		Product::CreateProduct($productDesc, $_POST['price']);
-		Inventory::addProduct($product, $_POST['quan']);
+		$productDesc->addImages( array( $_POST['image'] ) );
+		$product = Product::CreateProduct($productDesc, $_POST['price']);
+		Inventory::addProduct($product, $_POST['quan'] );
 		echo ("Product Added");
 	}
 	if ($_POST["submit"] == "edit") {

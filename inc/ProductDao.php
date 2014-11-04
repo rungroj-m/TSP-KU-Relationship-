@@ -5,8 +5,8 @@
     class ProductDao {
     	
     	private $host="localhost";
-    	private $user = "tsp";
-    	private $password="HAUTujja6LAwr2f8";
+    	private $user = "benzsuankularb";
+    	private $password="benzsk130";
     	private $database="ecomerce";
     	
 	protected $db;
