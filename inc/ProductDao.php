@@ -303,6 +303,5 @@
     require_once('Brand.php');
     require_once('Category.php');
     require_once('InventoryDao.php');
-    
-    
+    require_once('Inventory.php');
 ?>
