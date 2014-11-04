@@ -40,14 +40,32 @@
 	
 	function addProductDescription( $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $AdditionTags, $CreateDate ) {
 	    $STH = $this->db->prepare("insert into `ProductDescriptions`( `CategoryId`, `BrandId`, `ProductName`, `ModelCode`, `Description`, `CreateDate` ) values ( ?,?,?,?,?,? );");
-	    $STH->execute( array( $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $CreateDate ) );
+	    $STH->execute( array( $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $CreateDate->format('Y-m-d H:i:s') ) );
 	    $id = $this->db->lastInsertId();
+	    $this->arrangeTag( $Pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $AdditionTags );
+	    
+	    return $id;
+	}
 	
+	function editProductDescription( $pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $AdditionTags, $CreateDate ) {
+	    $STH = $this->db->prepare("update `ProductDescriptions` set `CategoryId` = :cid, `BrandId` = :bid, `ProductName` = :pn, `ModelCode` = :mc, `CreateDate` = :cd where `ProductDescriptionId`=:id" );
+	    $STH->bindParam(':id', $pdid );
+	    $STH->bindParam(':cid', $CategoryId );
+	    $STH->bindParam(':bid', $BrandId );
+	    $STH->bindParam(':pn', $ProductName );
+	    $STH->bindParam(':mc', $ModelCode );
+	    $STH->bindParam(':cd', $CreateDate->format('Y-m-d H:i:s') );
+	    $STH->execute();
+	    $this->removeProductDescriptionTag( $id );
+	    $this->arrangeTag( $pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $AdditionTags );
+	    return $id;
+	}
+	
+	private function arrangeTag( $Pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $AdditionTags ) {
 	    $tagIdArray = $this->addTags( array( $this->getCategoryById( $CategoryId ), $this->getBrandById( $BrandId ), $ProductName, $ModelCode ) );
 	    $this->addProductDescriptionTagId( $id, $tagIdArray );
 	    $addtionTagIdArray = $this->addTags( $AdditionTags );
-	    $this->addAdditionProductDescriptionTagId( $id, $addtionTagIdArray );
-	    return $id;
+	    $this->addAdditionProductDescriptionTagId( $Pdid, $addtionTagIdArray );
 	}
 	
 	function addProduct( $ProductDescriptionId, $Price, $CreateDate, $Status ) {
