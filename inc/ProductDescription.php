@@ -36,6 +36,15 @@
 	    $dao->editProductDescription( $this->id, $this->category->id, $this->brand->id, $this->productName, $this->modelCode, $this->description , $this->additionTags, $this->createDate->format('Y-m-d H:i:s') );
 	}
 	
+	public function getTags() {
+	    $result = array();
+	    $data = ProductDao::GetInstance()->getTagsByProductDescriptionId( $this->id );
+	    foreach( $data as &$val ) {
+		array_push( $result, $val['Key'] );
+	    }
+	    return $result;
+	}
+	
 	public static function GetProductDescription( $pdid ) {
 	    $dao = ProductDao::GetInstance();
 	    $data = $dao->getProductDescriptionById( $pdid );
