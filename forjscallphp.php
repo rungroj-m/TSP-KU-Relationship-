@@ -171,7 +171,7 @@ function createProductBoxForInventory($product) {
 
 if (isset($_POST["submit"])) {
 	if ($_POST["submit"] == "add") {
-		
+		echo("test");
 		include_once ('inc/Product.php');
 		include_once ('inc/ProductDescription.php');
 		include_once ('inc/Category.php');
@@ -180,12 +180,12 @@ if (isset($_POST["submit"])) {
 		include_once ('inc/InventoryDao.php');
 		$brand = Brand::CreateBrand($_POST['brand']);
 		$category = Category::CreateCategory($_POST['category']);
+		echo("before ProductDesc".$brand->id);
 		$productDesc = ProductDescription::CreateProductDescription( $category, $brand, $_POST['desc'], $_POST['code'], explode(',', $_POST['tag']), $_POST['name']);
 		ProductDescription::AddImages($productDesc->id, array( $_POST['image'] ));
 		Product::CreateProduct($productDesc, $_POST['price']);
-		echo($product ." ". $_POST['quan']);
-		Inventory::addProduct($product, $_POST['quan']);
-		echo ("Product Added");
+		echo ">".Inventory::addProduct($product, $_POST['quan'])."<";
+		echo ("Product Added".Inventory::getQuntity($product->id));
 	}
 	if ($_POST["submit"] == "edit") {
 	
@@ -197,18 +197,18 @@ if (isset($_POST["submit"])) {
 		include_once ('inc/InventoryDao.php');
 		
 		$id = $_POST["id"];
-		
-		Product::ReplaceActiveProduct($productdescs, $_POST["price"]);
+		echo ("getname".$_POST['name']);
 		Product::ReplaceActiveProduct($productdescs, $_POST["price"]);
 		Inventory::addProduct($id, $_POST["quan"] - Inventory::getQuntity($id));
 		$productdescs = ProductDescription::GetProductDescription($id);
-		$productdescs -> name = $_POST["name"];
-		$productdescs -> modelcode = $_POST["code"];
+		$productdescs -> productName = $_POST["name"];
+		$productdescs -> modelCode = $_POST["code"];
 		$productdescs -> description = $_POST["desc"];
 		$productdescs -> images = $_POST["image"];
-		$productdescs -> category = Brand::CreateBrand($_POST["category"]) -> id;
+		$productdescs -> category = Category::CreateCategory($_POST["category"]) -> id;
 		$productdescs -> additionTags = $_POST["tag"];
 		$productdescs -> brand = Brand::CreateBrand($_POST["brand"]) -> id;
+		$productdescs -> updateData();
 		echo ("Product Edited");
 	}
 	

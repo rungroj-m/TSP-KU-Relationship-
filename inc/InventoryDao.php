@@ -3,8 +3,8 @@
     class InventoryDao {
     	
     	private $host="localhost";
-    	private $user = "benzsuankularb";
-    	private $password="benzsk130";
+    	private $user = "tsp";
+    	private $password="HAUTujja6LAwr2f8";
     	private $database="ecomerce";
     	
 	protected $db;

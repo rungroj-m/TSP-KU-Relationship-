@@ -21,27 +21,36 @@ require_once ('inc/ProductDao.php');
 
 <?php
 
-	$product;
+	$product_str;
 	
 	if (isset($_GET["id"])) {
 		require_once ('inc/Product.php');
 		require_once ('inc/ProductDescription.php');
 		require_once ('inc/Category.php');
 		require_once ('inc/Brand.php');
-	
+		require_once ('inc/Inventory.php');
 		$product = Product::GetProduct($_GET["id"]);
+		
+		print_r($product);
+		
 		$productdescs = $product->productDescription;
 		
-		global $product;
 		
-		$product = "
+		global $product_str;
+		echo("quan");
+		$quan = Inventory::getQuntity($product->id);
+		echo("before".$quan);
+//		$cate = Category::GetCategory({$productdescs->category->value});
+		echo("after");
+		$product_str = "
 				$(\"#name\").val(\"{$productdescs->productName}\");
 				$(\"#code\").val(\"{$productdescs->modelCode}\");
 				$(\"#price\").val(\"{$product->price}\");
 				$(\"#desc\").code(replaceDoubleQuote('{$productdescs->description}'));
+				$(\"#image\").val(\"{$productdescs->images[0]}\");
 				$(\"#category\").val(\"{$productdescs->category->value}\");
-				$(\"#tag\").val(\"{$productdescs->additiontag}\");
-				$(\"#quan\").val(\"0\");
+				$(\"#tag\").val(\"{$productdescs->get\");
+				$(\"#quan\").val(\"$quan\");
 				$(\"#brand\").val(\"{$productdescs->brand->value}\");
 		";
 	}
@@ -115,7 +124,7 @@ Brand:
 	<tr>
 		<?php
 			if (isset($_GET["id"])) {
-				echo "<th><button type=\"button\" class=\"btn btn-info\" id=\"button-save\" style=\"width: 100%\">Save</button></th>";
+				echo "<th><button type=\"button\" class=\"btn btn-info\" id=\"button-save\" val=\"{$_GET["id"]}\"style=\"width: 100%\">Save</button></th>";
 			}
 			else {
 				echo "<th><button type=\"button\" class=\"btn btn-success\" id=\"button-add\" style=\"width: 100%\">Add</button></th>";
@@ -167,7 +176,7 @@ Brand:
 			url: 'forjscallphp.php',
 			type: "POST",
 			data: {"submit":"edit",
-				"id": $_GET["id"],
+				"id": $("#button-save").attr("val"),
 				"name": $("#name").val(),
 				"code": $("#code").val(),
 				"price": $("#price").val(),
@@ -189,7 +198,7 @@ Brand:
 			  minHeight: 300,
 			  maxHeight: 300,
 			  oninit: function() {
-				<?php global $product; echo $product; ?>
+				<?php global $product_str; echo $product_str; ?>
 			  }
 		});
 	});
