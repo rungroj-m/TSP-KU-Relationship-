@@ -211,4 +211,35 @@ if (isset($_POST["get_product_detail_by_id"])) {
 
 }
 
+if (isset($_POST["sign_up"])) {
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/Customer.php');
+	
+	$result = Customer::CreateCustomer($_POST["firstname"], $_POST["lastname"], $_POST["email"], $_POST["password"]);
+	echo "
+	{
+		\"id\" : {$result->id},
+		\"username\" : \"{$result->username}\",
+		\"firstname\" : \"{$result->firstName}\",
+		\"lastname\" : \"{$result->lastName}\"
+	}";
+}
+
+if (isset($_POST["sign-in"])) {
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/Customer.php');
+	
+	$result = Customer::Authenticate($_POST["email"], $_POST["password"]);
+	echo "
+	{
+		\"id\" : {$result->id},
+		\"username\" : \"{$result->username}\",
+		\"firstname\" : \"{$result->firstName}\",
+		\"lastname\" : \"{$result->lastName}\"
+	}";
+}
+
+
+
+
 
