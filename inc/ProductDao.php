@@ -5,8 +5,8 @@
     class ProductDao {
     	
     	private $host="localhost";
-    	private $user = "tsp";
-    	private $password="hz5qMQ7cPDd2pXyv";
+    	private $user = "benzsuankularb";
+    	private $password="benzsk130";
     	private $database="ecomerce";
     	
 	protected $db;
@@ -40,9 +40,9 @@
 	
 	function addProductDescription( $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $AdditionTags, $CreateDate ) {
 	    $STH = $this->db->prepare("insert into `ProductDescriptions`( `CategoryId`, `BrandId`, `ProductName`, `ModelCode`, `Description`, `CreateDate` ) values ( ?,?,?,?,?,? );");
-	    $STH->execute( array( $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $CreateDate->format('Y-m-d H:i:s') ) );
+	    $STH->execute( array( $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $CreateDate ) );
 	    $id = $this->db->lastInsertId();
-	    $this->arrangeTag( $Pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $AdditionTags );
+	    $this->arrangeTag( $id, $CategoryId, $BrandId, $ProductName, $ModelCode, $AdditionTags );
 	    
 	    return $id;
 	}
@@ -54,7 +54,7 @@
 	    $STH->bindParam(':bid', $BrandId );
 	    $STH->bindParam(':pn', $ProductName );
 	    $STH->bindParam(':mc', $ModelCode );
-	    $STH->bindParam(':cd', $CreateDate->format('Y-m-d H:i:s') );
+	    $STH->bindParam(':cd', $CreateDate );
 	    $STH->execute();
 	    $this->removeProductDescriptionTag( $id );
 	    $this->arrangeTag( $pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $AdditionTags );
@@ -63,7 +63,7 @@
 	
 	private function arrangeTag( $Pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $AdditionTags ) {
 	    $tagIdArray = $this->addTags( array( $this->getCategoryById( $CategoryId ), $this->getBrandById( $BrandId ), $ProductName, $ModelCode ) );
-	    $this->addProductDescriptionTagId( $id, $tagIdArray );
+	    $this->addProductDescriptionTagId( $Pdid, $tagIdArray );
 	    $addtionTagIdArray = $this->addTags( $AdditionTags );
 	    $this->addAdditionProductDescriptionTagId( $Pdid, $addtionTagIdArray );
 	}
@@ -302,6 +302,7 @@
     require_once('DataInfo.php');
     require_once('Brand.php');
     require_once('Category.php');
+    require_once('InventoryDao.php');
     
     
 ?>
