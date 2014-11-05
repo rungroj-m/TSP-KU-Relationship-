@@ -47,15 +47,15 @@
 	    return $id;
 	}
 	
-	function editProductDescription( $pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $AdditionTags, $CreateDate ) {
-	    $STH = $this->db->prepare("update `ProductDescriptions` set `CategoryId` = :cid, `BrandId` = :bid, `ProductName` = :pn,`Description` = :des, `ModelCode` = :mc, `CreateDate` = :cd where `ProductDescriptionId`=:id" );
+	function editProductDescription( $pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $AdditionTags ) {
+	    $STH = $this->db->prepare("update `ProductDescriptions` set `CategoryId` = :cid, `BrandId` = :bid, `ProductName` = :pn,`Description` = :des, `ModelCode` = :mc where `ProductDescriptionId`=:id" );
 	    $STH->bindParam(':id', $pdid );
 	    $STH->bindParam(':cid', $CategoryId );
 	    $STH->bindParam(':bid', $BrandId );
 	    $STH->bindParam(':des', $Description );
 	    $STH->bindParam(':pn', $ProductName );
 	    $STH->bindParam(':mc', $ModelCode );
-	    $STH->bindParam(':cd', $CreateDate->format('Y-m-d H:i:s') );
+	    //$STH->bindParam(':cd', $CreateDate->format('Y-m-d H:i:s') );
 	    $STH->execute();
 	    $this->removeProductDescriptionTag( $pdid );
 	    $this->arrangeTag( $pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $AdditionTags );
