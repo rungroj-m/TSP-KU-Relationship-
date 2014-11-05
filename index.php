@@ -31,7 +31,7 @@ body {
 						        <span class="icon-bar"></span>
 						        <span class="icon-bar"></span>
 					      </button>
-					      <a class="navbar-brand" href="?page=index">Ku Realtionship</a>
+					      <a class="navbar-brand" href="?page=index">Xtreme Sport Shop</a>
 				 	</div>
 					    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		      				<ul class="nav navbar-nav">

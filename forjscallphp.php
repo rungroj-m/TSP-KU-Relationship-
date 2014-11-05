@@ -1,5 +1,5 @@
 <?php
-
+// search should use search product for
 if (isset($_POST["get_product_by_category_for_shopping"])) {
 	
 	require_once ('inc/Product.php');
@@ -7,16 +7,22 @@ if (isset($_POST["get_product_by_category_for_shopping"])) {
 	require_once ('inc/Category.php');
 	require_once ('inc/Brand.php');
 	
-	$productdescs;
-	if ($_POST["get_product_by_category_for_shopping"] == "")
-		$productdescs = Product::GetAllProduct();
-	else
-		$productdescs = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_shopping"]);
-	
-	foreach ($productdescs as $p) {
-		print_r($p->id);
-		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
-		createProductBoxForShopping($product);
+	$product;
+	if ($_POST["get_product_by_category_for_shopping"] == ""){
+		$product = Product::GetAllProduct();
+	}
+// 	else{
+		
+// 		$productdesc = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_shopping"]);
+// 		foreach($productdesc as $pdesc){
+// 			array_push($product,Product::GetEnabledProductByProductDescriptionId($pdesc->$pid));
+// 		}
+//	}
+	foreach ($product as $p) {
+// 		echo("test");
+// 		print_r($p);
+//		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
+		createProductBoxForShopping($p);
 	}
 	
 }
@@ -28,16 +34,15 @@ if (isset($_POST["get_product_by_category_for_inventory"])) {
 	require_once ('inc/Category.php');
 	require_once ('inc/Brand.php');
 
-	$productdescs;
+	$product;
 	if ($_POST["get_product_by_category_for_inventory"] == "")
-		$productdescs = Product::GetAllProduct();
-	else
-		$productdescs = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_inventory"]);
+		$product = Product::GetAllProduct();
+// 	else
+// 		$productdescs = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_inventory"]);
 	
 
-	foreach ($productdescs as $p) {
-		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
-		createProductBoxForInventory($product);
+	foreach ($product as $p) {
+		createProductBoxForInventory($p);
 	}
 
 }
@@ -78,7 +83,7 @@ if (isset($_POST["search_product_for_shopping"])) {
 
 	foreach ($productdescs as $p) {
 		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
-		createProductBoxForInventory($product);
+		createProductBoxForShopping($product);
 	}
 }
 
@@ -128,8 +133,9 @@ function createProductBoxForShopping($product) {
 	$price = $product->price;
 	
 	echo "
+			
 	<div class=\"thumbnail\" style=\"box-shadow: 2px 2px 5px #cccccc; width: 200px; height: 250px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
-	
+	$productName
 	   	<a href=\"?page=detail&id=$productId\">
 	   		<!-- May change link of pic to product desc page -->
 	   		<img style=\"width: 180px; height: 180px; background-color: white; border-radius: 3px;\" src=\"{$product->productDescription->images[0]}\">
@@ -213,6 +219,8 @@ if (isset($_POST["submit"])) {
 		$productdescs -> additionTags = array($_POST["tag"]);
 		$productdescs -> brand = Brand::CreateBrand($_POST["brand"]);
 		$productdescs -> updateData();
+		
+		print_r($productdescs);
 		echo ("Product Edited");
 	}
 	
@@ -231,6 +239,12 @@ if (isset($_POST["get_product_detail_by_id"])) {
 	$productdescs = $product->productDescription;
 	$quan = Inventory::getQuntity($product->id);
 	$desc = str_replace('"', '\"', $productdescs->description);
+	
+// 	print_r($product);
+// 	print_r($productdescs);
+// 	print_r($quan);
+// 	echo($desc);
+	
 	echo "
 	{
 		\"id\" : {$_POST["get_product_detail_by_id"]},
