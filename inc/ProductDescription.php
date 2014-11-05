@@ -40,7 +40,7 @@
 	public function updateData() {
 	    $dao = ProductDao::GetInstance();
 	    echo ("x" .$this->productName);
-	    $dao->editProductDescription( $this->id, $this->category->id, $this->brand->id, $this->productName, $this->modelCode, $this->description , $this->additionTags, $this->createDate->format('Y-m-d H:i:s') );
+	    $dao->editProductDescription( $this->id, $this->category->id, $this->brand->id, $this->productName, $this->modelCode, $this->description , $this->additionTags );
 	    echo ("y" .$this->productName);
 	}
 	
