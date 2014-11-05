@@ -55,11 +55,11 @@
 	    $STH->bindParam(':des', $Description );
 	    $STH->bindParam(':pn', $ProductName );
 	    $STH->bindParam(':mc', $ModelCode );
-	    $STH->bindParam(':cd', $CreateDate );
+	    $STH->bindParam(':cd', $CreateDate->format('Y-m-d H:i:s') );
 	    $STH->execute();
-	    $this->removeProductDescriptionTag( $id );
+	    $this->removeProductDescriptionTag( $pdid );
 	    $this->arrangeTag( $pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $AdditionTags );
-	    return $id;
+	    return $pdid;
 	}
 	
 	private function arrangeTag( $Pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $AdditionTags ) {
@@ -298,7 +298,7 @@
     }
     
  
-//     require_once('Product.php');
+    //require_once('Product.php');
     require_once('ProductDescription.php');
     require_once('DataInfo.php');
     require_once('Brand.php');
