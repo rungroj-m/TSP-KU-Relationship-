@@ -48,10 +48,11 @@
 	}
 	
 	function editProductDescription( $pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $AdditionTags, $CreateDate ) {
-	    $STH = $this->db->prepare("update `ProductDescriptions` set `CategoryId` = :cid, `BrandId` = :bid, `ProductName` = :pn, `ModelCode` = :mc, `CreateDate` = :cd where `ProductDescriptionId`=:id" );
+	    $STH = $this->db->prepare("update `ProductDescriptions` set `CategoryId` = :cid, `BrandId` = :bid, `ProductName` = :pn,`Description` = :des, `ModelCode` = :mc, `CreateDate` = :cd where `ProductDescriptionId`=:id" );
 	    $STH->bindParam(':id', $pdid );
 	    $STH->bindParam(':cid', $CategoryId );
 	    $STH->bindParam(':bid', $BrandId );
+	    $STH->bindParam(':des', $Description );
 	    $STH->bindParam(':pn', $ProductName );
 	    $STH->bindParam(':mc', $ModelCode );
 	    $STH->bindParam(':cd', $CreateDate );
