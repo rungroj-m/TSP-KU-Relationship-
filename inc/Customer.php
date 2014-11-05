@@ -33,6 +33,10 @@
 	    $dao = CustomerDao::GetInstance();
 	    $data = $dao->getCustomer( $dao->authCustomer( $username, $password ) );
 	    
+	    return Customer::dataToCustomer( $data );
+	}
+	
+	private static function dataToCustomer( $data ){
 	    $result = new self();
 	    $result->id = $data['CustomerId'];
 	    $result->firstName = $data['FirstName'];
@@ -52,5 +56,11 @@
 	    $result->username = $username;
 	    return $result;
 	}
+	
+	public static function GetCustomer( $customerId ) {
+	    $dao = CustomerDao::GetInstance();
+	    $data = $dao->getCustomer( $customerId );
+	    return Customer::dataToCustomer( $data );
+    	}
     }
 ?>
