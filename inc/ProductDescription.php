@@ -65,6 +65,7 @@
 	    $instance->modelCode = $data['ModelCode'];
 	    $instance->description = $data['Description'];
 	    $instance->createDate = new DateTime( $data['CreateDate'] );
+	    $instance->additionTags = $data['AdditionalTags'];
 	    
 	    $data = $dao->getImagesByProductDescriptionId( $pdid );
 	    $instance->images = array();

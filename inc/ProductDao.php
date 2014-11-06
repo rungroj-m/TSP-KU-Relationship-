@@ -5,8 +5,8 @@
     class ProductDao {
     	
     	private $host="localhost";
-    	private $user = "tsp";
-    	private $password="tsp";
+    	private $user = "benzsuankularb";
+    	private $password="benzsk130";
     	private $database="ecomerce";
     	
 	protected $db;
@@ -137,6 +137,13 @@
 	    $STH->bindParam(':id', $pdid );
 	    $STH->execute();
 	    $result = $STH->fetch();
+	    
+	    $data = $this->getAdditionTagByProductDescriptionId( $pdid );
+	    $arr = array();
+	    foreach( $data as &$val ) {
+		array_push( $arr , $val['Key'] );
+	    }
+	    $result['AdditionalTags'] = $arr;
 	    return $result;
 	}
 	
@@ -225,6 +232,15 @@
 	    return $returnArray;
 	}
 	
+	//public function 
+	
+	private function getAdditionTagByProductDescriptionId ( $pdid ) {
+	    $STH = $this->db->prepare( "SELECT * FROM AdditionProductDescriptionTags AT JOIN Tags T ON T.Tagid = AT.TagId WHERE ProductDescriptionId = :pdid" );
+	    $STH->bindParam(':pdid', $pdid );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
 	public function getTagsByProductDescriptionId( $pdid ) {
 	    $STH = $this->db->prepare( "SELECT TG.Key
 		FROM ( SELECT * FROM AdditionProductDescriptionTags UNION SELECT * FROM ProductDescriptionTags ) TK
@@ -305,4 +321,7 @@
     require_once('Category.php');
     require_once('InventoryDao.php');
 //     require_once('Inventory.php');
+
+    //$p = ProductDescription::CreateProductDescription( Category::CreateCategory('Cat1' ), Brand::CreateBrand('Brand1'), 'tag1', 'tag2', array( 'atag1', 'atag2' ), 'fuck' );
+    print_r( ProductDescription::GetProductDescription( 10 ) );
 ?>
