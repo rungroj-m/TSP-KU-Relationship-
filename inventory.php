@@ -6,12 +6,12 @@
 			<button type="button" id="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%">
 				<qq>Category</qq> <span class="caret"></span>
 			</button>
-			<ul class="dropdown-menu" id="category-dropdown"style="background-color: black" role="menu">
-				<li><a style = "color: white">All</a></li>
-				<li><a style = "color: white">Shirt</a></li>
-			    <li><a style = "color: white">Equipment</a></li>
-			    <li><a style = "color: white">Balls</a></li>
-			    <li><a style = "color: white">Forbidden stuffs</a></li>
+			<ul class="dropdown-menu" id="category-dropdown" role="menu" style="width: 100%">
+				<li><a>Clothes</a></li>
+			    <li><a>Equipments</a></li>
+			    <li><a>Balls</a></li>
+			    <li><a>Others</a></li>
+			    <li><a>All</a></li>
 			</ul>
 		</div>      
 	</div> 
@@ -57,14 +57,14 @@
 
 <!-- Add Product popup -->
 <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-	<div class="modal-dialog">
+	<div class="modal-dialog" style="width: 950px">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 				<h4 class="modal-title" id="myModalLabel">Add Product</h4>
 			</div>
 			<div class="modal-body">
-				<iframe id="frame" src="" frameborder="0" style="width: 550px; height: 525px"></iframe>
+				<iframe id="frame" src="" frameborder="0" style="width: 100%; height: 500px"></iframe>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -103,14 +103,16 @@
 	});
 	
 	$("#category-dropdown li").click(function() {
-		alert("choose catagory should refresh product list below immediately");
 		$("#dropdown qq").text($(this).text());
+		search();
 	});
 
 	$("#search-box").keypress(function(event) {
 		// 13 means ENTER
 		if (event.which == 13) {
 			search();
+			var input = $("#search-box")
+
 		}
 	});
 	

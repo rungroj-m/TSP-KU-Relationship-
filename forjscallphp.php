@@ -48,7 +48,6 @@ if (isset($_POST["get_product_by_category_for_inventory"])) {
 }
 
 if (isset($_POST["search_product_for_shopping"])) {
-	
 	require_once ('inc/Product.php');
 	require_once ('inc/ProductDescription.php');
 	require_once ('inc/Category.php');
@@ -56,31 +55,29 @@ if (isset($_POST["search_product_for_shopping"])) {
 	
 	$cat = $_POST["category"];
 	$str = $_POST["search_product_for_shopping"];
+	$productdescs = array();
 	if($str == ""){
 		if($cat == "Category" || $cat == "All") {
-			echo(1);
-			$productdescs = Product::GetAllProduct();
+			$product = Product::GetAllProduct();
+			foreach ($product as $p){
+				array_push($productdescs, $p->productDescription);
+			}
 		}
 		else{
-			echo(2);
-				$productdescs = ProductDescription::SearchByTags( array($cat) );
-			}
+			$productdescs = ProductDescription::SearchByTags( array($cat) );
+		}
 	}
 	else{
 		$str = explode(",", $str);
 		if(!($cat == "Category" || $cat == "All")) {
-			echo(3);	
 			array_push($str, $cat);
-			echo($str);
 			$productdescs = ProductDescription::SearchByTags( $str );
 		}
 		else {
-			echo(4);
 			$productdescs = ProductDescription::SearchByTags( $str );
 		}
 	}
 	
-
 	foreach ($productdescs as $p) {
 		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
 		createProductBoxForShopping($product);
@@ -96,26 +93,26 @@ if (isset($_POST["search_product_for_inventory"])) {
 
 	$cat = $_POST["category"];
 	$str = $_POST["search_product_for_inventory"];
+	$productdescs = array();
 	if($str == ""){
 		if($cat == "Category" || $cat == "All") {
-			echo(1);
-			$productdescs = Product::GetAllProduct();
+			$product = Product::GetAllProduct();
+			foreach ($product as $p){
+				array_push($productdescs, $p->productDescription);
+			}
+				
 		}
 		else{
-			echo(2);
 			$productdescs = ProductDescription::SearchByTags( array($cat) );
 		}
 	}
 	else{
 		$str = explode(",", $str);
 		if(!($cat == "Category" || $cat == "All")) {
-			echo(3);
 			array_push($str, $cat);
-			echo($str);
 			$productdescs = ProductDescription::SearchByTags( $str );
 		}
 		else {
-			echo(4);
 			$productdescs = ProductDescription::SearchByTags( $str );
 		}
 	}
@@ -128,24 +125,33 @@ if (isset($_POST["search_product_for_inventory"])) {
 }
 
 function createProductBoxForShopping($product) {
+	if (!($product -> id))
+		return "";
+	require_once ('inc/Inventory.php');
+	include_once ('inc/InventoryDao.php');
+	
 	$productId = $product->id;
 	$productName = $product->productDescription->productName;
 	$price = $product->price;
+	$imageLen = count($product->productDescription->images);
+	$maxQuan = Inventory::getQuntity($productId);
+	
+	$buttonStatus = $maxQuan > 0 ? "" : "disabled";
 	
 	echo "
 			
-	<div class=\"thumbnail\" style=\"box-shadow: 2px 2px 5px #cccccc; width: 200px; height: 250px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
-	$productName
+	<div class=\"thumbnail\" style=\"box-shadow: 2px 2px 5px #cccccc; width: 200px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
+	
 	   	<a href=\"?page=detail&id=$productId\">
 	   		<!-- May change link of pic to product desc page -->
-	   		<img style=\"width: 180px; height: 180px; background-color: white; border-radius: 3px;\" src=\"{$product->productDescription->images[0]}\">
+	   		<img style=\"width: 180px; height: 180px; background-color: white; border-radius: 3px;\" src=\"{$product->productDescription->images[$imageLen-1]}\">
 	  
 			<div id=\"name\">$productName</div>
 		</a>
 	
 		<div id=\"price\">&#3647;$price</div>
 	
-		<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price, 1);\">ADD</button>
+		<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price, 1, $maxQuan);\" $buttonStatus>ADD</button>
 	</div>
 
 	";
@@ -153,19 +159,23 @@ function createProductBoxForShopping($product) {
 }
 
 function createProductBoxForInventory($product) {
+	if (!($product -> id))
+		return "";
 	$productId = $product->id;
 	$productName = $product->productDescription->productName;
 	$price = $product->price;
 	
 	$images = $product->productDescription->images;
+	$imageLen = count($product->productDescription->images);
+	
 	$coverImage;
 	if ( $images == null || count ( $images ) < 1 ) {
 		$coverImage = 'image/logo.png';
 	} else {
-		$coverImage = $product->productDescription->images[0];
+		$coverImage = $product->productDescription->images[$imageLen-1];
 	}
 	echo "
-	<div class=\"thumbnail\" style=\"box-shadow: 2px 2px 5px #cccccc; width: 200px; height: 250px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
+	<div class=\"thumbnail\" style=\"box-shadow: 2px 2px 5px #cccccc; width: 200px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
 
 		<!-- May change link of pic to product desc page -->
 		<img style=\"width: 180px; height: 180px; background-color: white; border-radius: 3px;\" src=\"{$coverImage}\">
@@ -183,7 +193,6 @@ function createProductBoxForInventory($product) {
 
 if (isset($_POST["submit"])) {
 	if ($_POST["submit"] == "add") {
-		echo("test");
 		include_once ('inc/Product.php');
 		include_once ('inc/ProductDescription.php');
 		include_once ('inc/Category.php');
@@ -196,7 +205,6 @@ if (isset($_POST["submit"])) {
 		$productDesc->addImages( array( $_POST['image'] ) );
 		$product = Product::CreateProduct($productDesc, $_POST['price']);
 		Inventory::addProduct($product, $_POST['quan'] );
-		echo ("Product Added");
 	}
 	if ($_POST["submit"] == "edit") {
 	
@@ -208,20 +216,21 @@ if (isset($_POST["submit"])) {
 		include_once ('inc/InventoryDao.php');
 		
 		$id = $_POST["id"];
-		Inventory::addProduct($id, $_POST["quan"] - Inventory::getQuntity($id));
-		$productdescs = ProductDescription::GetProductDescription($id);
-//		Product::ReplaceActiveProduct($productdescs, $_POST["price"]);
+		$product = Product::GetProduct($id);
+		$productdescs = $product->productDescription;
+		$product = Product::ReplaceActiveProduct($productdescs, $_POST["price"]);
+		Inventory::addProduct($product, $_POST["quan"]);
 		$productdescs -> productName = $_POST["name"];
 		$productdescs -> modelCode = $_POST["code"];
 		$productdescs -> description = $_POST["desc"];
-		$productdescs -> images = array($_POST["image"]);
+		$productdescs -> addImages(array($_POST["image"]));
 		$productdescs -> category = Category::CreateCategory($_POST["category"]);
-		$productdescs -> additionTags = array($_POST["tag"]);
+		$productdescs -> additionTags = explode(',', $_POST['tag']);
 		$productdescs -> brand = Brand::CreateBrand($_POST["brand"]);
 		$productdescs -> updateData();
 		
-		print_r($productdescs);
-		echo ("Product Edited");
+		//print_r($productdescs);
+		//echo ("Product Edited");
 	}
 	
 }
@@ -245,6 +254,9 @@ if (isset($_POST["get_product_detail_by_id"])) {
 // 	print_r($quan);
 // 	echo($desc);
 	
+	$tags_str = implode("\", \"", $productdescs->additionTags);
+	$imageLen = count($product->productDescription->images);
+	
 	echo "
 	{
 		\"id\" : {$_POST["get_product_detail_by_id"]},
@@ -252,9 +264,9 @@ if (isset($_POST["get_product_detail_by_id"])) {
 		\"code\" : \"{$productdescs->modelCode}\",
 		\"price\" : {$product->price},
 		\"description\" : \"{$desc}\",
-		\"image\" : \"{$product->productDescription->images[0]}\",
+		\"image\" : \"{$product->productDescription->images[$imageLen-1]}\",
 		\"category\" : \"{$productdescs->category->value}\",
-		\"tag\" : \"{$productdescs->additiontag}\",
+		\"tag\" : [\"$tags_str\"],
 		\"quantity\" : $quan,
 		\"brand\" : \"{$productdescs->brand->value}\"
 	}";
@@ -278,6 +290,8 @@ if (isset($_POST["sign_up"])) {
 if (isset($_POST["sign-in"])) {
 	require_once ('inc/CustomerDao.php');
 	require_once ('inc/Customer.php');
+	
+// 	var_dump($_POST);
 	
 	$result = Customer::Authenticate($_POST["email"], $_POST["password"]);
 	echo "

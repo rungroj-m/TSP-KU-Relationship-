@@ -31,15 +31,13 @@ require_once ('inc/ProductDao.php');
 		require_once ('inc/Inventory.php');
 		$product = Product::GetProduct($_GET["id"]);
 		
-		print_r($product);
-		
 		$productdescs = $product->productDescription;
 		
 		
 		global $product_str;
 		
 		$quan = Inventory::getQuntity($product->id);
-		$tag_str = implode(", ", $productdescs->getTags());
+		$tag_str = implode(", ", $productdescs->additionTags);
 		
 		$product_str = "
 				$(\"#name\").val(\"{$productdescs->productName}\");
@@ -72,7 +70,7 @@ Code:
 Price:
 <div class="input-group">
 	<span class="input-group-addon"><span class="glyphicon glyphicon-usd"></span></span>
-	<input type="number" class="form-control" id="price" placeholder="Number">
+	<input type="number" class="form-control" id="price" placeholder="Number" min="0">
 </div>
 
 Description:
@@ -92,11 +90,11 @@ Category:
 			<button type="button" id="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%">
 				Category <span class="caret"></span>
 			</button>
-			<ul class="dropdown-menu" id="category-dropdown"style="background-color: black" role="menu">
-				<li><a style = "color: white">Shirt</a></li>
-			    <li><a style = "color: white">Equipment</a></li>
-			    <li><a style = "color: white">Balls</a></li>
-			    <li><a style = "color: white">Forbidden stuffs</a></li>
+			<ul class="dropdown-menu" id="category-dropdown" role="menu" style="width: 100%">
+				<li><a>Clothes</a></li>
+			    <li><a>Equipments</a></li>
+			    <li><a>Balls</a></li>
+			    <li><a>Others</a></li>
 			</ul>
 		</div> 
 </div>
@@ -110,7 +108,7 @@ Tag:
 Quantity:
 <div class="input-group">
 	<span class="input-group-addon"><span class="glyphicon glyphicon-plus"></span></span>
-	<input type="number" class="form-control" id="quan" placeholder="Integer">
+	<input type="number" class="form-control" id="quan" placeholder="Integer" min="0">
 </div>
 
 Brand:
@@ -205,6 +203,10 @@ Brand:
 	function replaceDoubleQuote(str) {
 		return str.replace('"', '\\"');
 	}
+
+	$("input[type=number]").on("mousewheel", function(e) {
+	    $(this).blur(); 
+	});
 
 	
 </script>
