@@ -66,6 +66,7 @@
 	    $tagIdArray = $this->addTags( array( $this->getCategoryById( $CategoryId ), $this->getBrandById( $BrandId ), $ProductName, $ModelCode ) );
 	    $this->addProductDescriptionTagId( $Pdid, $tagIdArray );
 	    $addtionTagIdArray = $this->addTags( $AdditionTags );
+	    print_r( $addtionTagIdArray );
 	    $this->addAdditionProductDescriptionTagId( $Pdid, $addtionTagIdArray );
 	}
 	
@@ -301,12 +302,12 @@
 	}
 	
 	private function removeProductDescriptionTag( $productId ) {
-	    $this->removeItemByTable( 'ProductDescriptionTags', $productId );
-	    $this->removeItemByTable( 'AdditionProductDescriptionTags', $productId );
+	    $this->removeItemByTable( 'ProductDescriptionTags', 'ProductDescriptionId' , $productId );
+	    $this->removeItemByTable( 'AdditionProductDescriptionTags', 'ProductDescriptionId' , $productId );
 	}
 	
-	private function removeItemByTable( $table, $primaryId ) {
-	    $STH = $this->db->prepare("delete from `$table` where `$primaryId` = :id");
+	private function removeItemByTable( $table, $att ,$primaryId ) {
+	    $STH = $this->db->prepare("delete from `$table` where `$att` = :id");
 	    $STH->bindParam(':id', $primaryId);
 	    $STH->execute();
 	}
@@ -322,6 +323,6 @@
     require_once('InventoryDao.php');
 //     require_once('Inventory.php');
 
-    //$p = ProductDescription::CreateProductDescription( Category::CreateCategory('Cat1' ), Brand::CreateBrand('Brand1'), 'tag1', 'tag2', array( 'atag1', 'atag2' ), 'fuck' );
-    //print_r( ProductDescription::GetProductDescription( 10 ) );
+    $p = ProductDescription::CreateProductDescription( Category::CreateCategory('Cat1' ), Brand::CreateBrand('Brand1'), 'tag1', 'tag2', array( 'atag1', 'atag2' ), 'fuck' );
+    print_r( ProductDescription::GetProductDescription( $p->id ) );
 ?>
