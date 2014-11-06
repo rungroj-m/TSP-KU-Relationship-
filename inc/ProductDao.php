@@ -323,5 +323,5 @@
 //     require_once('Inventory.php');
 
     //$p = ProductDescription::CreateProductDescription( Category::CreateCategory('Cat1' ), Brand::CreateBrand('Brand1'), 'tag1', 'tag2', array( 'atag1', 'atag2' ), 'fuck' );
-    print_r( ProductDescription::GetProductDescription( 10 ) );
+    //print_r( ProductDescription::GetProductDescription( 10 ) );
 ?>
