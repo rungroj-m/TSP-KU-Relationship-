@@ -66,6 +66,7 @@
 	    $tagIdArray = $this->addTags( array( $this->getCategoryById( $CategoryId ), $this->getBrandById( $BrandId ), $ProductName, $ModelCode ) );
 	    $this->addProductDescriptionTagId( $Pdid, $tagIdArray );
 	    $addtionTagIdArray = $this->addTags( $AdditionTags );
+	    print_r( $addtionTagIdArray );
 	    $this->addAdditionProductDescriptionTagId( $Pdid, $addtionTagIdArray );
 	}
 	
@@ -301,12 +302,12 @@
 	}
 	
 	private function removeProductDescriptionTag( $productId ) {
-	    $this->removeItemByTable( 'ProductDescriptionTags', $productId );
-	    $this->removeItemByTable( 'AdditionProductDescriptionTags', $productId );
+	    $this->removeItemByTable( 'ProductDescriptionTags', 'ProductDescriptionId' , $productId );
+	    $this->removeItemByTable( 'AdditionProductDescriptionTags', 'ProductDescriptionId' , $productId );
 	}
 	
-	private function removeItemByTable( $table, $primaryId ) {
-	    $STH = $this->db->prepare("delete from `$table` where `$primaryId` = :id");
+	public function removeItemByTable( $table, $att ,$primaryId ) {
+	    $STH = $this->db->prepare("delete from `$table` where `$att` = :id");
 	    $STH->bindParam(':id', $primaryId);
 	    $STH->execute();
 	}
