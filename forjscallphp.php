@@ -56,25 +56,25 @@ if (isset($_POST["search_product_for_shopping"])) {
 	$cat = $_POST["category"];
 	$str = $_POST["search_product_for_shopping"];
 	$productdescs = array();
-	if($str == ""){
-		if($cat == "Category" || $cat == "All") {
+	if ($str == "") {
+		if ($cat == "Category" || $cat == "All") {
 			$product = Product::GetAllProduct();
 			foreach ($product as $p){
 				array_push($productdescs, $p->productDescription);
 			}
 		}
-		else{
-			$productdescs = ProductDescription::SearchByTags( array($cat) );
+		else {
+			$productdescs = ProductDescription::SearchByTags(array($cat));
 		}
 	}
-	else{
+	else {
 		$str = explode(",", $str);
-		if(!($cat == "Category" || $cat == "All")) {
+		if (!($cat == "Category" || $cat == "All")) {
 			array_push($str, $cat);
-			$productdescs = ProductDescription::SearchByTags( $str );
+			$productdescs = ProductDescription::SearchByTags($str);
 		}
 		else {
-			$productdescs = ProductDescription::SearchByTags( $str );
+			$productdescs = ProductDescription::SearchByTags($str);
 		}
 	}
 	
@@ -94,29 +94,27 @@ if (isset($_POST["search_product_for_inventory"])) {
 	$cat = $_POST["category"];
 	$str = $_POST["search_product_for_inventory"];
 	$productdescs = array();
-	if($str == ""){
-		if($cat == "Category" || $cat == "All") {
+	if ($str == "") {
+		if ($cat == "Category" || $cat == "All") {
 			$product = Product::GetAllProduct();
-			foreach ($product as $p){
+			foreach ($product as $p) {
 				array_push($productdescs, $p->productDescription);
-			}
-				
+			}		
 		}
 		else{
-			$productdescs = ProductDescription::SearchByTags( array($cat) );
+			$productdescs = ProductDescription::SearchByTags(array($cat));
 		}
 	}
-	else{
+	else {
 		$str = explode(",", $str);
-		if(!($cat == "Category" || $cat == "All")) {
+		if (!($cat == "Category" || $cat == "All")) {
 			array_push($str, $cat);
-			$productdescs = ProductDescription::SearchByTags( $str );
+			$productdescs = ProductDescription::SearchByTags($str);
 		}
 		else {
-			$productdescs = ProductDescription::SearchByTags( $str );
+			$productdescs = ProductDescription::SearchByTags($str);
 		}
 	}
-
 
 	foreach ($productdescs as $p) {
 		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
@@ -140,13 +138,13 @@ function createProductBoxForShopping($product) {
 	
 	echo "
 			
-	<div class=\"thumbnail\" style=\"box-shadow: 2px 2px 5px #cccccc; width: 200px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
+	<div class=\"thumbnail productbox\">
 	
 	   	<a href=\"?page=detail&id=$productId\">
 	   		<!-- May change link of pic to product desc page -->
-	   		<img style=\"width: 180px; height: 180px; background-color: white; border-radius: 3px;\" src=\"{$product->productDescription->images[$imageLen-1]}\">
+	   		<img src=\"{$product->productDescription->images[$imageLen-1]}\">
 	  
-			<div id=\"name\">$productName</div>
+			<div class=\"name\" id=\"name\">$productName</div>
 		</a>
 	
 		<div id=\"price\">&#3647;$price</div>
@@ -175,12 +173,12 @@ function createProductBoxForInventory($product) {
 		$coverImage = $product->productDescription->images[$imageLen-1];
 	}
 	echo "
-	<div class=\"thumbnail\" style=\"box-shadow: 2px 2px 5px #cccccc; width: 200px; border-radius: 6px; background-color: #eee; padding-top: 10px; margin: 20px; display: inline-block\" align=\"center\">
+	<div class=\"thumbnail productbox\">
 
 		<!-- May change link of pic to product desc page -->
-		<img style=\"width: 180px; height: 180px; background-color: white; border-radius: 3px;\" src=\"{$coverImage}\">
+		<img src=\"{$coverImage}\">
 	
-		<div id=\"name\">$productName</div>
+		<div class=\"name\" id=\"name\">$productName</div>
 	
 		<div id=\"price\">&#3647;$price</div>
 	

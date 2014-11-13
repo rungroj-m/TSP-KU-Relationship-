@@ -119,7 +119,10 @@
 	$.ajax({
 		url: 'forjscallphp.php',
 		type: "POST",
-		data: { "get_product_by_category_for_shopping": "" }
+		data: {
+			"search_product_for_shopping": "",
+			"category": "All"
+		}
 	}).done(function(response) {
 	    $("#productBoxContainer").html(response);
 	});

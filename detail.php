@@ -189,7 +189,7 @@
 		data: { "get_product_detail_by_id": <?php echo $_GET["id"]; ?> }
 	}).done(function(response) {
 		product = $.parseJSON(response);
-		alert(response);
+// 		alert(response);
 	    $("#name").html(product.name);
 	    $("#code").html(product.code);
 	    $("#price").html(product.price);

@@ -7,6 +7,7 @@
 	<script src="js/bootstrap-dropdown.js"></script>
 	<script src="js/summernote.js"></script>
 	<script src="bootstrap/js/bootstrap.js"></script>
+	<link href="css/kurel.css" rel="stylesheet">
 </head>
 
 <style>

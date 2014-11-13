@@ -5,7 +5,3 @@
 <div class="jumbotron">
 		Promotion
 </div>
-
-<div class="jumbotron">
-		Feature product
-</div>

@@ -15,10 +15,10 @@
 <body>
 
 
-<div>
+<div align="center">
 <h3>Major Functions</h3>
 <br>- Inventory
-<br>	- Add / Edit / Remove product: use case
+<br>	- Add / Edit / Remove product
 <br>	- Search product
 <br>- Shopping
 <br>	- View product
@@ -32,18 +32,18 @@
 <br>		<img src="image/uc2.png" />
 </div>
 
-<div>
+<div align="center">
 <h3>Component Diagram</h3><br>
-<img src="image/componentdiagram.jpg" />
+<img src="image/componentdiagram.jpg" style="width: 80%"/>
 <br>
 <h3>Architechture</h3><br>
-<img src="image/architechture.png" />
+<img src="image/architechture.png" style="width: 50%"/>
 
 <h3>How to implement</h3>
 
+<div align="left" style="margin-left: 300px">	
 <br>WS -> login system -> sign in , sign out, sign up
-<br>		
-<br>		Sign in
+<br><b>		Sign in</b>
 <br>		POST /signin
 <br>		Content-type: application/json
 <br>			{
@@ -51,13 +51,13 @@
 <br>			"password" : md5(pass)
 <br>			}
 <br>		
-<br>		Sign out
+<br><b>		Sign out</b>
 <br>		POST /signout
 <br>			{
 <br>			"username" : "xxx"
 <br>			}
 <br>			
-<br>		Sign up
+<br><b>		Sign up</b>
 <br>		POST /signup
 <br>			{
 <br>			"username" : "xxx",
@@ -68,7 +68,7 @@
 <br>		
 <br>		
 <br>   -> inventory system -> add product , edit product , delete product , search product
-<br>		add product
+<br><b>		add product</b>
 <br>		POST /product
 <br>		Content-type: application/json
 <br>			{
@@ -76,38 +76,38 @@
 <br>			...
 <br>			}
 <br>		
-<br>		edit product
+<br><b>		edit product</b>
 <br>		PUT /product/{id}
 <br>			{
 <br>			"productName" : "yyy",
 <br>			...
 <br>			}
 <br>			
-<br>		delete product
+<br><b>		delete product</b>
 <br>		DELETE /product/{id}
 <br>
-<br>		search product
+<br><b>		search product</b>
 <br>		GET /product?str=xxx
 <br>		Accepted: application/json
 <br>
 <br>   -> shopping -> add to cart , increase/delete quantity , search product
-<br>		add to cart
+<br><b>		add to cart</b>
 <br>		POST /shopping/{id}/{quantity}
 <br>
-<br>		increase/delete quantity
+<br><b>		increase/delete quantity</b>
 <br>		POST /shopping/{id}/{quantity}
 <br>
-<br>		search product
+<br><b>		search product</b>
 <br>		GET /product?str=xxx
 <br>		Accepted: application/json
-<br>
 <br>
 <br>
 <br>
 <br>
 </div>
+</div>
 
-<div>
+<div align="center">
 
 <h3>Advantages/ Disadvantages</h3>
 
@@ -122,7 +122,7 @@ Adventage: -<br>
 Disventage: Need new structure for shopping system<br>
 </div>
 
-<div>
+<div align="center">
 Authentication: we send username and descriptd password
 </div>
 

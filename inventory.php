@@ -97,7 +97,10 @@
 	$.ajax({
 		url: 'forjscallphp.php',
 		type: "POST",
-		data: { "get_product_by_category_for_inventory": "" }
+		data: {
+			"search_product_for_inventory": "",
+			"category": "All"
+		}
 	}).done(function(response) {
 	    $("#productBoxContainer").html(response);
 	});
