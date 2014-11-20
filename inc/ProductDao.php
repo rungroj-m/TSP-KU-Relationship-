@@ -262,19 +262,13 @@
 		$orQuery .= " PDT.TagId = $value OR";
 	    }
 	    $orQuery = substr($orQuery, 0, -2);
-	    /*$query = "SELECT PD.ProductDescriptionId, PD.CategoryId, C.Name, PD.BrandId, B.Name, PD.ProductName, PD.ModelCode, PD.Description, PD.CreateDate 
-		    FROM (SELECT TCD.ProductDescriptionId
-			FROM (SELECT PDT.ProductDescriptionId, Count( PDT.TagId ) as TC
-				FROM ProductDescriptionTags PDT
-				WHERE$orQuery
-				GROUP BY PDT.ProductDescriptionId) as TCD
-			WHERE TCD.TC = $tagCount) as PD2
-		    JOIN (Categories C
-			JOIN (Brands B
-			    JOIN ProductDescriptions PD
-			    ON B.BrandId = PD.BrandId)
-			ON C.CategoryId = PD.CategoryId)
-		    ON PD2.ProductDescriptionId = PD.ProductDescriptionId";*/
+	    /*
+	     SELECT PDT.ProductDescriptionId, Count( PDT.TagId ) as TC FROM
+			( SELECT * FROM AdditionProductDescriptionTags UNION SELECT * FROM ProductDescriptionTags ) PDT
+			WHERE PDT.TagId = 105 OR PDT.TagId = 106 "
+			GROUP BY PDT.ProductDescriptionId
+			HAVING TC = $tagCount
+	     **/
 	    $query = "SELECT PDT.ProductDescriptionId, Count( PDT.TagId ) as TC FROM
 			( SELECT * FROM AdditionProductDescriptionTags UNION SELECT * FROM ProductDescriptionTags ) PDT
 			WHERE$orQuery
