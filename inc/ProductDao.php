@@ -209,6 +209,7 @@
 	}
     
 	private function addTag( $key ) {
+	    $key = strtolower( $key );
 	    $STH = $this->db->prepare("INSERT IGNORE INTO `Tags` SET `Key` = :key");
 	    $STH->bindParam(':key', $key);
 	    $STH->execute();
@@ -216,6 +217,7 @@
 	}
 	
 	private function getTag( $key ) {
+	    $key = strtolower( $key );
 	    $STH = $this->db->prepare("SELECT `TagId` FROM `Tags` WHERE `Key` = :key");
 	    $STH->bindParam(':key', $key );
 	    $STH->execute();
