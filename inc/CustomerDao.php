@@ -1,9 +1,15 @@
 <?php
     class CustomerDao {
     	
-    	private $host="localhost";
-    	private $user = "tsp";
-    	private $password="tsp";
+    	/*private $host="knotsupavit.in.th";
+    	private $user = "knotsupavi_tsp";
+    	private $password="1!Qqqqqq";
+    	private $database="knotsupavi_tsp";
+    	*/
+	
+	private $host="localhost";
+    	private $user = "benzsuankularb";
+    	private $password="benzsk130";
     	private $database="ecomerce";
     	
 	protected $db;

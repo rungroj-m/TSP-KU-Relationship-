@@ -68,7 +68,8 @@ if (isset($_POST["search_product_for_shopping"])) {
 		}
 	}
 	else {
-		$str = explode(",", $str);
+		$str = array_map( 'trim', explode(",", $str) );
+		
 		if (!($cat == "Category" || $cat == "All")) {
 			array_push($str, $cat);
 			$productdescs = ProductDescription::SearchByTags($str);
@@ -107,6 +108,7 @@ if (isset($_POST["search_product_for_inventory"])) {
 	}
 	else {
 		$str = explode(",", $str);
+		array_map( 'trim', $tags_str );
 		if (!($cat == "Category" || $cat == "All")) {
 			array_push($str, $cat);
 			$productdescs = ProductDescription::SearchByTags($str);
@@ -199,7 +201,7 @@ if (isset($_POST["submit"])) {
 		include_once ('inc/InventoryDao.php');
 		$brand = Brand::CreateBrand($_POST['brand']);
 		$category = Category::CreateCategory($_POST['category']);
-		$productDesc = ProductDescription::CreateProductDescription( $category, $brand, $_POST['desc'], $_POST['code'], explode(',', $_POST['tag']), $_POST['name']);
+		$productDesc = ProductDescription::CreateProductDescription( $category, $brand, $_POST['desc'], $_POST['code'], array_map( 'trim', explode(',', $_POST['tag']) ), $_POST['name']);
 		$productDesc->addImages( array( $_POST['image'] ) );
 		$product = Product::CreateProduct($productDesc, $_POST['price']);
 		Inventory::addProduct($product, $_POST['quan'] );
@@ -223,7 +225,7 @@ if (isset($_POST["submit"])) {
 		$productdescs -> description = $_POST["desc"];
 		$productdescs -> addImages(array($_POST["image"]));
 		$productdescs -> category = Category::CreateCategory($_POST["category"]);
-		$productdescs -> additionTags = explode(',', $_POST['tag']);
+		$productdescs -> additionTags = array_map( 'trim', explode(',', $_POST['tag']) );
 		$productdescs -> brand = Brand::CreateBrand($_POST["brand"]);
 		$productdescs -> updateData();
 		
