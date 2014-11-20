@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 01, 2014 at 08:09 PM
+-- Generation Time: Nov 20, 2014 at 09:34 AM
 -- Server version: 5.6.20
 -- PHP Version: 5.5.15
 
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `AdditionProductDescriptionTags` (
 CREATE TABLE IF NOT EXISTS `Brands` (
 `BrandId` int(11) NOT NULL,
   `Name` varchar(50) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 -- --------------------------------------------------------
 
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `Carts` (
   `LastUpdate` int(11) NOT NULL,
   `CustomerId` int(11) NOT NULL,
   `Closed` tinyint(1) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `CartTransactions` (
 CREATE TABLE IF NOT EXISTS `Categories` (
 `CategoryId` int(11) NOT NULL,
   `Name` varchar(50) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 -- --------------------------------------------------------
 
@@ -89,18 +89,7 @@ CREATE TABLE IF NOT EXISTS `Customers` (
   `LastName` text NOT NULL,
   `Password` text NOT NULL,
   `UserName` varchar(20) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Inventory`
---
-
-CREATE TABLE IF NOT EXISTS `Inventory` (
-  `ProductId` int(11) NOT NULL,
-  `Quantity` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -114,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `InventoryTransactions` (
   `ProductId` int(11) NOT NULL,
   `Quantity` int(11) NOT NULL,
   `Deposition` tinyint(1) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=32 ;
 
 -- --------------------------------------------------------
 
@@ -142,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `ProductDescriptions` (
   `ModelCode` text NOT NULL,
   `Description` text NOT NULL,
   `CreateDate` datetime NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
 
 -- --------------------------------------------------------
 
@@ -165,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `ProductImages` (
 `ImageId` int(11) NOT NULL,
   `ProductDescriptionId` int(11) NOT NULL,
   `ImageAddress` text NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 -- --------------------------------------------------------
 
@@ -179,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `Products` (
   `Price` float NOT NULL,
   `CreateDate` datetime NOT NULL,
   `Status` tinyint(1) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
 
 -- --------------------------------------------------------
 
@@ -202,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `Sales` (
 CREATE TABLE IF NOT EXISTS `Tags` (
 `TagId` int(11) NOT NULL,
   `Key` varchar(100) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=109 ;
 
 --
 -- Indexes for dumped tables
@@ -212,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `Tags` (
 -- Indexes for table `AdditionProductDescriptionTags`
 --
 ALTER TABLE `AdditionProductDescriptionTags`
- ADD UNIQUE KEY `TagId` (`TagId`);
+ ADD PRIMARY KEY (`ProductDescriptionId`,`TagId`);
 
 --
 -- Indexes for table `Brands`
@@ -243,12 +232,6 @@ ALTER TABLE `Categories`
 --
 ALTER TABLE `Customers`
  ADD PRIMARY KEY (`CustomerId`), ADD UNIQUE KEY `UserName` (`UserName`);
-
---
--- Indexes for table `Inventory`
---
-ALTER TABLE `Inventory`
- ADD PRIMARY KEY (`ProductId`);
 
 --
 -- Indexes for table `InventoryTransactions`
@@ -294,42 +277,42 @@ ALTER TABLE `Tags`
 -- AUTO_INCREMENT for table `Brands`
 --
 ALTER TABLE `Brands`
-MODIFY `BrandId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `BrandId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `Carts`
 --
 ALTER TABLE `Carts`
-MODIFY `CartId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+MODIFY `CartId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `Categories`
 --
 ALTER TABLE `Categories`
-MODIFY `CategoryId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `CategoryId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `Customers`
 --
 ALTER TABLE `Customers`
-MODIFY `CustomerId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `CustomerId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `InventoryTransactions`
 --
 ALTER TABLE `InventoryTransactions`
-MODIFY `TransactionId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
+MODIFY `TransactionId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
 --
 -- AUTO_INCREMENT for table `ProductDescriptions`
 --
 ALTER TABLE `ProductDescriptions`
-MODIFY `ProductDescriptionId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `ProductDescriptionId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT for table `ProductImages`
 --
 ALTER TABLE `ProductImages`
-MODIFY `ImageId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `ImageId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `Products`
 --
 ALTER TABLE `Products`
-MODIFY `ProductId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `ProductId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT for table `Sales`
 --
@@ -339,7 +322,7 @@ MODIFY `SaleId` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `Tags`
 --
 ALTER TABLE `Tags`
-MODIFY `TagId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+MODIFY `TagId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=109;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
