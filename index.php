@@ -73,7 +73,40 @@ body {
 		
 		
 	</div>
-	
+
+	<!--Payment table (need data url insert in table) -->
+	<div>
+		<table id="paymentTable" data-url="" data-height="400" data-row-style="rowStyle" data-sort-name="name" align = "center">
+		    <thead>
+		    <tr>
+		        <th data-field="name" data-sortable="true" class="col-md-2">Name</th>
+		      	<th data-field="quantity" class="col-md-2">Quantity</th>
+		      	<th data-field="price" class="col-md-2">Price</th>
+		      	<th data-field="total" class="col-md-2">Total price</th>
+		    </tr>
+		    </thead>
+		</table>
+		<script>
+		    function rowStyle(row, index) {
+		        var classes = ['active', 'success', 'info', 'warning', 'danger'];
+
+		        if (index % 2 === 0 && index / 2 < classes.length) {
+		            return {
+		                classes: classes[index / 2]
+		            };
+		        }
+		        return {};
+		    }
+		</script>
+	</div>
+
+	<div class="radio" align="center">
+		<label>
+			<input type="radio" name="confirm" id="confirm1"<p>Agree all conditions</p> 
+		</label>
+
+	</div>
+
 	<div class="footer">
       <div class="container" align="center" style="margin-top: 30px; margin-bottom: 20px">
         <p class="text-muted">Made by KU Relationship &copy; 2014</p>
