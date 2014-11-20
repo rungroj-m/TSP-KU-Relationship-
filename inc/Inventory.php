@@ -2,6 +2,7 @@
     class Inventory {
     	
 	public static function addProduct( $product, $amount ){
+		echo "am>> " .$amount;
 	    InventoryDao::GetInstance()->addInventory( $product->id, $amount );
 	    return $amount;
 	}

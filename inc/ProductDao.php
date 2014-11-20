@@ -5,8 +5,8 @@
     class ProductDao {
     	
     	private $host="localhost";
-    	private $user = "tsp";
-    	private $password="tsp";
+    	private $user = "benzsuankularb";
+    	private $password="benzsk130";
     	private $database="ecomerce";
     	
 	protected $db;
@@ -209,6 +209,7 @@
 	}
     
 	private function addTag( $key ) {
+	    $key = strtolower( $key );
 	    $STH = $this->db->prepare("INSERT IGNORE INTO `Tags` SET `Key` = :key");
 	    $STH->bindParam(':key', $key);
 	    $STH->execute();
@@ -216,6 +217,7 @@
 	}
 	
 	private function getTag( $key ) {
+	    $key = strtolower( $key );
 	    $STH = $this->db->prepare("SELECT `TagId` FROM `Tags` WHERE `Key` = :key");
 	    $STH->bindParam(':key', $key );
 	    $STH->execute();
@@ -260,19 +262,13 @@
 		$orQuery .= " PDT.TagId = $value OR";
 	    }
 	    $orQuery = substr($orQuery, 0, -2);
-	    /*$query = "SELECT PD.ProductDescriptionId, PD.CategoryId, C.Name, PD.BrandId, B.Name, PD.ProductName, PD.ModelCode, PD.Description, PD.CreateDate 
-		    FROM (SELECT TCD.ProductDescriptionId
-			FROM (SELECT PDT.ProductDescriptionId, Count( PDT.TagId ) as TC
-				FROM ProductDescriptionTags PDT
-				WHERE$orQuery
-				GROUP BY PDT.ProductDescriptionId) as TCD
-			WHERE TCD.TC = $tagCount) as PD2
-		    JOIN (Categories C
-			JOIN (Brands B
-			    JOIN ProductDescriptions PD
-			    ON B.BrandId = PD.BrandId)
-			ON C.CategoryId = PD.CategoryId)
-		    ON PD2.ProductDescriptionId = PD.ProductDescriptionId";*/
+	    /*
+	     SELECT PDT.ProductDescriptionId, Count( PDT.TagId ) as TC FROM
+			( SELECT * FROM AdditionProductDescriptionTags UNION SELECT * FROM ProductDescriptionTags ) PDT
+			WHERE PDT.TagId = 105 OR PDT.TagId = 106 "
+			GROUP BY PDT.ProductDescriptionId
+			HAVING TC = $tagCount
+	     **/
 	    $query = "SELECT PDT.ProductDescriptionId, Count( PDT.TagId ) as TC FROM
 			( SELECT * FROM AdditionProductDescriptionTags UNION SELECT * FROM ProductDescriptionTags ) PDT
 			WHERE$orQuery
@@ -322,8 +318,4 @@
     require_once('Category.php');
     require_once('InventoryDao.php');
 //     require_once('Inventory.php');
-
-    //print_r( ProductDescription::GetProductDescription( 62 ) );
-    //$p = ProductDescription::CreateProductDescription( Category::CreateCategory('Cat1' ), Brand::CreateBrand('Brand1'), 'tag1', 'tag2', array( 'atag1', 'atag2' ), 'fuck' );
-    //print_r( ProductDescription::GetProductDescription( 10 ) );
 ?>
