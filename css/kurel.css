@@ -1,0 +1,30 @@
+.productbox {
+	box-shadow: 2px 2px 5px #cccccc;
+	width: 200px !important;
+	height: 310px !important;
+	border-radius: 6px;
+	background-color: #eee;
+	padding-top: 10px;
+	margin: 20px;
+	display: inline-block;
+	text-align: center;
+}
+
+.productbox:hover {
+    box-shadow: 6px 6px 10px #999999;
+}
+
+.productbox img {
+	width: 180px;
+	height: 180px !important;
+	background-color: white;
+	border-radius: 3px;
+}
+
+.productbox .name {
+	margin: 8px;
+	font-size: 1em;
+	line-height: 1.2em;
+	height: 2.4em;
+	overflow: hidden;
+}

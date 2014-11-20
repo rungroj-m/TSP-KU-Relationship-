@@ -1,3 +1,4 @@
+
 <!-- Sign in form -->
 <div class="container" align="center" id="container-form">
 	<div class="jumbotron" style="box-shadow: 4px 4px 6px #cccccc; width: 50%" id="container-login">
@@ -95,8 +96,18 @@
 			}
 		}).done(function(response) {
 			alert(response);
-			signin($.parseJSON(response));
+			var registered = $.parseJSON(response);
+			
+			if (registered.username == email) {
+				console.log("Response Pass, from sign in");
+				signin(registered);
+			}
+			else {
+				console.log("Response Fail, from sign in");
+			}
+			
 		});
+		
 		return false;
 	});
 
@@ -117,24 +128,55 @@
 			}
 		}).done(function(response) {
 			alert(response);
-			signin($.parseJSON(response));
+			var registered = $.parseJSON(response);
+			
+			if (registered.username == email) {
+				console.log("Response Pass, from sign up");
+				signin(registered);
+			}
+			else {
+				console.log("Response Fail, from sign up");
+			}
 		});
 
 		return false;
 	});
+	
+	function signin(customer) {
+// 		$.cookie("customer", JSON.stringify(customer), { expires: 15 });
 
-	function signin(response) {
-		console.log();
-		$.cookie("email", response.username, { expires: 15 });
-		$.cookie("firstname", response.firstname, { expires: 15 });
-		$.cookie("lastname", response.lastname, { expires: 15 });
-		window.location = window.location.pathname;
+		$.cookie("email", customer.username, { expires: 15 });
+		$.cookie("firstname", customer.firstname, { expires: 15 });
+		$.cookie("lastname", customer.lastname, { expires: 15 });
+		
+		<?php
+			if (isset($_POST["back_to_location"]))
+				echo "postAndRedirect();";
+			else
+				echo "window.location = window.location.pathname;";
+		?>
+		
 	};
 
 	$("#recovery-form").submit(function () {
-		
-		 return false;
+		alert("Available soon");
+		return false;
 	});
+
+	function postAndRedirect() {
+	    var postFormStr = "<form method='POST' action='" + window.location.pathname <?php if (isset($_POST["back_to_location"])) echo "+ \"{$_POST["back_to_location"]}\""; ?> + "'>";
+	    postFormStr += "<input type='hidden' name='pid' value='<?php if (isset($_POST["back_to_location"])) echo $_POST["pid"]; ?>'></input>";
+	    postFormStr += "<input type='hidden' name='pn' value='<?php if (isset($_POST["back_to_location"])) echo $_POST["pn"]; ?>'></input>";
+	    postFormStr += "<input type='hidden' name='p' value='<?php if (isset($_POST["back_to_location"])) echo $_POST["p"]; ?>'></input>";
+	    postFormStr += "<input type='hidden' name='q' value='<?php if (isset($_POST["back_to_location"])) echo $_POST["q"]; ?>'></input>";
+	    postFormStr += "<input type='hidden' name='mq' value='<?php if (isset($_POST["back_to_location"])) echo $_POST["mq"]; ?>'></input>";
+	    postFormStr += "</form>";
+
+	    var formElement = $(postFormStr);
+
+	    $('body').append(formElement);
+	    $(formElement).submit();
+	}
 
 
 </script>

@@ -1,3 +1,4 @@
+
 <br>
 
 <div class="row">
@@ -6,12 +7,12 @@
 			<button type="button" id="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%">
 				<qq>Category</qq> <span class="caret"></span>
 			</button>
-			<ul class="dropdown-menu" id="category-dropdown"style="background-color: black" role="menu">
-				<li><a style = "color: white">All</a></li>
-				<li><a style = "color: white">Shirt</a></li>
-			    <li><a style = "color: white">Equipment</a></li>
-			    <li><a style = "color: white">Balls</a></li>
-			    <li><a style = "color: white">Forbidden stuffs</a></li>
+			<ul class="dropdown-menu" id="category-dropdown" role="menu" style="width: 100%">
+				<li><a>Clothes</a></li>
+			    <li><a>Equipments</a></li>
+			    <li><a>Balls</a></li>
+			    <li><a>Others</a></li>
+			    <li><a>All</a></li>
 			</ul>
 		</div>      
 	</div> 
@@ -95,71 +96,106 @@
 	</div>
 </div>
 
+<!-- Alert signin -->
+<div class="modal fade" id="alert-signin">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Login</h4>
+			</div>
+			<div class="modal-body">
+				<p>Sign in to ADD product?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+				<button type="button" class="btn btn-primary" id="signin-button" onclick="postAndRedirect();">Yes</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 	$.ajax({
 		url: 'forjscallphp.php',
 		type: "POST",
-		data: { "get_product_by_category_for_shopping": "" }
+		data: {
+			"search_product_for_shopping": "",
+			"category": "All"
+		}
 	}).done(function(response) {
 	    $("#productBoxContainer").html(response);
 	});
-
-	function addToCart(productId, productName, price, quantity) {
-		if ($.cookie("cartItems") == undefined) {
-			var arr = [{id: productId, name: productName, quantity: quantity, unitprice: price}];
-			
-			$.cookie("cartItems", JSON.stringify(arr), { expires: 15 }); // in 15 days
+	
+	var pid, pn, p, q, mq;
+	function addToCart(productId, productName, price, quantity, maxQuan) {
+		if ($.cookie("email") == undefined) {
+			$("#alert-signin").modal({
+				show: true
+			});
+			pid = productId; pn = productName; p = price; q = quantity; mq = maxQuan;
 		}
 		else {
-			block: {
-				var arr = $.parseJSON($.cookie('cartItems'));
-				for (var i = 0; i < arr.length; i++) {
-					if (arr[i].id == productId) {
-						arr[i].quantity += quantity;
-						if (arr[i].quantity == 0) {
-							arr.splice(i, 1);
-						}
-						break block;
-					}
-				}
-				arr.push({id: productId, name: productName, quantity: quantity, unitprice: price});
+			if ($.cookie("cartItems") == undefined) {
+				var arr = [{id: productId, name: productName, quantity: quantity, unitprice: price}];
+				
+				$.cookie("cartItems", JSON.stringify(arr), { expires: 15 }); // in 15 days
 			}
-		
-			$.cookie("cartItems", JSON.stringify(arr), { expires: 15 }); // in 15 days
+			else {
+				block: {
+					var arr = $.parseJSON($.cookie('cartItems'));
+					for (var i = 0; i < arr.length; i++) {
+						if (arr[i].id == productId) {
+							if (arr[i].quantity + quantity >= maxQuan)
+								arr[i].quantity = maxQuan;
+							else
+								arr[i].quantity += quantity;
+							
+							if (arr[i].quantity == 0) {
+								arr.splice(i, 1);
+							}
+							break block;
+						}
+					}
+					arr.push({id: productId, name: productName, quantity: quantity, unitprice: price});
+				}
+			
+				$.cookie("cartItems", JSON.stringify(arr), { expires: 15 }); // in 15 days
+			}
+			
+			var arr = $.parseJSON($.cookie('cartItems'));
+			
+			$("#cart").empty();
+			$("#cart").append("\
+				<tr>\
+					<th>Product</th>\
+					<th>Q.</th>\
+					<th>U.P.</th>\
+					<th></th>\
+				</tr>\
+			");
+			var total = 0;
+			for (var i = 0; i < arr.length; i++) {
+				$("#cart").append(
+						"<tr>" +
+							"<th>" + arr[i].name + "</th>" +
+							"<th>" + arr[i].quantity + "</th>" +
+							"<th>" + arr[i].unitprice + "</th>" +
+							"<th>" +
+								"<span class=\"label alert-danger\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", -1, " + maxQuan + ")\");\">-</span>" +
+								"<span class=\"label alert-success\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", 1, " + maxQuan + ")\");\">+</span>" +
+							"</th>" +
+						"</tr>"
+				);
+				total += arr[i].quantity * arr[i].unitprice;
+			}
+			$("#total").text("\u0E3F" + total);
 		}
-		
-		var arr = $.parseJSON($.cookie('cartItems'));
-		
-		$("#cart").empty();
-		$("#cart").append("\
-			<tr>\
-				<th>Product</th>\
-				<th>Q.</th>\
-				<th>U.P.</th>\
-				<th></th>\
-			</tr>\
-		");
-		var total = 0;
-		for (var i = 0; i < arr.length; i++) {
-			$("#cart").append(
-					"<tr>" +
-						"<th>" + arr[i].name.substring(0, 12) + "</th>" +
-						"<th>" + arr[i].quantity + "</th>" +
-						"<th>" + arr[i].unitprice + "</th>" +
-						"<th>" +
-							"<span class=\"label alert-danger\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", -1)\");\">-</span>" +
-							"<span class=\"label alert-success\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", 1)\");\">+</span>" +
-						"</th>" +
-					"</tr>"
-			);
-			total += arr[i].quantity * arr[i].unitprice;
-		}
-		$("#total").text("\u0E3F" + total);
 	}
 
 	$("#category-dropdown li").click(function() {
-		alert("choose catagory should refresh product list below immediately");
 		$("#dropdown qq").text($(this).text());
+		search();
 	});
 
 	$("#search-box").keypress(function(event) {
@@ -217,7 +253,7 @@
 			for (var i = 0; i < arr.length; i++) {
 				$("#cart").append(
 					"<tr>" +
-						"<th>" + arr[i].name.substring(0, 12) + "</th>" +
+						"<th>" + arr[i].name + "</th>" +
 						"<th>" + arr[i].quantity + "</th>" +
 						"<th>" + arr[i].unitprice + "</th>" +
 						"<th>" +
@@ -233,8 +269,60 @@
 		}
 	});
 	
+	function postAndRedirect() {
+	    var postFormStr = "<form method='POST' action='" + window.location.pathname + "?page=member'>";
+	    postFormStr += "<input type='hidden' name='back_to_location' value='?page=shopping'></input>";
+	    postFormStr += "<input type='hidden' name='pid' value='" + pid + "'></input>";
+	    postFormStr += "<input type='hidden' name='pn' value='" + pn + "'></input>";
+	    postFormStr += "<input type='hidden' name='p' value='" + p + "'></input>";
+	    postFormStr += "<input type='hidden' name='q' value='" + q + "'></input>";
+	    postFormStr += "<input type='hidden' name='mq' value='" + mq + "'></input>";
+	    postFormStr += "</form>";
+
+	    var formElement = $(postFormStr);
+
+	    $('body').append(formElement);
+	    $(formElement).submit();
+	}
+	
 </script>
 
+<?php 
+	if (isset($_POST["search_redirect"])) {
+		echo "
+			<script type=\"text/javascript\">
+				function search_redirect() {
+					$.ajax({
+						url: 'forjscallphp.php',
+						type: 'POST',
+						data: {
+							'search_product_for_shopping': '{$_POST['str']}',
+							'category': '{$_POST['cat']}'
+						}
+					}).done(function(response) {
+					//alert(response);
+					    $('#productBoxContainer').html(response);
+					});
+				}
+				
+				search_redirect();
+			</script>
+		";
+	}
 
+
+?>
+
+<?php 
+	if (isset($_POST["pid"]))
+		echo "
+			<script type=\"text/javascript\">
+				$(document).ready(function() {
+					addToCart({$_POST["pid"]}, \"{$_POST["pn"]}\", {$_POST["p"]}, {$_POST["q"]}, {$_POST["mq"]});
+				});
+			</script>
+	";
+
+?>
 
 
