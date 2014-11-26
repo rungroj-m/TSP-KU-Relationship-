@@ -5,29 +5,6 @@
     	public $firstName;
     	public $lastName;
     	public $username;
-	
-	public function addToCart( $product, $amount ){
-	    $dao = InventoryDao::GetInstance();
-	    $dao->addToCart( $this->id, $product->id, $amount );
-	}
-	
-	public function removeFromCart( $product, $amount ) {
-	    $dao = InventoryDao::GetInstance();
-	    $dao->removeFromCart( $this->id, $product->id, $amount );
-	}
-	
-	public function getCartProducts() {
-	    $dao = InventoryDao::GetInstance();
-	    $data = $dao->getCartProducts( $dao->getCurrentCartId( $this->id ) );
-	    $result = array();
-	    foreach( $data as &$val ) {
-		$detail = array();
-		$detail['Product'] = Product::GetProduct( $val['ProductId'] );
-		$detail['Quantity'] = $val['Quantity'];
-		array_push( $result, $detail );
-	    }
-	    return $result;
-	}
     	
 	public static function Authenticate( $username, $password ) {
 	    $dao = CustomerDao::GetInstance();
@@ -62,5 +39,9 @@
 	    $data = $dao->getCustomer( $customerId );
 	    return Customer::dataToCustomer( $data );
     	}
+	
+	public function getCart() {
+	    return Cart::GetCartFromCustomer( $this );
+	}
     }
 ?>

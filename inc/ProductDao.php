@@ -317,11 +317,38 @@
     }
     
  
-    //require_once('Product.php');
     require_once('ProductDescription.php');
     require_once('DataInfo.php');
     require_once('Brand.php');
     require_once('Category.php');
+    require_once('Sale.php');
     require_once('InventoryDao.php');
-//     require_once('Inventory.php');
+    require_once('PaymentDao.php');
+    require_once('Payment.php');
+    require_once('Product.php');
+    require_once('ProductDao.php');
+    require_once('Cart.php');
+    require_once('Inventory.php');
+    require_once('Customer.php');
+    require_once('CustomerDao.php');
+    require_once('CreditCard.php');
+    
+    //$product = Product::GetProduct( 18 );
+    //Inventory::addProduct( $product, 30 );
+    $customer = Customer::Authenticate( 'benzsk130', 'benzsuankularb' );
+    $cart = $customer->getCart();
+    $cart->AddProduct( Product::GetProduct( 17 ) , 12 );
+    $cart->AddProduct( Product::GetProduct( 16 ) , 2 );
+    
+    $credit = CreditCard::CreateCreditCard( 'Krittayot', '1234567891234567','000', '2014', '11' );
+    if( $credit->vertify() == true ) {
+	$cart->purchase( $credit );
+    } else {
+	throw new Exception( 'Cannot Vertify' );
+    }
+    
+    /*echo Inventory::getQuntity( $product->id );
+    $cart->AddProduct( $product, 10 );
+    echo Inventory::getQuntity( $product->id );
+    print_r(  $cart->GetProducts() );*/
 ?>
