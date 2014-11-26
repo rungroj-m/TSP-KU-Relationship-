@@ -35,7 +35,7 @@
 	    foreach( $products as &$product ) {
 		$total = $total + ( $product['Product']->price * $product['Quantity'] );
 	    }
-	    return $total;
+	    return Promotion::Total( $total );
 	}
 	
 	public function GetProducts() {
