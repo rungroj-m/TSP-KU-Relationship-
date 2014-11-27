@@ -133,8 +133,8 @@
 				
 				<table class="table">
 					<tr>
-						<th><button type="button" class="btn btn-success" id="button-checkout" >Check Out</button></th>
-						<th><button type="button" class="btn btn-danger" id="button-clear-cart" >Clear</button></th>
+						<th><button type="button" class="btn btn-success" id="button-checkout" style="width: 100%">Check Out</button></th>
+						<th><button type="button" class="btn btn-danger" id="button-clear-cart" style="width: 100%">Clear</button></th>
 					</tr>
 				</table>
 			</div>

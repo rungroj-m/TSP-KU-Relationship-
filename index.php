@@ -8,6 +8,8 @@
 	<script src="js/summernote.js"></script>
 	<script src="bootstrap/js/bootstrap.js"></script>
 	<link href="css/kurel.css" rel="stylesheet">
+	<script src="js/bic_calendar.js"></script>
+	<link href="css/bic_calendar.css" rel="stylesheet">
 </head>
 
 <style>
@@ -40,9 +42,10 @@ body {
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "inventory") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=inventory">Inventory</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "news") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=news">News</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "promotion") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=promotion">Promotion</a></li>
-		      					<?php if (isset($_GET['page']) && $_GET['page'] == "user") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=user">User</a></li>
+		      					<?php if (isset($_GET['page']) && $_GET['page'] == "customer") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=customer">Customer</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "member") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=member">Member</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "profile") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=profile">Profile</a></li>
+		      					<?php if (isset($_GET['page']) && $_GET['page'] == "transaction") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=transaction">Transaction</a></li>
 					        </ul>
 					        <ul class="nav navbar-nav navbar-right" id="username">
 					        </ul>
@@ -72,39 +75,6 @@ body {
 	?>
 		
 		
-	</div>
-
-	<!--Payment table (need data url insert in table) -->
-	<div>
-		<table id="paymentTable" data-url="" data-height="400" data-row-style="rowStyle" data-sort-name="name" align = "center">
-		    <thead>
-		    <tr>
-		        <th data-field="name" data-sortable="true" class="col-md-2">Name</th>
-		      	<th data-field="quantity" class="col-md-2">Quantity</th>
-		      	<th data-field="price" class="col-md-2">Price</th>
-		      	<th data-field="total" class="col-md-2">Total price</th>
-		    </tr>
-		    </thead>
-		</table>
-		<script>
-		    function rowStyle(row, index) {
-		        var classes = ['active', 'success', 'info', 'warning', 'danger'];
-
-		        if (index % 2 === 0 && index / 2 < classes.length) {
-		            return {
-		                classes: classes[index / 2]
-		            };
-		        }
-		        return {};
-		    }
-		</script>
-	</div>
-
-	<div class="radio" align="center">
-		<label>
-			<input type="radio" name="confirm" id="confirm1"<p>Agree all conditions</p> 
-		</label>
-
 	</div>
 
 	<div class="footer">

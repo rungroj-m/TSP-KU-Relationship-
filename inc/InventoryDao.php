@@ -118,10 +118,12 @@
 	}
 	
 	public function closeCart( $cartId ) {
+	    echo 'fdsadfsafadsdfasdfsfdsaadsf';
 	    $STH = $this->db->prepare("UPDATE `Carts`
 					SET `Closed` = 1
-					WHERE `CartId` = ?");
-	    $STH->execute( array( $cartId ));
+					WHERE `CartId` = :cid");
+	    $STH->bindParam(':cid', $cartId );
+	    $STH->execute();
 	}
 	
 	public function getCartTransactions( $cartId ) {

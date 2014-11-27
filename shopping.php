@@ -68,8 +68,8 @@
 				
 				<table class="table">
 					<tr>
-						<th><button type="button" class="btn btn-success" id="button-checkout" >Check Out</button></th>
-						<th><button type="button" class="btn btn-danger" id="button-clear-cart" >Clear</button></th>
+						<td><button type="button" class="btn btn-success" id="button-checkout" style="width: 100%">Check Out</button></td>
+						<td><button type="button" class="btn btn-danger" id="button-clear-cart" style="width: 100%">Clear</button></td>
 					</tr>
 				</table>
 			</div>
@@ -284,6 +284,10 @@
 	    $('body').append(formElement);
 	    $(formElement).submit();
 	}
+
+	$("#button-checkout").click(function() {
+		window.location.href = "?page=payment";
+	});
 	
 </script>
 

@@ -46,6 +46,7 @@
 							<th>ID</th>
 							<th>Transaction</th>
 							<th>Date</th>
+							<th>Total</th>
 							<th>Status</th>
 							<th></th>
 						</tr>
@@ -54,6 +55,7 @@
 							<th>1234</th>
 							<th>[tshirt x 2, balls x2]</th>
 							<th>12:23:34 12/12/2014</th>
+							<th>128</th>
 							<th>Pending</th>
 							<th></th>
 						</tr>
@@ -61,6 +63,7 @@
 							<th>1255</th>
 							<th>[tshirt x 2, balls x2, red bal...</th>
 							<th>00:10:11 15/12/2014</th>
+							<th>999</th>
 							<th>Sent <a href="#">TH991111</a></th>
 							<th></th>
 						</tr>
