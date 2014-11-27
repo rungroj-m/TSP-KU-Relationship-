@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 20, 2014 at 09:34 AM
+-- Generation Time: Nov 26, 2014 at 04:47 PM
 -- Server version: 5.6.20
 -- PHP Version: 5.5.15
 
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `AdditionProductDescriptionTags` (
 CREATE TABLE IF NOT EXISTS `Brands` (
 `BrandId` int(11) NOT NULL,
   `Name` varchar(50) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
@@ -50,10 +50,10 @@ CREATE TABLE IF NOT EXISTS `Brands` (
 
 CREATE TABLE IF NOT EXISTS `Carts` (
 `CartId` int(11) NOT NULL,
-  `LastUpdate` int(11) NOT NULL,
+  `LastUpdate` datetime(6) NOT NULL,
   `CustomerId` int(11) NOT NULL,
   `Closed` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -75,7 +75,21 @@ CREATE TABLE IF NOT EXISTS `CartTransactions` (
 CREATE TABLE IF NOT EXISTS `Categories` (
 `CategoryId` int(11) NOT NULL,
   `Name` varchar(50) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `CreditCards`
+--
+
+CREATE TABLE IF NOT EXISTS `CreditCards` (
+  `Number` varchar(16) NOT NULL,
+  `Cvv` varchar(3) NOT NULL,
+  `Name` text NOT NULL,
+  `Balance` decimal(20,2) NOT NULL,
+  `ExpDate` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -89,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `Customers` (
   `LastName` text NOT NULL,
   `Password` text NOT NULL,
   `UserName` varchar(20) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -103,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `InventoryTransactions` (
   `ProductId` int(11) NOT NULL,
   `Quantity` int(11) NOT NULL,
   `Deposition` tinyint(1) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=32 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=53 ;
 
 -- --------------------------------------------------------
 
@@ -112,10 +126,11 @@ CREATE TABLE IF NOT EXISTS `InventoryTransactions` (
 --
 
 CREATE TABLE IF NOT EXISTS `Payments` (
-  `PaymentId` int(11) NOT NULL,
+`PaymentId` int(11) NOT NULL,
   `DateTime` datetime NOT NULL,
-  `CustomerId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `CreditCardNumber` varchar(16) NOT NULL,
+  `Amount` decimal(20,2) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
@@ -131,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `ProductDescriptions` (
   `ModelCode` text NOT NULL,
   `Description` text NOT NULL,
   `CreateDate` datetime NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 -- --------------------------------------------------------
 
@@ -154,7 +169,7 @@ CREATE TABLE IF NOT EXISTS `ProductImages` (
 `ImageId` int(11) NOT NULL,
   `ProductDescriptionId` int(11) NOT NULL,
   `ImageAddress` text NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
@@ -168,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `Products` (
   `Price` float NOT NULL,
   `CreateDate` datetime NOT NULL,
   `Status` tinyint(1) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 -- --------------------------------------------------------
 
@@ -180,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `Sales` (
 `SaleId` int(11) NOT NULL,
   `CartId` int(11) NOT NULL,
   `PaymentId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 -- --------------------------------------------------------
 
@@ -191,7 +206,7 @@ CREATE TABLE IF NOT EXISTS `Sales` (
 CREATE TABLE IF NOT EXISTS `Tags` (
 `TagId` int(11) NOT NULL,
   `Key` varchar(100) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=109 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=143 ;
 
 --
 -- Indexes for dumped tables
@@ -228,6 +243,12 @@ ALTER TABLE `Categories`
  ADD PRIMARY KEY (`CategoryId`), ADD UNIQUE KEY `name` (`Name`);
 
 --
+-- Indexes for table `CreditCards`
+--
+ALTER TABLE `CreditCards`
+ ADD PRIMARY KEY (`Number`);
+
+--
 -- Indexes for table `Customers`
 --
 ALTER TABLE `Customers`
@@ -238,6 +259,12 @@ ALTER TABLE `Customers`
 --
 ALTER TABLE `InventoryTransactions`
  ADD PRIMARY KEY (`TransactionId`);
+
+--
+-- Indexes for table `Payments`
+--
+ALTER TABLE `Payments`
+ ADD PRIMARY KEY (`PaymentId`);
 
 --
 -- Indexes for table `ProductDescriptions`
@@ -277,52 +304,57 @@ ALTER TABLE `Tags`
 -- AUTO_INCREMENT for table `Brands`
 --
 ALTER TABLE `Brands`
-MODIFY `BrandId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+MODIFY `BrandId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `Carts`
 --
 ALTER TABLE `Carts`
-MODIFY `CartId` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `CartId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `Categories`
 --
 ALTER TABLE `Categories`
-MODIFY `CategoryId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+MODIFY `CategoryId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `Customers`
 --
 ALTER TABLE `Customers`
-MODIFY `CustomerId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `CustomerId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `InventoryTransactions`
 --
 ALTER TABLE `InventoryTransactions`
-MODIFY `TransactionId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
+MODIFY `TransactionId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=53;
+--
+-- AUTO_INCREMENT for table `Payments`
+--
+ALTER TABLE `Payments`
+MODIFY `PaymentId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `ProductDescriptions`
 --
 ALTER TABLE `ProductDescriptions`
-MODIFY `ProductDescriptionId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
+MODIFY `ProductDescriptionId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `ProductImages`
 --
 ALTER TABLE `ProductImages`
-MODIFY `ImageId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+MODIFY `ImageId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `Products`
 --
 ALTER TABLE `Products`
-MODIFY `ProductId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+MODIFY `ProductId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `Sales`
 --
 ALTER TABLE `Sales`
-MODIFY `SaleId` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `SaleId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `Tags`
 --
 ALTER TABLE `Tags`
-MODIFY `TagId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=109;
+MODIFY `TagId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=143;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
