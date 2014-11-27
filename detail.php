@@ -213,7 +213,7 @@
 	});
 	}
 
-	var pid, pn, p, q, mq;
+	var pid, pn, p, q//, mq;
 	function addToCart(quantity) {
 		if ($("#quan").val() == 0)
 			return;
@@ -227,63 +227,20 @@
 			$("#alert-signin").modal({
 				show: true
 			});
-			pid = productId; pn = productName; p = price; q = quantity; mq = <?php echo Inventory::getQuntity($_GET["id"]); ?>;
+			pid = productId; pn = productName; p = price; q = quantity;/* mq = <?php //echo Inventory::getQuntity($_GET["id"]); ?>*/;
 		}
 		else {
-			if ($.cookie("cartItems") == undefined) {
-				var arr = [{id: productId, name: productName, quantity: quantity, unitprice: price}];
-				
-				$.cookie("cartItems", JSON.stringify(arr), { expires: 15 }); // in 15 days
-			}
-			else {
-				block: {
-					var arr = $.parseJSON($.cookie('cartItems'));
-					for (var i = 0; i < arr.length; i++) {
-						if (arr[i].id == productId) {
-							if (arr[i].quantity + quantity >= maxQuan)
-								arr[i].quantity = maxQuan;
-							else
-								arr[i].quantity += quantity;
-							
-							if (arr[i].quantity == 0) {
-								arr.splice(i, 1);
-							}
-							break block;
-						}
-					}
-					arr.push({id: productId, name: productName, quantity: quantity, unitprice: price});
+			$.ajax({
+				url: 'forjscallphp.php',
+				type: "POST",
+				data: {
+					"add_to_cart": $.cookie("customerid"),
+					"product_id": productId,
+					"quantity": quantity
 				}
-			
-				$.cookie("cartItems", JSON.stringify(arr), { expires: 15 }); // in 15 days
-			}
-			
-			var arr = $.parseJSON($.cookie('cartItems'));
-			
-			$("#cart").empty();
-			$("#cart").append("\
-				<tr>\
-					<th>Product</th>\
-					<th>Q.</th>\
-					<th>U.P.</th>\
-					<th></th>\
-				</tr>\
-			");
-			var total = 0;
-			for (var i = 0; i < arr.length; i++) {
-				$("#cart").append(
-						"<tr>" +
-							"<th>" + arr[i].name + "</th>" +
-							"<th>" + arr[i].quantity + "</th>" +
-							"<th>" + arr[i].unitprice + "</th>" +
-							"<th>" +
-								"<span class=\"label alert-danger\" onclick=\"addToCart(-1);\");\">-</span>" +
-								"<span class=\"label alert-success\" onclick=\"addToCart(1);\");\">+</span>" +
-							"</th>" +
-						"</tr>"
-				);
-				total += arr[i].quantity * arr[i].unitprice;
-			}
-			$("#total").text("\u0E3F" + total);
+			}).done(function(response) {
+				showAllProductsInCart();
+			});
 		}
 	}
 
@@ -327,31 +284,59 @@
 	});
 
 	$(document).ready(function() {
-		if ($.cookie("cartItems") != undefined) {
-			var arr = $.parseJSON($.cookie('cartItems'));
-			var total = 0;
-			for (var i = 0; i < arr.length; i++) {
-				$("#cart").append(
-					"<tr>" +
-						"<th>" + arr[i].name.substring(0, 12) + "</th>" +
-						"<th>" + arr[i].quantity + "</th>" +
-						"<th>" + arr[i].unitprice + "</th>" +
-						"<th>" +
-							"<span class=\"label alert-danger\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", -1)\");\">-</span>" +
-							"<span class=\"label alert-success\" onclick=\"addToCart(" + arr[i].id + ", '" + arr[i].name + "', " + arr[i].unitprice + ", 1)\");\">+</span>" +
-						"</th>" +
-					"</tr>"
-				);
-				total += arr[i].quantity * arr[i].unitprice;
-			}
-			$("#total").text("\u0E3F" + total);
-		}
+		showAllProductsInCart();
 		<?php 
 				if (!isset($_POST["pid"]))
 					echo "aj();";
 		?>
 	});
 
+	function showAllProductsInCart() {
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"get_all_product_in_cart": $.cookie("customerid")
+			}
+		}).done(function(products_json) {
+			$("#cart").empty();
+			$("#cart").append("\
+				<tr>\
+					<th>Product</th>\
+					<th>Q.</th>\
+					<th>U.P.</th>\
+					<th></th>\
+				</tr>\
+			");
+
+			var array = JSON.parse(products_json);
+			var total = 0;
+			for (var i = 0; i < array.length; i++) {
+
+				var productName = array[i].Product.productDescription.productName;
+				var quantity = array[i].Quantity;
+				var unitprice = array[i].Product.price;
+
+				var pid = array[0].Product.id;
+				var maxQuan = 
+				
+				$("#cart").append(
+						"<tr>" +
+							"<th>" + productName + "</th>" +
+							"<th>" + quantity + "</th>" +
+							"<th>" + unitprice + "</th>" +
+							"<th>" +
+								"<span class=\"label alert-danger\" onclick=\"addToCart(" + pid + ", '" + productName + "', " + unitprice + ", -1);\">-</span>" +
+								"<span class=\"label alert-success\" onclick=\"addToCart(" + pid + ", '" + productName + "', " + unitprice + ", 1);\">+</span>" +
+							"</th>" +
+						"</tr>"
+				);
+				total += quantity * unitprice;
+			}
+			$("#total").text("\u0E3F" + total);
+		});
+	}
+	
 	function postAndRedirectToShopping() {
 	    var postFormStr = "<form method='POST' action='" + window.location.pathname + "?page=shopping'>";
 	    postFormStr += "<input type='hidden' name='search_redirect' value='value'></input>";

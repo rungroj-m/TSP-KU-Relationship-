@@ -143,7 +143,7 @@
 	});
 	
 	function signin(customer) {
-// 		$.cookie("customer", JSON.stringify(customer), { expires: 15 });
+		$.cookie("customerid", customer.id, { expires: 15 });
 
 		$.cookie("email", customer.username, { expires: 15 });
 		$.cookie("firstname", customer.firstname, { expires: 15 });
@@ -169,7 +169,7 @@
 	    postFormStr += "<input type='hidden' name='pn' value='<?php if (isset($_POST["back_to_location"])) echo $_POST["pn"]; ?>'></input>";
 	    postFormStr += "<input type='hidden' name='p' value='<?php if (isset($_POST["back_to_location"])) echo $_POST["p"]; ?>'></input>";
 	    postFormStr += "<input type='hidden' name='q' value='<?php if (isset($_POST["back_to_location"])) echo $_POST["q"]; ?>'></input>";
-	    postFormStr += "<input type='hidden' name='mq' value='<?php if (isset($_POST["back_to_location"])) echo $_POST["mq"]; ?>'></input>";
+	    //postFormStr += "<input type='hidden' name='mq' value='<?php if (isset($_POST["back_to_location"])) echo $_POST["mq"]; ?>'></input>";
 	    postFormStr += "</form>";
 
 	    var formElement = $(postFormStr);

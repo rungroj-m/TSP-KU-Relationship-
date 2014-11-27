@@ -11,8 +11,8 @@
     	*/
 	
 	private $host="localhost";
-    	private $user = "benzsuankularb";
-    	private $password="benzsk130";
+    	private $user = "tsp";
+    	private $password="tsp";
     	private $database="ecomerce";
     	
 	protected $db;
@@ -317,20 +317,4 @@
     }
     
  
-    require_once('ProductDescription.php');
-    require_once('DataInfo.php');
-    require_once('Brand.php');
-    require_once('Category.php');
-    require_once('Sale.php');
-    require_once('InventoryDao.php');
-    require_once('PaymentDao.php');
-    require_once('Payment.php');
-    require_once('Product.php');
-    require_once('ProductDao.php');
-    require_once('Cart.php');
-    require_once('Inventory.php');
-    require_once('Customer.php');
-    require_once('CustomerDao.php');
-    require_once('CreditCard.php');
-    require_once('Promotion.php');
 ?>

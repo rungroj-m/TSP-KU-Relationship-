@@ -313,5 +313,44 @@ if (isset($_POST["get_promotion"])) {
 	echo '[{"date":"27\/2\/","title":"Getting Contacts Barcelona - test1","link":"http:\/\/gettingcontacts.com\/events\/view\/barcelona","color":"red"},{"date":"25\/5\/","title":"test2","link":"http:\/\/gettingcontacts.com\/events\/view\/barcelona","color":"pink"},{"date":"20\/6\/","title":"test2","link":"http:\/\/gettingcontacts.com\/events\/view\/barcelona","color":"green"},{"date":"7\/10\/","title":"test3","link":"http:\/\/gettingcontacts.com\/events\/view\/barcelona","color":"blue","class":"miclasse ","content":"contingut popover';
 }
 
+if (isset($_POST["get_all_product_in_cart"])) {
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/Cart.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDao.php');
+	require_once ('inc/ProductDescription.php');
+	require_once ('inc/Category.php');
+	require_once ('inc/Brand.php');
+	
+	$customer = Customer::GetCustomer($_POST["get_all_product_in_cart"]);
+	$products = $customer->getCart()->GetProducts();
+	
+	echo json_encode($products);
+}
 
+if (isset($_POST["add_to_cart"])) {
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/Cart.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDao.php');
+	require_once ('inc/ProductDescription.php');
+	require_once ('inc/Category.php');
+	require_once ('inc/Brand.php');
 
+	$customer = Customer::GetCustomer($_POST["add_to_cart"]);
+	$cart = $customer->getCart();
+	
+	$product = Product::GetProduct($_POST["product_id"]);
+	$amount = $_POST["quantity"];
+	
+	if ($amount > 0) {
+		$cart->AddProduct($product, $amount);
+	}
+	else if ($amount < 0) {
+		$cart->RemoveProduct($product, -1 * $amount);
+	}
+}

@@ -84,18 +84,12 @@ body {
     </div>
     
     <script type="text/javascript">
-// 		if ($.cookie("customer") != undefined) {
-		if ($.cookie("email") != undefined) {
+		if ($.cookie("emailid") != undefined) {
 			var customer = $.cookie("customer");
-			//alert(customer);
-			//alert(customer);
 			
-//  			$("#username").html("<li><a>Hi, " + customer.firstname + " " + customer.lastname + "</a></li>" +
-//  					"<li><a href=\"#\" id=\"logout\">Logout</a></li>");
-
-				$("#username").html("<li><a>Hi, " + $.cookie("firstname") + " " + $.cookie("lastname") + "</a></li>" +
-						"<li><a href=\"#\" id=\"logout\">Logout</a></li>");
-				
+			$("#username").html("<li><a>Hi, " + $.cookie("firstname") + " " + $.cookie("lastname") + "</a></li>" +
+					"<li><a href=\"#\" id=\"logout\">Logout</a></li>");
+			
 			$('.navbar-nav li:contains("Member")').remove();
 // ADMIN MODE
 // 			if ($.cookie("email") != "admin@kurel.com") {
@@ -110,12 +104,10 @@ body {
 		}
 
 		$("#logout").click(function() {
-// 			$.removeCookie("customer");
-
+			$.removeCookie("customerid");
 			$.removeCookie("email");
 			$.removeCookie("firstname");
 			$.removeCookie("lastname");
-			$.removeCookie("cartItems");
 			window.location = window.location.pathname;
 		});
 
