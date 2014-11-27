@@ -201,7 +201,7 @@ if (isset($_POST["submit"])) {
 		include_once ('inc/InventoryDao.php');
 		$brand = Brand::CreateBrand($_POST['brand']);
 		$category = Category::CreateCategory($_POST['category']);
-		$productDesc = ProductDescription::CreateProductDescription( $category, $brand, $_POST['desc'], $_POST['code'], array_map( 'trim', explode(',', $_POST['tag']) ), $_POST['name']);
+		$productDesc = ProductDescription::CreateProductDescription( $category, $brand, $_POST['desc'], $_POST['code'], array_map( 'trim', explode(',', $_POST['tag']) ), $_POST['name'] ,$_POST['weight']);
 		$productDesc->addImages( array( $_POST['image'] ) );
 		$product = Product::CreateProduct($productDesc, $_POST['price']);
 		Inventory::addProduct($product, $_POST['quan'] );
@@ -227,6 +227,7 @@ if (isset($_POST["submit"])) {
 		$productdescs -> category = Category::CreateCategory($_POST["category"]);
 		$productdescs -> additionTags = array_map( 'trim', explode(',', $_POST['tag']) );
 		$productdescs -> brand = Brand::CreateBrand($_POST["brand"]);
+		$productdescs -> weight = $_POST['weight'];
 		$productdescs -> updateData();
 		
 		//print_r($productdescs);
@@ -353,4 +354,20 @@ if (isset($_POST["add_to_cart"])) {
 	else if ($amount < 0) {
 		$cart->RemoveProduct($product, -1 * $amount);
 	}
+}
+
+if (isset($_POST["clear-cart"])) {
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/Cart.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDao.php');
+	require_once ('inc/ProductDescription.php');
+	require_once ('inc/Category.php');
+	require_once ('inc/Brand.php');
+
+	$customer = Customer::GetCustomer($_POST["clear-cart"]);
+	$cart = $customer->getCart();
+	$cart->ClearProducts();
 }

@@ -267,20 +267,26 @@
 	});
 
 	$("#button-confirm-clear-cart").click(function() {
-		$.removeCookie("cartItems");
-		
-		$("#cart").empty();
-		$("#cart").append("\
-			<tr>\
-				<th>Product</th>\
-				<th>Q.</th>\
-				<th>U.P.</th>\
-			</tr>\
-		");
-
-		$("#total").text("\u0E3F0");
-		
-		$("#clear-cart-confirm").modal('hide');
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"clear-cart": $.cookie("customerid")
+			}
+		}).done(function(products_json) {
+			$("#cart").empty();
+			$("#cart").append("\
+				<tr>\
+					<th>Product</th>\
+					<th>Q.</th>\
+					<th>U.P.</th>\
+				</tr>\
+			");
+	
+			$("#total").text("\u0E3F0");
+			
+			$("#clear-cart-confirm").modal('hide');
+		});
 	});
 
 	$(document).ready(function() {
@@ -318,7 +324,6 @@
 				var unitprice = array[i].Product.price;
 
 				var pid = array[i].Product.id;
-				var maxQuan = 
 				
 				$("#cart").append(
 						"<tr>" +
@@ -389,7 +394,10 @@
 	    $('body').append(formElement);
 	    $(formElement).submit();
 	}
-	
+
+	$("#button-checkout").click(function() {
+		window.location.href = "?page=payment";
+	});
 </script>
 						
 <?php

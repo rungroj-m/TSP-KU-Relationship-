@@ -4,7 +4,7 @@
 	</div>
 	<div class="panel-body">
 		<div>
-			<table class="table table-striped table-bordered">
+			<table class="table table-striped table-bordered" id="cart">
 				<tr>
 					<td>#</td>
 					<td>Name</td>
@@ -14,15 +14,248 @@
 					<td>Weight</td>
 				</tr>
 			</table>
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title">Address</h3>
+	</div>
+	<div class="panel-body">
+		<div>
+		Address same as yours <input type="checkbox">
 			
-			<table class="table">
-				<tr>
-					<td><button type="button" class="btn btn-info" id="button-add" style="width: 100%">&lt; Back to shopping</button></td>
-					<td><button type="button" class="btn btn-primary" id="button-clear" style="width: 100%">Payment &gt;</button></td>
-				</tr>
-			</table>
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title">Shipping Option</h3>
+	</div>
+	<div class="panel-body">
+		<div>
+		
+		<table class="table">
+					<tbody id="transaction-list">
+						<tr>
+							<th>Option</th>
+							<th>Fee</th>
+							<th>Total</th>
+							<th></th>
+						</tr>
+						<tr>
+							<th>EMS</th>
+							<th id="emsfee"></th>
+							<th id="emstotal"></th>
+							<th><input type="radio" name="option" value="1"></th>
+						</tr>
+						<tr>
+							<th>ธรรมดา</th>
+							<th id="deliveryfee"></th>
+							<th id="deliverytotal"></th>
+							<th><input type="radio" name="option" value="2"></th>
+							<th></th>
+						</tr>
+					</tbody>
+				</table>
+			
+		<table class="table">
+			<tr>
+				<td><button type="button" class="btn btn-info" id="button-back" style="width: 100%">&lt; Back to shopping</button></td>
+				<td><button type="button" class="btn btn-primary" id="button-pay" style="width: 100%">Payment &gt;</button></td>
+			</tr>
+		</table>
 			
 			
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+	var amount = 0;
+	var totalquan = 0;
+	var totalweight = 0;
+	
+	$(document).ready(function() {
+		showAllProductsInCart();
+	});
+
+	function getEMSFee(weight,amount) {
+		var total = 0;
+		if(weight < 20)
+			total += 32;
+		else if(weight < 100)
+			total += 37;
+		else if(weight < 250)
+			total += 42;
+		else if(weight < 500)
+			total += 52;
+		else if(weight < 1000)
+			total += 67;
+		else if(weight < 1500)
+			total += 82;
+		else if(weight < 2000)
+			total += 97;
+		else if(weight < 2500)
+			total += 112;
+		else if(weight < 3000)
+			total += 127;
+		else if(weight < 3500)
+			total += 147;
+		else if(weight < 4000)
+			total += 167;
+		else if(weight < 4500)
+			total += 187;
+		else if(weight < 5000)
+			total += 207;
+		else if(weight < 5500)
+			total += 232;
+		else if(weight < 6000)
+			total += 257;
+		else if(weight < 6500)
+			total += 282;
+		else if(weight < 7000)
+			total += 307;
+		else if(weight < 7500)
+			total += 332;
+		else if(weight < 8000)
+			total += 357;
+		else if(weight < 8500)
+			total += 387;
+		else if(weight < 9000)
+			total += 417;
+		else if(weight < 9500)
+			total += 447;
+		else if(weight < 10000)
+			total += 477;
+		$("#emsfee").text(total);
+		$("#emstotal").text(amount + total);
+	}
+
+	function getDeliverFee(weight,amount) {
+		var total = 0;
+		if(weight < 1000)
+			total += 20;
+		else if(weight < 2000)
+			total += 35;
+		else if(weight < 3000)
+			total += 50;
+		else if(weight < 4000)
+			total += 65;
+		else if(weight < 5000)
+			total += 80;
+		else if(weight < 6000)
+			total += 95;
+		else if(weight < 7000)
+			total += 110;
+		else if(weight < 8000)
+			total += 125;
+		else if(weight < 9000)
+			total += 140;
+		else if(weight < 10000)
+			total += 155;
+		$("#deliveryfee").text(total);
+		$("#deliverytotal").text(amount + total);
+	}
+	
+	function addToCart(productId, productName, price, quantity/*, maxQuan*/) {
+		if ($.cookie("customerid") == undefined) {
+			$("#alert-signin").modal({
+				show: true
+			});
+			pid = productId; pn = productName; p = price; q = quantity;// mq = maxQuan;
+		}
+		else {
+			$.ajax({
+				url: 'forjscallphp.php',
+				type: "POST",
+				data: {
+					"add_to_cart": $.cookie("customerid"),
+					"product_id": productId,
+					"quantity": quantity
+				}
+			}).done(function(response) {
+				showAllProductsInCart();
+			});
+		}
+	}
+
+	function showAllProductsInCart() {
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"get_all_product_in_cart": $.cookie("customerid")
+			}
+		}).done(function(products_json) {
+			$("#cart").empty();
+			$("#cart").append("\
+				<thead><tr>\
+					<th>#</th>\
+					<th>Name</th>\
+					<th>Quantity</th>\
+					<th>Unit Price</th>\
+					<th>Total Price</th>\
+					<th>Weight</th>\
+				</tr></thead>\
+			");
+
+			var array = JSON.parse(products_json);
+			for (var i = 0; i < array.length; i++) {
+
+				var productName = array[i].Product.productDescription.productName;
+				var quantity = array[i].Quantity;
+				var unitprice = array[i].Product.price;
+
+				var pid = array[i].Product.id;
+				
+				$("#cart").append(
+						"<tr>" +
+							"<th>" + (i+1) + "</th>" +
+							"<th>" + productName + "</th>" +
+							"<th>" +
+							"<span class=\"label alert-danger\" onclick=\"addToCart(" + pid + ", '" + productName + "', " + unitprice + ", -1);\">-</span>" +
+							"<span class=\"label alert-success\" onclick=\"addToCart(" + pid + ", '" + productName + "', " + unitprice + ", 1);\">+</span>" +
+							"&nbsp;" + quantity +
+							"</th>" +
+							"<th>" + unitprice + "</th>" +
+							"<th>" + quantity * unitprice + "</th>" +
+							"<th>" + 000 + "</th>" +
+						"</tr>"
+				);
+				amount += quantity * unitprice;
+				totalquan += Number(quantity);
+				totalweight += Number(000);
+
+				console.log(totalquan + " " + quantity);
+			}
+			$("#cart").append(
+					"<tr>" +
+						"<th></th>" +
+						"<th>Total</th>" +
+						"<th>" + totalquan +"</th>" +
+						"<th></th>" +
+						"<th>" + amount +"</th>" +
+						"<th>" + totalweight +"</th>" +
+					"</tr>"
+			);
+
+		getEMSFee(totalweight,amount);
+		getDeliverFee(totalweight,amount);
+		});
+	}
+
+	$("#button-back").click(function() {
+		window.location.href = "?page=shopping";
+	});
+</script>
+
+
+
+
+
+
+
+

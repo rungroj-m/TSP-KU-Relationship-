@@ -84,8 +84,7 @@ body {
     </div>
     
     <script type="text/javascript">
-		if ($.cookie("emailid") != undefined) {
-			var customer = $.cookie("customer");
+		if ($.cookie("customerid") != undefined) {
 			
 			$("#username").html("<li><a>Hi, " + $.cookie("firstname") + " " + $.cookie("lastname") + "</a></li>" +
 					"<li><a href=\"#\" id=\"logout\">Logout</a></li>");

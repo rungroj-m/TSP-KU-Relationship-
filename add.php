@@ -73,6 +73,13 @@ Price:
 	<input type="number" class="form-control" id="price" placeholder="Number" min="0">
 </div>
 
+Weight:
+<div class="input-group">
+	<span class="input-group-addon"><span class="glyphicon glyphicon-save"></span></span>
+	<input type="number" class="form-control" id="weight" placeholder="Number" min="0">
+	<span class="input-group-addon">Grams</span>
+</div>
+
 Description:
 <div id="desc"></div>
 
@@ -144,6 +151,7 @@ Brand:
 				"name": $("#name").val(),
 				"code": $("#code").val(),
 				"price": $("#price").val(),
+				"weight": $("#weight").val(),
 				"desc": $("#desc").code(),
 				"image": $("#image").val(),
 				"category": $("#category").val(),
@@ -160,6 +168,7 @@ Brand:
 		$("#name").val(""); 
 		$("#code").val("") ;
 		$("#price").val("") ;
+		$("#weight").val(""),
 		$("#desc").code("") ;
 		$("#image").val(""),
 		$("#category").val("") ;
@@ -177,6 +186,7 @@ Brand:
 				"name": $("#name").val(),
 				"code": $("#code").val(),
 				"price": $("#price").val(),
+				"weight": $("#weight").val(),
 				"desc": $("#desc").code(),
 				"image": $("#image").val(),
 				"category": $("#category").val(),
