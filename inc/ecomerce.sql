@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 27, 2014 at 07:58 AM
+-- Generation Time: Nov 27, 2014 at 08:31 AM
 -- Server version: 5.6.20
 -- PHP Version: 5.5.15
 
@@ -30,6 +30,21 @@ CREATE TABLE IF NOT EXISTS `AdditionProductDescriptionTags` (
   `ProductDescriptionId` int(11) NOT NULL,
   `TagId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Admins`
+--
+
+CREATE TABLE IF NOT EXISTS `Admins` (
+`AdminId` int(11) NOT NULL,
+  `FirstName` text NOT NULL,
+  `LastName` text NOT NULL,
+  `UserName` varchar(20) NOT NULL,
+  `Password` text NOT NULL,
+  `Level` int(2) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -220,6 +235,12 @@ ALTER TABLE `AdditionProductDescriptionTags`
  ADD PRIMARY KEY (`ProductDescriptionId`,`TagId`);
 
 --
+-- Indexes for table `Admins`
+--
+ALTER TABLE `Admins`
+ ADD PRIMARY KEY (`AdminId`);
+
+--
 -- Indexes for table `Brands`
 --
 ALTER TABLE `Brands`
@@ -301,6 +322,11 @@ ALTER TABLE `Tags`
 -- AUTO_INCREMENT for dumped tables
 --
 
+--
+-- AUTO_INCREMENT for table `Admins`
+--
+ALTER TABLE `Admins`
+MODIFY `AdminId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `Brands`
 --

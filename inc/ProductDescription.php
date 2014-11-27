@@ -93,5 +93,5 @@
 	    return $dao->findProductDescriptionByTags( $stringArray );
 	}
     }
-    
 ?>
+
