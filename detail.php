@@ -84,7 +84,7 @@
 								<div class="input-group">
 									<input type="number" class="form-control" id="quan" value="1" min="0" max="<?php echo $maxQuan; ?>">
 									<span class="input-group-btn">
-										<button type="button" class="btn btn-success" id="add-button" onclick="addToCart(0);">ADD</button>
+										<button type="button" class="btn btn-success" id="add-button" onclick="addToCart(<?php echo $_GET["id"]; ?>, 0);">ADD</button>
 									</span>
 								</div>
 							</div>
@@ -214,12 +214,12 @@
 	}
 
 	var pid, pn, p, q//, mq;
-	function addToCart(quantity) {
+	function addToCart(productId, quantity) {
 		if ($("#quan").val() == 0)
 			return;
 		if (quantity == 0)
 			quantity = Number($("#quan").val());
-		var productId = product.id;
+			
 		var productName = product.name;
 		var price = product.price;
 
@@ -317,7 +317,7 @@
 				var quantity = array[i].Quantity;
 				var unitprice = array[i].Product.price;
 
-				var pid = array[0].Product.id;
+				var pid = array[i].Product.id;
 				var maxQuan = 
 				
 				$("#cart").append(
@@ -326,8 +326,8 @@
 							"<th>" + quantity + "</th>" +
 							"<th>" + unitprice + "</th>" +
 							"<th>" +
-								"<span class=\"label alert-danger\" onclick=\"addToCart(" + pid + ", '" + productName + "', " + unitprice + ", -1);\">-</span>" +
-								"<span class=\"label alert-success\" onclick=\"addToCart(" + pid + ", '" + productName + "', " + unitprice + ", 1);\">+</span>" +
+								"<span class=\"label alert-danger\" onclick=\"addToCart(" + pid + ", -1);\">-</span>" +
+								"<span class=\"label alert-success\" onclick=\"addToCart(" + pid + ", 1);\">+</span>" +
 							"</th>" +
 						"</tr>"
 				);

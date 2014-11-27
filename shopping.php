@@ -233,7 +233,7 @@
 				var quantity = array[i].Quantity;
 				var unitprice = array[i].Product.price;
 
-				var pid = array[0].Product.id;
+				var pid = array[i].Product.id;
 				var maxQuan = 
 				
 				$("#cart").append(
