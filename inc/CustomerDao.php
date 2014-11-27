@@ -8,8 +8,8 @@
     	*/
 	
 	private $host="localhost";
-    	private $user = "tsp";
-    	private $password="tsp";
+    	private $user = "benzsuankularb";
+    	private $password="benzsk130";
     	private $database="ecomerce";
     	
 	protected $db;
@@ -49,6 +49,33 @@
 	    $STH->bindParam(':cusId', $customerId );
 	    $STH->execute();
 	    return $STH->fetch();
+	}
+	
+	public function getAdmin( $adminId ) {
+	    $STH = $this->db->prepare(  "SELECT * FROM `Admins` WHERE `AdminId` = :cusId" );
+	    $STH->bindParam(':cusId', $adminId );
+	    $STH->execute();
+	    return $STH->fetch();
+	}
+	
+	public function addAdmin( $firstName, $lastName, $username, $password, $level ) {
+	    $STH = $this->db->prepare("INSERT INTO `Admins`( `FirstName`, `LastName`, `UserName`, `Password`, `Level` ) VALUES ( :firstName, :lastName, :userName, :password, :level)" );
+	    $STH->bindParam(':firstName', $firstName );
+	    $STH->bindParam(':lastName', $lastName );
+	    $STH->bindParam(':userName', $username );
+	    $STH->bindParam(':password', md5( $password ) );
+	    $STH->bindParam(':level', $level );
+	    $STH->execute();
+	    return $this->db->lastInsertId();
+	}
+	
+	public function authAdmin( $username, $password ) {
+	    $STH = $this->db->prepare(  "SELECT `AdminId` FROM `Admins` WHERE `UserName` = :userName AND `Password` = :pass" );
+	    $STH->bindParam(':userName', $username );
+	    $STH->bindParam(':pass', md5( $password ) );
+	    $STH->execute();
+	    if ( $STH->rowCount() == 0 ) return null;
+	    return $STH->fetch()['AdminId'];
 	}
 	
     }

@@ -93,14 +93,5 @@
 	    return $dao->findProductDescriptionByTags( $stringArray );
 	}
     }
-
-    require_once( 'ProductDescription.php' );
-    require_once( 'ProductDao.php' );
-    require_once( 'Category.php' );
-    require_once( 'Brand.php' );
-    
-    $in = ProductDescription::GetProductDescription( 21 );
-    $in->weight = 10000;
-    $in->updateData();
     
 ?>
