@@ -11,8 +11,8 @@
     	*/
 	
 	private $host="localhost";
-    	private $user = "tsp";
-    	private $password="tsp";
+    	private $user = "benzsuankularb";
+    	private $password="benzsk130";
     	private $database="ecomerce";
     	
 	protected $db;
@@ -44,23 +44,24 @@
 	    return $STH->fetchAll();
 	}
 	
-	function addProductDescription( $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $AdditionTags, $CreateDate ) {
-	    $STH = $this->db->prepare("insert into `ProductDescriptions`( `CategoryId`, `BrandId`, `ProductName`, `ModelCode`, `Description`, `CreateDate` ) values ( ?,?,?,?,?,? );");
-	    $STH->execute( array( $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $CreateDate ) );
+	function addProductDescription( $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $AdditionTags, $CreateDate, $Weight ) {
+	    $STH = $this->db->prepare("insert into `ProductDescriptions`( `CategoryId`, `BrandId`, `ProductName`, `ModelCode`, `Description`, `CreateDate`, `Weight` ) values ( ?,?,?,?,?,?,? );");
+	    $STH->execute( array( $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $CreateDate, $Weight ) );
 	    $id = $this->db->lastInsertId();
 	    $this->arrangeTag( $id, $CategoryId, $BrandId, $ProductName, $ModelCode, $AdditionTags );
 	    
 	    return $id;
 	}
 	
-	function editProductDescription( $pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $AdditionTags ) {
-	    $STH = $this->db->prepare("update `ProductDescriptions` set `CategoryId` = :cid, `BrandId` = :bid, `ProductName` = :pn,`Description` = :des, `ModelCode` = :mc where `ProductDescriptionId`=:id" );
+	function editProductDescription( $pdid, $CategoryId, $BrandId, $ProductName, $ModelCode, $Description, $AdditionTags,$Weight ) {
+	    $STH = $this->db->prepare("update `ProductDescriptions` set `CategoryId` = :cid, `BrandId` = :bid, `ProductName` = :pn,`Description` = :des, `ModelCode` = :mc , `Weight` = :weight where `ProductDescriptionId`=:id" );
 	    $STH->bindParam(':id', $pdid );
 	    $STH->bindParam(':cid', $CategoryId );
 	    $STH->bindParam(':bid', $BrandId );
 	    $STH->bindParam(':des', $Description );
 	    $STH->bindParam(':pn', $ProductName );
 	    $STH->bindParam(':mc', $ModelCode );
+	    $STH->bindParam(':weight', $Weight );
 	    //$STH->bindParam(':cd', $CreateDate->format('Y-m-d H:i:s') );
 	    $STH->execute();
 	    $this->removeProductDescriptionTag( $pdid );
@@ -72,7 +73,7 @@
 	    $tagIdArray = $this->addTags( array( $this->getCategoryById( $CategoryId ), $this->getBrandById( $BrandId ), $ProductName, $ModelCode ) );
 	    $this->addProductDescriptionTagId( $Pdid, $tagIdArray );
 	    $addtionTagIdArray = $this->addTags( $AdditionTags );
-	    print_r( $addtionTagIdArray );
+	    //print_r( $addtionTagIdArray );
 	    $this->addAdditionProductDescriptionTagId( $Pdid, $addtionTagIdArray );
 	}
 	

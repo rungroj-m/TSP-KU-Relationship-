@@ -10,15 +10,16 @@
 	public $createDate;
 	public $additionTags;
 	public $images;
+	public $weight ;
 	
 	public function __construct(){
 	}
 	
-	public static function CreateProductDescription( $category, $brand, $description, $modelCode, $additionTags, $productName ) {
+	public static function CreateProductDescription( $category, $brand, $description, $modelCode, $additionTags, $productName, $weight ) {
 	    $dao = ProductDao::GetInstance();
 	    $now = new DateTime( 'now' );
 	    print_r($now);
-	    $pdid = $dao->addProductDescription( $category->id, $brand->id, $productName, $modelCode, $description , $additionTags, $now->format('Y-m-d H:i:s') );
+	    $pdid = $dao->addProductDescription( $category->id, $brand->id, $productName, $modelCode, $description , $additionTags, $now->format('Y-m-d H:i:s'), $weight );
 	    
 	    $instance = new self();
 	    $instance->id = $pdid;
@@ -29,6 +30,7 @@
 	    $instance->productName = $productName;
 	    $instance->createDate = $now;
 	    $instance->additionTags = $additionTags;
+	    $instance->weight = $weight;
 	    return $instance;
 	}
 	
@@ -39,9 +41,9 @@
 	
 	public function updateData() {
 	    $dao = ProductDao::GetInstance();
-	    echo ("x" .$this->productName);
-	    $dao->editProductDescription( $this->id, $this->category->id, $this->brand->id, $this->productName, $this->modelCode, $this->description , $this->additionTags );
-	    echo ("y" .$this->productName);
+	    //echo ("x" .$this->productName);
+	    $dao->editProductDescription( $this->id, $this->category->id, $this->brand->id, $this->productName, $this->modelCode, $this->description , $this->additionTags, $this->weight );
+	    //echo ("y" .$this->productName);
 	}
 	
 	public function getTags() {
@@ -66,6 +68,7 @@
 	    $instance->description = $data['Description'];
 	    $instance->createDate = new DateTime( $data['CreateDate'] );
 	    $instance->additionTags = $data['AdditionalTags'];
+	    $instance->weight = $data['Weight'];
 	    
 	    $data = $dao->getImagesByProductDescriptionId( $pdid );
 	    $instance->images = array();
@@ -91,4 +94,13 @@
 	}
     }
 
+    require_once( 'ProductDescription.php' );
+    require_once( 'ProductDao.php' );
+    require_once( 'Category.php' );
+    require_once( 'Brand.php' );
+    
+    $in = ProductDescription::GetProductDescription( 21 );
+    $in->weight = 10000;
+    $in->updateData();
+    
 ?>
