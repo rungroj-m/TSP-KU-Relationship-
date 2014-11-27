@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 27, 2014 at 08:31 AM
+-- Generation Time: Nov 27, 2014 at 08:41 AM
 -- Server version: 5.6.20
 -- PHP Version: 5.5.15
 
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `Brands` (
 
 CREATE TABLE IF NOT EXISTS `Carts` (
 `CartId` int(11) NOT NULL,
-  `LastUpdate` datetime(6) NOT NULL,
+  `LastUpdate` datetime NOT NULL,
   `CustomerId` int(11) NOT NULL,
   `Closed` tinyint(1) NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
@@ -204,6 +204,21 @@ CREATE TABLE IF NOT EXISTS `Products` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `Promotion`
+--
+
+CREATE TABLE IF NOT EXISTS `Promotion` (
+`PromotionId` int(11) NOT NULL,
+  `Type` int(1) NOT NULL,
+  `Value` decimal(20,2) NOT NULL,
+  `StartDate` datetime NOT NULL,
+  `EndDate` datetime NOT NULL,
+  `AdminId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `Sales`
 --
 
@@ -307,6 +322,12 @@ ALTER TABLE `Products`
  ADD PRIMARY KEY (`ProductId`);
 
 --
+-- Indexes for table `Promotion`
+--
+ALTER TABLE `Promotion`
+ ADD PRIMARY KEY (`PromotionId`);
+
+--
 -- Indexes for table `Sales`
 --
 ALTER TABLE `Sales`
@@ -372,6 +393,11 @@ MODIFY `ImageId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 --
 ALTER TABLE `Products`
 MODIFY `ProductId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT for table `Promotion`
+--
+ALTER TABLE `Promotion`
+MODIFY `PromotionId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `Sales`
 --
