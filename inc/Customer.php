@@ -43,5 +43,7 @@
 	public function getCart() {
 	    return Cart::GetCartFromCustomer( $this );
 	}
+	
+	
     }
 ?>

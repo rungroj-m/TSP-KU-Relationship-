@@ -19,6 +19,19 @@
 	    return $instance;
 	}
 	
+	public static function GetCreditCard( $number ) {
+	    return CreditCard::dataToCreditCard( PaymentDao::getCreditCardByNumber( $number ) );
+	}
+	
+	private static function dataToCreditCard( $data ) {
+	    $instance = new Self();
+	    $instance->cardNumber = $data['Number'];
+	    $instance->cvv = $data['Cvv'];
+	    $instance->name = $data['Name'];
+	    $instance->expDate = new TimeDate( $data['ExpDate'] );
+	    return $instance;
+	}
+	
 	public function vertify() {
 	    $data = PaymentDao::GetInstance()->getCreditCard( $this->name, $this->cardNumber, $this->cvv, $this->expDate );
 	    $this->isVertify = $data['Number'] == $this->cardNumber;

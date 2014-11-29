@@ -118,7 +118,6 @@
 	}
 	
 	public function closeCart( $cartId ) {
-	    echo 'fdsadfsafadsdfasdfsfdsaadsf';
 	    $STH = $this->db->prepare("UPDATE `Carts`
 					SET `Closed` = 1
 					WHERE `CartId` = :cid");
@@ -163,8 +162,10 @@
 	    $this->closeCart( $this->getCurrentCartId( $customerId ) );
 	}
 	
-	public function purchaseCart() {
-	    //TODO
+	public function getCart( $cartId ) {
+	    $STH = $this->db->prepare("SELECT * FROM `Carts` WHERE `CartId` = $cartId" );
+	    $STH->execute();
+	    return $STH->fetch();
 	}
 	
 	public static function ReleaseUnpurchaseCart() {

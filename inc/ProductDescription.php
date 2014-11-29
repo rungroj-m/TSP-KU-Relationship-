@@ -93,5 +93,14 @@
 	    return $dao->findProductDescriptionByTags( $stringArray );
 	}
     }
+    
+    /*require_once( 'ProductDao.php' );
+    require_once( 'Product.php' );
+    require_once( 'Category.php' );
+    require_once( 'Brand.php' );
+    $p = Product::GetProduct( 21 );
+    print_r( $p );
+    $p->disable();*/
+    
 ?>
 

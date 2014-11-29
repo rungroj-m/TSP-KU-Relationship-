@@ -12,6 +12,10 @@
 	    return Cart::dataToCart( $data );
 	}
 	
+	public static function GetCart( $cartId ) {
+	    return Cart::dataToCart( InventoryDao::getCart( $cartId ) );
+	}
+	
 	private static function dataToCart( $data ){
 	    $instance = new self();
 	    $instance->cartId = $data['CartId'];
