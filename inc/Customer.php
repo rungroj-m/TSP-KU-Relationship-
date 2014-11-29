@@ -44,6 +44,5 @@
 	    return Cart::GetCartFromCustomer( $this );
 	}
 	
-	
     }
 ?>
