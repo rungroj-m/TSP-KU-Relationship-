@@ -43,5 +43,9 @@
 	public function getCart() {
 	    return Cart::GetCartFromCustomer( $this );
 	}
+	
+	public function getWishList (){
+	    return WishLists::GetWishListFromCustomer( $this );
+	}
     }
 ?>

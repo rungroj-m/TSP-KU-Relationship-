@@ -15,6 +15,23 @@
 	public function GetCustomer() {
 	    return $cart->customer;
 	}
+	
+	public static function GetAll() {
+	    $datas = PaymentDao::GetInstance()->GetAllSale();
+	    $result = array();
+	    foreach( $datas as &$val ) {
+		array_push( $result, Sale::dataToSale( $val ) );
+	    }
+	    return $result;
+	}
+	
+	private static function dataToSale( $data ) {
+	    $instance = new self();
+	    $instance->cart = Cart::GetCart( $data['CartId'] );
+	    $instance->payment = Payment::GetPayment( $data['Payment'] );
+	    $instance->id = $data['SaleId'];
+	    return $instance;
+	}
     }
 
 ?>

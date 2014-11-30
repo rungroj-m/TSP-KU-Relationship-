@@ -68,6 +68,110 @@
 	    $this->addInventory( $newPid, $this->releaseAllInventory( $oldPid ) ) ;
 	}
 	
+	public function addToWishList( $customerId, $pid, $amount ) {
+	    $wishListId = $this->getCurrentWishListId( $customerId );
+	    $transactionId = $this->releaseInventory( $pid, $amount );
+	    $STH = $this->db->prepare("INSERT INTO `WishListTransactions`( `WishListId`, `InventoryTransactionId` ) VALUES ( :wishListId, :transactionId )" );
+	    $STH->bindParam(':wishListId', $this->getCurrentWishListId( $customerId ) );
+	    $STH->bindParam(':transactionId', $transactionId );
+	    $STH->execute();
+	    return $transactionId;
+	}
+	
+	public function removeFromWishList( $customerId, $pid, $amount ) {
+	    //TODO CHECK REMOVE
+	    $wishListId = $this->getCurrentWishListId( $customerId );
+	    $transactionId = $this->addInventory( $pid, $amount );
+	    $STH = $this->db->prepare("INSERT INTO `WishListTransactions`( `WishListId`, `InventoryTransactionId` ) VALUES ( :wishListId, :transactionId )" );
+	    $STH->bindParam(':wishListId', $wishListId );
+	    $STH->bindParam(':transactionId', $transactionId );
+	    $STH->execute();
+	    return $transactionId;
+	}
+	
+	public function  getCurrentWishListId ( $customerId ) {
+	    return $this->getCurrentWishList( $customerId )['WishListId'];
+	}
+	
+	public function getCurrentWishList ( $customerId ) {
+	    $STH = $this->db->prepare("SELECT * FROM `WishLists` WHERE `CustomerId` = :customerId AND `Closed` = 0");
+	    $STH->bindParam(':customerId', $customerId );
+	    $STH->execute();
+	    if( $STH->rowCount() == 0 ) {
+		$this->createWishList( $customerId );
+		return $this->getCurrentWishList( $customerId );
+	    }
+	    $wishListData = $STH->fetch();
+	    return $wishListData;
+	}
+	
+	public function createWishList ( $customerId ) {
+	    $STH = $this->db->prepare("INSERT INTO `WishLists`(`CustomerId`, `LastUpdate`, `Closed`) VALUES ( :customerId, NOW(), 0 )");
+	    $STH->bindParam(':customerId', $customerId );
+	    $STH->execute();
+	    return $this->db->lastInsertId();
+	}
+	
+	public function updateWishList( $wishListId ) {
+	    $STH = $this->db->prepare("UPDATE `WishLists` SET `LastUpdate` = NOW() WHERE `WishListId` = ?" );
+	    $STH->execute( array( $wishListId ));
+	}
+	
+	public function closeWishList( $wishListId ) {
+	    $STH = $this->db->prepare("UPDATE `WishLists`
+					SET `Closed` = 1
+					WHERE `WishListId` = :cid");
+	    $STH->bindParam(':cid', $wishListId );
+	    $STH->execute();
+	}
+	
+	public function getWishListTransactions( $wishListId ) {
+	    $STH = $this->db->prepare("SELECT * FROM `WishListTransactions` CT
+				      JOIN `InventoryTransactions` IT
+				      ON IT.TransactionId = CT.TransactionId
+				      WHERE CT.WishListId = :wishListId");
+	    $STH->bindParam(':wishListId', $wishListId );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
+	public function getWishListProducts( $wishListId ) {
+	    $STH = $this->db->prepare("SELECT T1.ProductId, ( T1.income - COALESCE( T2.outcome , 0 ) ) as Quantity FROM
+					    ( SELECT IT.ProductId, SUM( IT.Quantity ) as income FROM `WishListTransactions` CT
+					    JOIN `InventoryTransactions` IT
+					    ON IT.TransactionId = CT.InventoryTransactionId
+					    WHERE CT.WishListId = :wishListId AND IT.Deposition = 0
+					    GROUP BY IT.ProductId) T1
+					LEFT JOIN
+					    ( SELECT IT.ProductId, SUM( IT.Quantity ) as outcome FROM `WishListTransactions` CT
+					    JOIN `InventoryTransactions` IT
+					    ON IT.TransactionId = CT.InventoryTransactionId
+					    WHERE CT.WishListId = :wishListId AND IT.Deposition = 1
+					    GROUP BY IT.ProductId ) T2
+				      ON T1.ProductId = T2.ProductId");
+	    $STH->bindParam(':wishListId', $wishListId );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
+	public function releaseWishList( $customerId ) {
+	    $data = $this.getWishListProducts();
+	    foreach ( $data as &$val ) {
+		$this->removeFromWishList( $customerId, $val['ProductId'], $val['Quantity'] );
+	    }
+	    $this->closeWishList( $this->getCurrentWishListId( $customerId ) );
+	}
+	
+	public function getWishList( $wishListId ) {
+	    $STH = $this->db->prepare("SELECT * FROM `WishLists` WHERE `WishListId` = $wishListId" );
+	    $STH->execute();
+	    return $STH->fetch();
+	}
+	
+	public static function ReleaseUnpurchaseWishList() {
+	    
+	}
+	
 	public function addToCart( $customerId, $pid, $amount ) {
 	    $cartId = $this->getCurrentCartId( $customerId );
 	    $transactionId = $this->releaseInventory( $pid, $amount );
@@ -118,7 +222,6 @@
 	}
 	
 	public function closeCart( $cartId ) {
-	    echo 'fdsadfsafadsdfasdfsfdsaadsf';
 	    $STH = $this->db->prepare("UPDATE `Carts`
 					SET `Closed` = 1
 					WHERE `CartId` = :cid");
@@ -163,12 +266,10 @@
 	    $this->closeCart( $this->getCurrentCartId( $customerId ) );
 	}
 	
-	public function purchaseCart() {
-	    //TODO
-	}
-	
-	public static function ReleaseUnpurchaseCart() {
-	    
+	public function getCart( $cartId ) {
+	    $STH = $this->db->prepare("SELECT * FROM `Carts` WHERE `CartId` = $cartId" );
+	    $STH->execute();
+	    return $STH->fetch();
 	}
     }
     

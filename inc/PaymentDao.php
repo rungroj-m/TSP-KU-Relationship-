@@ -45,12 +45,25 @@
 	    return $this->db->lastInsertId();
 	}
 	
+	public function GetAllSale() {
+	    $STH = $this->db->prepare(  "SELECT * FROM `Sales`" );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
 	public function getCreditCard( $name, $number, $cvv, $expDate ) {
 	    $STH = $this->db->prepare(  "SELECT * FROM `CreditCards` WHERE `Name` = :name AND `Number` = :number AND `Cvv` = :cvv AND `ExpDate` = :expDate" );
 	    $STH->bindParam(':name', $name );
 	    $STH->bindParam(':number', $number );
 	    $STH->bindParam(':cvv', $cvv );
 	    $STH->bindParam(':expDate', $expDate->format('Y-m-d') );
+	    $STH->execute();
+	    return $STH->fetch();
+	}
+	
+	public function getCreditCardByNumber( $number ) {
+	    $STH = $this->db->prepare(  "SELECT * FROM `CreditCards` WHERE `Number` = :number " );
+	    $STH->bindParam(':number', $number );
 	    $STH->execute();
 	    return $STH->fetch();
 	}
@@ -82,6 +95,46 @@
 	    $STH->bindParam(':dt', $dateTime->format('Y-m-d H:i:s') );
 	    $STH->execute();
 	    return $this->db->lastInsertId();
+	}
+	
+	public function getPayment( $paymentId ) {
+	    $STH = $this->db->prepare(  "SELECT * FROM `Payments` WHERE `PaymentId` = $paymentId" );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
+	public function addPromotion( $type, $percent, $startDate, $endDate, $adminId ) {
+	    $STH = $this->db->prepare(  "INSERT INTO `Promotions`(`Type`, `Value`, `StartDate`, `EndDate`, `AdminId`) VALUES ( :type, :val, :std, :ed, :adminId )" );
+	    $STH->bindParam(':type', $type );
+	    $STH->bindParam(':val', $percent );
+	    $STH->bindParam(':std', $startDate->format('Y-m-d H:i:s') );
+	    $STH->bindParam(':ed', $endDate->format('Y-m-d H:i:s') );
+	    $STH->bindParam(':adminId', $adminId );
+	    $STH->execute();
+	    return $this->db->lastInsertId();
+	}
+	
+	public function deletePromotion( $promotionId ) {
+	    $STH = $this->db->prepare(  "DELETE FROM `Promotions` WHERE `PromotionId` = $promotionId" );
+	    $STH->execute();
+	}
+	
+	public function getAllPromotion() {
+	    $STH = $this->db->prepare(  "SELECT * FROM `Promotions`" );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
+	public function getFurtherPromotion() {
+	    $STH = $this->db->prepare(  "SELECT * FROM `Promotions` WHERE `EndDate` >= NOW()" );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
+	public function getCurrentPromotion() {
+	    $STH = $this->db->prepare(  "SELECT * FROM `Promotions` WHERE `StartDate` <= NOW() AND `EndDate` >= NOW()" );
+	    $STH->execute();
+	    return $STH->fetchAll();
 	}
     }
     

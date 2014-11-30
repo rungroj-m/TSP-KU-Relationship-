@@ -1,25 +1,24 @@
 <?php
-    class Cart {
+    class WishLists {
 	
-	public $cartId;
+	public $id;
 	public $closed;
 	public $customer;
 	public $lastUpdate;
-	public $totalPrice;
 	
-	public static function GetCartFromCustomer( $customer ) {
+	public static function GetWishListFromCustomer( $customer ) {
 	    $dao = InventoryDao::GetInstance();
-	    $data = $dao->getCurrentCart( $customer->id );
-	    return Cart::dataToCart( $data );
+	    $data = $dao->getCurrentWishList( $customer->id );
+	    return WishList::dataToWishList( $data );
 	}
 	
-	public static function GetCart( $cartId ) {
-	    return Cart::dataToCart( InventoryDao::getCart( $cartId ) );
+	public static function GetWishList( $id ) {
+	    return WishList::dataToWishList( InventoryDao::getWishList( $id ) );
 	}
 	
-	private static function dataToCart( $data ){
+	private static function dataToWishList( $data ){
 	    $instance = new self();
-	    $instance->cartId = $data['CartId'];
+	    $instance->id = $data['WishListId'];
 	    $instance->closed = $data['Closed'];
 	    $instance->customer = Customer::GetCustomer( $data['CustomerId'] );
 	    $instance->lastUpdate = $data['LastUpdate']; //Not sure;
@@ -27,10 +26,9 @@
 	}
 	
 	public function purchase( $creditCard ) {
-		print_r($creditCard->isVertify);
-	    if( $creditCard->isVertify == false ) return null;
+	    if( $creditCard->isVertify == false ) throw new Exception("Credit Card Didn't Vertify");
 	    $payment = $creditCard->pay( $this->GetTotalPrice() );
-	    if( $payment == null ) return null;
+	    if( $payment == null ) throw new Exception( "Cannot Request Money From this Credit Card." );
 	    $this->close();
 	    return Sale::CreateSale( $payment, $this );
 	}
@@ -39,19 +37,14 @@
 	    $products = $this->GetProducts();
 	    $total = 0;
 	    foreach( $products as &$product ) {
-	//	$total = $total + ( $product['Product']->price * $product['Quantity'] );
-		$total = $totalPrice;
+		$total = $total + ( $product['Product']->price * $product['Quantity'] );
 	    }
 	    return Promotion::Total( $total );
 	}
 	
-	public function setTotalPrice($tot){
-		$totalPrice = $tot;
-	}
-	
 	public function GetProducts() {
 	    $dao = InventoryDao::GetInstance();
-	    $data = $dao->getCartProducts( $dao->getCurrentCartId( $this->customer->id ) );
+	    $data = $dao->getWishListProducts( $dao->getCurrentWishListId( $this->customer->id ) );
 	    $result = array();
 	    foreach( $data as &$val ) {
 		$detail = array();
@@ -72,16 +65,16 @@
 	
 	public function AddProduct( $product, $amount ){
 	    $dao = InventoryDao::GetInstance();
-	    $dao->addToCart( $this->customer->id, $product->id, $amount );
+	    $dao->addToWishList( $this->customer->id, $product->id, $amount );
 	}
 	
 	public function RemoveProduct( $product, $amount ) {
 	    $dao = InventoryDao::GetInstance();
-	    $dao->removeFromCart( $this->customer->id, $product->id, $amount );
+	    $dao->removeFromWishList( $this->customer->id, $product->id, $amount );
 	}
 	
 	public function close() {
-	    InventoryDao::GetInstance()->closeCart( $this->cartId );
+	    InventoryDao::GetInstance()->closeWishList( $this->id );
 	}
 	
     }
