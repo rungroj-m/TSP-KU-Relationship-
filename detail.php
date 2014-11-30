@@ -68,6 +68,7 @@
 						<h6>Model Code: <span id="code"></span></h6>
 						<br>
 						<h5>Category: <span id="category"></span></h5>
+						<h5>Weight: <span id=weight></span> grams</h5>
 						<br>
 						<h5>Stock: <span id="quantity"></span></h5>
 						<h5>Price: <span id="price"></span></h5>
@@ -203,6 +204,7 @@
 	    }
 	    
 	    $("#tag").html(tags_str);
+	    $("#weight").html(product.weight);
 	    $("#quantity").html(product.quantity);
 	    $("#brand").html(product.brand);
 
@@ -360,7 +362,7 @@
 	});
 
 	function addToWish(productId) {
-		alert("Available later...");
+		
 	}
 
 	function postAndRedirectToSignin() {

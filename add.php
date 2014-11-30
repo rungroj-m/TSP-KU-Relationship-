@@ -12,6 +12,11 @@
 <?php
 require_once ('inc/Product.php');
 require_once ('inc/ProductDao.php');
+require_once ('inc/ProductDescription.php');
+require_once ('inc/Category.php');
+require_once ('inc/Brand.php');
+require_once ('inc/Inventory.php');
+require_once ('inc/InventoryDao.php');
 	if (isset($_GET["id"])) {
 		$result = Product::GetProduct($_GET["id"]);
 	}
@@ -24,11 +29,6 @@ require_once ('inc/ProductDao.php');
 	$product_str;
 	
 	if (isset($_GET["id"])) {
-		require_once ('inc/Product.php');
-		require_once ('inc/ProductDescription.php');
-		require_once ('inc/Category.php');
-		require_once ('inc/Brand.php');
-		require_once ('inc/Inventory.php');
 		$product = Product::GetProduct($_GET["id"]);
 		
 		$productdescs = $product->productDescription;
@@ -43,6 +43,7 @@ require_once ('inc/ProductDao.php');
 				$(\"#name\").val(\"{$productdescs->productName}\");
 				$(\"#code\").val(\"{$productdescs->modelCode}\");
 				$(\"#price\").val(\"{$product->price}\");
+				$(\"#weight\").val(\"{$productdescs->weight}\");
 				$(\"#desc\").code(replaceDoubleQuote('{$productdescs->description}'));
 				$(\"#image\").val(\"{$productdescs->images[0]}\");
 				$(\"#category\").val(\"{$productdescs->category->value}\");
@@ -92,7 +93,7 @@ Image URL:
 Category:
 <div class="input-group">
 	<span class="input-group-addon"><span class="glyphicon glyphicon-th-list"></span></span>
-	<input type="text" class="form-control" id="category" placeholder="(Select below or input for a new category)">
+	<input type="text" class="form-control" id="category" value="Others" placeholder="" disabled>
 	<div class="btn-group btn-group-sm" style="width: 100%">
 			<button type="button" id="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%">
 				Category <span class="caret"></span>

@@ -176,7 +176,7 @@
 				"remove": productId
 			}
 		}).done(function(response) {
-			alert(productId + " removed");
+			alert(productId + " removed " +response);
 		});
 		$("#remove-product-confirm").modal('hide');
 	});

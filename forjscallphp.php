@@ -151,7 +151,7 @@ function createProductBoxForShopping($product) {
 	
 		<div id=\"price\">&#3647;$price</div>
 	
-		<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price, 1, $maxQuan);\" $buttonStatus>ADD</button>
+		<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price, 1/*, $maxQuan*/);\" $buttonStatus>ADD</button>
 	</div>
 
 	";
@@ -207,9 +207,8 @@ if (isset($_POST["submit"])) {
 		Inventory::addProduct($product, $_POST['quan'] );
 	}
 	if ($_POST["submit"] == "edit") {
-	
-		include_once ('inc/Product.php');
 		include_once ('inc/ProductDescription.php');
+		include_once ('inc/Product.php');
 		include_once ('inc/Category.php');
 		include_once ('inc/Brand.php');
 		include_once ('inc/Inventory.php');
@@ -268,6 +267,7 @@ if (isset($_POST["get_product_detail_by_id"])) {
 		\"image\" : \"{$product->productDescription->images[$imageLen-1]}\",
 		\"category\" : \"{$productdescs->category->value}\",
 		\"tag\" : [\"$tags_str\"],
+		\"weight\" : $productdescs->weight,
 		\"quantity\" : $quan,
 		\"brand\" : \"{$productdescs->brand->value}\"
 	}";
@@ -307,6 +307,7 @@ if (isset($_POST["sign-in"])) {
 if (isset($_POST["remove"])) {
 	require_once('inc/Product.php');
 	require_once('inc/ProductDao.php');
+	echo("in remove");
 	Product::GetProduct($_POST["remove"])->disable();
 }
 
@@ -371,3 +372,24 @@ if (isset($_POST["clear-cart"])) {
 	$cart = $customer->getCart();
 	$cart->ClearProducts();
 }
+
+if (isset($_POST["confirm-payment"])) {
+	include_once 'inc/CreditCard.php';
+	include_once 'inc/Customer.php';
+	include_once 'inc/CustomerDao.php';
+	include_once 'inc/Cart.php';
+	include_once 'inc/Sale.php';
+	require_once ('inc/InventoryDao.php');
+	$card = CreditCard::CreateCreditCard($_POST["name"], $_POST["number"], $_POST["cvv"], $_POST["expYear"], $_POST["expMonth"]);
+	$customer = Customer::GetCustomer($_POST['customerid']);
+	$amount = $_POST["amount"];
+	$cart = $customer->getCart();
+	$sale = $cart->purchase($card);
+	if($cart !== null){
+		//go to tracking
+	}else{
+		echo("verify fail or not enough money please change to other credit card");
+	}
+}
+
+

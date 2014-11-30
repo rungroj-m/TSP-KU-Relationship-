@@ -37,7 +37,7 @@
 	<div class="panel-body">
 		<div>
 		
-		<table class="table">
+		<table class="table table-hover">
 					<tbody id="transaction-list">
 						<tr>
 							<th>Option</th>
@@ -190,6 +190,10 @@
 				"get_all_product_in_cart": $.cookie("customerid")
 			}
 		}).done(function(products_json) {
+			amount = 0;
+			totalquan = 0;
+			totalweight = 0;
+			
 			$("#cart").empty();
 			$("#cart").append("\
 				<thead><tr>\
@@ -208,7 +212,7 @@
 				var productName = array[i].Product.productDescription.productName;
 				var quantity = array[i].Quantity;
 				var unitprice = array[i].Product.price;
-
+				var weight = array[i].Product.productDescription.weight;
 				var pid = array[i].Product.id;
 				
 				$("#cart").append(
@@ -222,12 +226,12 @@
 							"</th>" +
 							"<th>" + unitprice + "</th>" +
 							"<th>" + quantity * unitprice + "</th>" +
-							"<th>" + 000 + "</th>" +
+							"<th>" + quantity * weight+ "</th>" +
 						"</tr>"
 				);
 				amount += quantity * unitprice;
 				totalquan += Number(quantity);
-				totalweight += Number(000);
+				totalweight += Number(quantity * weight);
 
 				console.log(totalquan + " " + quantity);
 			}
@@ -250,6 +254,42 @@
 	$("#button-back").click(function() {
 		window.location.href = "?page=shopping";
 	});
+
+	$("#button-pay").click(function() {
+		var passAmoung = 0; 
+		var option = $("input:radio[name=option]:checked").val();
+			if (option == 1)
+				passAmoung = $("#emstotal").text();
+			else if (option == 2)
+				passAmoung = $("#deliverytotal").text();
+		
+		if (option == undefined)
+			alert("Please choose shipping method.");
+		else
+			post("?page=dummycredit", {total: passAmoung});
+	});
+
+	function post(path, params) {
+	    var method = "POST";
+	    
+	    var form = document.createElement("form");
+	    form.setAttribute("method", method);
+	    form.setAttribute("action", path);
+
+	    for(var key in params) {
+	        if(params.hasOwnProperty(key)) {
+	            var hiddenField = document.createElement("input");
+	            hiddenField.setAttribute("type", "hidden");
+	            hiddenField.setAttribute("name", key);
+	            hiddenField.setAttribute("value", params[key]);
+
+	            form.appendChild(hiddenField);
+	         }
+	    }
+
+	    document.body.appendChild(form);
+	    form.submit();
+	}
 </script>
 
 

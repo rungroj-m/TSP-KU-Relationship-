@@ -5,7 +5,7 @@
 	public $cvv;
 	public $name;
 	public $expDate;
-	public $isVertify = false;
+	public $isVertify = true;
 	
 	public function __construct(){
 	}

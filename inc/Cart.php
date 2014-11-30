@@ -5,6 +5,7 @@
 	public $closed;
 	public $customer;
 	public $lastUpdate;
+	public $totalPrice;
 	
 	public static function GetCartFromCustomer( $customer ) {
 	    $dao = InventoryDao::GetInstance();
@@ -22,9 +23,10 @@
 	}
 	
 	public function purchase( $creditCard ) {
-	    if( $creditCard->isVertify == false ) throw new Exception("Credit Card Didn't Vertify");
+		print_r($creditCard->isVertify);
+	    if( $creditCard->isVertify == false ) return null;
 	    $payment = $creditCard->pay( $this->GetTotalPrice() );
-	    if( $payment == null ) throw new Exception( "Cannot Request Money From this Credit Card." );
+	    if( $payment == null ) return null;
 	    $this->close();
 	    return Sale::CreateSale( $payment, $this );
 	}
@@ -33,9 +35,14 @@
 	    $products = $this->GetProducts();
 	    $total = 0;
 	    foreach( $products as &$product ) {
-		$total = $total + ( $product['Product']->price * $product['Quantity'] );
+	//	$total = $total + ( $product['Product']->price * $product['Quantity'] );
+		$total = $totalPrice;
 	    }
 	    return Promotion::Total( $total );
+	}
+	
+	public function setTotalPrice($tot){
+		$totalPrice = $tot;
 	}
 	
 	public function GetProducts() {

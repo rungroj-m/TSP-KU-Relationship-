@@ -1,5 +1,8 @@
 <html>
 <head>
+	<link rel="shortcut icon" type="image/png" href="image/logo.png"/>
+	<title>Xtreme Sport Shop</title>
+	
 	<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato">
 	<script src="js/jquery.js"></script>
@@ -10,6 +13,9 @@
 	<link href="css/kurel.css" rel="stylesheet">
 	<script src="js/bic_calendar.js"></script>
 	<link href="css/bic_calendar.css" rel="stylesheet">
+	
+	<script src="js/xml2json.js"></script>
+	<script src="js/json2xml.js"></script>
 </head>
 
 <style>
@@ -26,14 +32,8 @@ body {
     <!-- static for each page -->
 			<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 			  	<div class="container-fluid">
-			    <!-- Brand and toggle get grouped for better mobile display -->
+			  		<a class="navbar-brand" style="padding: 10;" href="#" onclick="window.location = window.location.pathname" ><img alt="Brand" id="logo" style="width: 32px; height: 32px"></a>
 				    <div class="navbar-header">
-					      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-						        <span class="sr-only">Toggle navigation</span>
-						        <span class="icon-bar"></span>
-						        <span class="icon-bar"></span>
-						        <span class="icon-bar"></span>
-					      </button>
 					      <a class="navbar-brand" href="#" onclick="window.location = window.location.pathname" >Xtreme Sport Shop</a>
 				 	</div>
 					    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -55,9 +55,6 @@ body {
 			<br>
 			<br>
 			<br>
-			<div align = "center">
-			 <img src="image/logo.png" alt="Ku Relationship" style="width:304px;height:228px">
-    		</div>
 
 	<!-- for content -->
 	<div class="container">
@@ -113,6 +110,10 @@ body {
 		function index() {
 			window.location.pathname;
 		}
+
+		$(document).ready(function() {
+			$("#logo").attr("src", window.location.pathname.replace("index.php", "") + "/image/logo.png");
+		});
 
     </script>
 </body>

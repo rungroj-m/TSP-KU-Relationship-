@@ -221,6 +221,7 @@
 				"get_all_product_in_cart": $.cookie("customerid")
 			}
 		}).done(function(products_json) {
+//			alert(products_json);
 			$("#cart").empty();
 			$("#cart").append("\
 				<tr>\
