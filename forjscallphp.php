@@ -1,60 +1,68 @@
 <?php
-// search should use search product for
-if (isset($_POST["get_product_by_category_for_shopping"])) {
+// // search should use search product for
+// if (isset($_POST["get_product_by_category_for_shopping"])) {
 	
-	require_once ('inc/Product.php');
-	require_once ('inc/ProductDescription.php');
-	require_once ('inc/Category.php');
-	require_once ('inc/Brand.php');
+// 	require_once ('inc/Product.php');
+// 	require_once ('inc/ProductDescription.php');
+// 	require_once ('inc/Category.php');
+// 	require_once ('inc/Brand.php');
 	
-	$product;
-	if ($_POST["get_product_by_category_for_shopping"] == ""){
-		$product = Product::GetAllProduct();
-	}
-// 	else{
+// 	$product;
+// 	if ($_POST["get_product_by_category_for_shopping"] == ""){
+// 		$product = Product::GetAllProduct();
+// 	}
+// // 	else{
 		
-// 		$productdesc = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_shopping"]);
-// 		foreach($productdesc as $pdesc){
-// 			array_push($product,Product::GetEnabledProductByProductDescriptionId($pdesc->$pid));
-// 		}
-//	}
-	foreach ($product as $p) {
-// 		echo("test");
-// 		print_r($p);
-//		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
-		createProductBoxForShopping($p);
-	}
+// // 		$productdesc = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_shopping"]);
+// // 		foreach($productdesc as $pdesc){
+// // 			array_push($product,Product::GetEnabledProductByProductDescriptionId($pdesc->$pid));
+// // 		}
+// //	}
+// 	foreach ($product as $p) {
+// // 		echo("test");
+// // 		print_r($p);
+// //		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
+// 		createProductBoxForShopping($p);
+// 	}
 	
-}
+// 	if (count($product) == 0)
+// 		echo "No result.";
+// }
 
-if (isset($_POST["get_product_by_category_for_inventory"])) {
+// if (isset($_POST["get_product_by_category_for_inventory"])) {
 
-	require_once ('inc/Product.php');
-	require_once ('inc/ProductDescription.php');
-	require_once ('inc/Category.php');
-	require_once ('inc/Brand.php');
+// 	require_once ('inc/Product.php');
+// 	require_once ('inc/ProductDescription.php');
+// 	require_once ('inc/Category.php');
+// 	require_once ('inc/Brand.php');
 
-	$product;
-	if ($_POST["get_product_by_category_for_inventory"] == "")
-		$product = Product::GetAllProduct();
-// 	else
-// 		$productdescs = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_inventory"]);
+// 	$product;
+// 	if ($_POST["get_product_by_category_for_inventory"] == "")
+// 		$product = Product::GetAllProduct();
+// // 	else
+// // 		$productdescs = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_inventory"]);
 	
 
-	foreach ($product as $p) {
-		createProductBoxForInventory($p);
-	}
+// 	foreach ($product as $p) {
+// 		createProductBoxForInventory($p);
+// 	}
 
-}
+// 	if (count($product) == 0)
+// 		echo "No result.";
+// }
 
 if (isset($_POST["search_product_for_shopping"])) {
 	require_once ('inc/Product.php');
 	require_once ('inc/ProductDescription.php');
 	require_once ('inc/Category.php');
 	require_once ('inc/Brand.php');
+	require_once ('inc/WishList.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
 	
 	$cat = $_POST["category"];
 	$str = $_POST["search_product_for_shopping"];
+	$customerId = $_POST["customer_id"];
 	$productdescs = array();
 	if ($str == "") {
 		if ($cat == "Category" || $cat == "All") {
@@ -79,10 +87,24 @@ if (isset($_POST["search_product_for_shopping"])) {
 		}
 	}
 	
+	$wishList = WishList::GetWishListFromCustomer(Customer::GetCustomer($customerId));
+// 	print_r($wishList);
+// 	$productandquan = $wishList->GetProducts();
+// 	print_r($productandquan);
+	
 	foreach ($productdescs as $p) {
 		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
-		createProductBoxForShopping($product);
+		
+		
+		$isWish = $wishList->isWish($product);
+		
+		createProductBoxForShopping($product, $isWish);
 	}
+
+	
+	
+	if (count($productdescs) == 0)
+		echo "No result.";
 }
 
 if (isset($_POST["search_product_for_inventory"])) {
@@ -122,9 +144,12 @@ if (isset($_POST["search_product_for_inventory"])) {
 		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
 		createProductBoxForInventory($product);
 	}
+	
+	if (count($productdescs) == 0)
+		echo "No result.";
 }
 
-function createProductBoxForShopping($product) {
+function createProductBoxForShopping($product, $isWish) {
 	if (!($product -> id))
 		return "";
 	require_once ('inc/Inventory.php');
@@ -138,6 +163,7 @@ function createProductBoxForShopping($product) {
 	
 	$buttonStatus = $maxQuan > 0 ? "" : "disabled";
 	
+	if ($isWish)
 	echo "
 			
 	<div class=\"thumbnail productbox\">
@@ -145,7 +171,7 @@ function createProductBoxForShopping($product) {
 	   	<a href=\"?page=detail&id=$productId\">
 	   		<!-- May change link of pic to product desc page -->
 	   		<img src=\"{$product->productDescription->images[$imageLen-1]}\">
-	  
+	   		<span style=\"position: relative; top: -20px; left: 80px;\" class=\"glyphicon glyphicon-heart\"></span>
 			<div class=\"name\" id=\"name\">$productName</div>
 		</a>
 	
@@ -154,6 +180,24 @@ function createProductBoxForShopping($product) {
 		<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price, 1/*, $maxQuan*/);\" $buttonStatus>ADD</button>
 	</div>
 
+	";
+
+	else
+	echo "
+		
+	<div class=\"thumbnail productbox\">
+	
+	<a href=\"?page=detail&id=$productId\">
+		<!-- May change link of pic to product desc page -->
+		<img src=\"{$product->productDescription->images[$imageLen-1]}\">
+		<div class=\"name\" id=\"name\">$productName</div>
+	</a>
+
+		<div id=\"price\">&#3647;$price</div>
+
+		<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price, 1/*, $maxQuan*/);\" $buttonStatus>ADD</button>
+	</div>
+	
 	";
 	
 }
@@ -399,30 +443,41 @@ if (isset($_POST["confirm-payment"])) {
 }
 
 if (isset($_POST["get_wishlist_product"])) {
-	$customerId = isset($_POST["get_wishlist_product"]);
-	$wishlist = WishLists::GetWishListFromCustomer(Customer::GetCustomer($customerId));
+	require_once ('inc/WishList.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDao.php');
+	
+	$customerId = $_POST["get_wishlist_product"];
+	
+	$wishlist = Customer::GetCustomer($customerId)->getWishList();
 	$products = $wishlist -> GetProducts();
 	
 	foreach ($products as $p) {
-		// 		echo("test");
-		// 		print_r($p);
-		//		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
-		createProductBoxForWishList($p);
+		createProductBoxForWishList($p["Product"], $p["Quantity"]);
 	}
-	//????????????????????????????
 	
+	if (count($products) == 0)
+		echo "No result.";
 }
 
 if (isset($_POST["add_to_wishlist"])) {
-	$customerId = isset($_POST["add_to_wishlist"]);
-	$productId = isset($_POST["product_id"]);
-	$wishlist = WishLists::GetWishListFromCustomer(Customer::GetCustomer($customerId));
-	$wishlist -> addProduct(Product::GetProduct($productId),1);
-	//????????????????????????????
-
+	require_once ('inc/WishList.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDao.php');
+	
+	$customerId = $_POST["add_to_wishlist"];
+	$productId = $_POST["product_id"];
+	$wishlist = Customer::GetCustomer($customerId) -> getWishList();
+	$wishlist -> addProduct(Product::GetProduct($productId), 1);
 }
 
-function createProductBoxForWishList($product) {
+function createProductBoxForWishList($product, $wishQuan) {
 	if (!($product -> id))
 		return "";
 	require_once ('inc/Inventory.php');
@@ -436,7 +491,6 @@ function createProductBoxForWishList($product) {
 
 	$buttonStatus = $maxQuan > 0 ? "" : "disabled";
 
-	$wishQuan = WishLists::
 	
 	echo "
 		
@@ -446,14 +500,14 @@ function createProductBoxForWishList($product) {
 	<!-- May change link of pic to product desc page -->
 	<img src=\"{$product->productDescription->images[$imageLen-1]}\">
 	 
-	<div class=\"name\" id=\"name\">$productName</div>
+	<div class=\"name\" id=\"name\">$wishQuan $productName</div>
 	</a>
 
 	<div id=\"price\">&#3647;$price</div>
 
 	<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price, 1/*, $maxQuan*/);\" $buttonStatus>ADD</button>
-	</div>
 	<button type=\"button\" class=\"btn btn-Danger\" onclick=\"removeWishProduct('$productId');\">REMOVE</button>
+	</div>
 
 	";
 
@@ -465,5 +519,18 @@ if (isset($_POST["remove_wish"])) {
 	$wishlist = WishLists::GetWishListFromCustomer(Customer::GetCustomer($customerId));
 	$wishlist -> RemoveProduct(Product::GetProduct($productId),1);
 	////
+}
+
+if (isset($_POST["sign_up_admin"])) {
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/Admin.php');
+	$result = Admin::CreateAdmin($_POST["firstname"], $_POST["lastname"], $_POST["email"], $_POST["password"],1);
+	echo "
+	{
+	\"id\" : {$result->id},
+	\"username\" : \"{$result->username}\",
+	\"firstname\" : \"{$result->firstName}\",
+	\"lastname\" : \"{$result->lastName}\"
+	}";
 }
 

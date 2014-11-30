@@ -121,7 +121,8 @@
 		type: "POST",
 		data: {
 			"search_product_for_shopping": "",
-			"category": "All"
+			"category": "All",
+			"customer_id": $.cookie("customerid")
 		}
 	}).done(function(response) {
 	    $("#productBoxContainer").html(response);

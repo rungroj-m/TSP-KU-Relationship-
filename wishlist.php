@@ -209,9 +209,9 @@
 			url: 'forjscallphp.php',
 			type: "POST",
 			data: {
-				"get_wishlist_product": ($.cookie("customerid")
+				"get_wishlist_product": $.cookie("customerid")
 			}
-		}).done(function(products_json) {
+		}).done(function(response) {
 			$("#productBoxContainer").html(response);
 		});
 	}
