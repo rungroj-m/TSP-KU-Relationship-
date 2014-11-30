@@ -155,7 +155,7 @@
 	}
 	
 	public function releaseWishList( $customerId ) {
-	    $data = $this.getWishListProducts();
+	    $data = $this->getWishListProducts( $this->getCurrentWishListId( $customerId ) );
 	    foreach ( $data as &$val ) {
 		$this->removeFromWishList( $customerId, $val['ProductId'], $val['Quantity'] );
 	    }
@@ -259,7 +259,8 @@
 	}
 	
 	public function releaseCart( $customerId ) {
-	    $data = $this.getCartProducts();
+	    
+	    $data = $this->getCartProducts( $this->getCurrentCartId( $customerId ) );
 	    foreach ( $data as &$val ) {
 		$this->removeFromCart( $customerId, $val['ProductId'], $val['Quantity'] );
 	    }

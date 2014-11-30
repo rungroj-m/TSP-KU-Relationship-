@@ -45,7 +45,19 @@
 	}
 	
 	public function getWishList (){
-	    return WishLists::GetWishListFromCustomer( $this );
+	    return WishList::GetWishListFromCustomer( $this );
 	}
     }
+    /*
+    require_once( "CustomerDao.php" );
+    require_once( "WishList.php" );
+    require_once( "Sale.php" );
+    require_once( "PaymentDao.php" );
+    require_once( "Payment.php" );
+    require_once( "Cart.php" );
+    require_once( "CreditCard.php" );
+    require_once( "InventoryDao.php" );
+    */
+    
+    
 ?>

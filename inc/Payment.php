@@ -17,15 +17,18 @@
 	}
 	
 	public static function GetPayment( $paymentId ) {
+	    print_r( PaymentDao::GetInstance()->getPayment( $paymentId ) );
 	    return Payment::dataToPayment( PaymentDao::GetInstance()->getPayment( $paymentId ) );
 	}
 	
-	public static function dataToPayment( $data ) {
+	private static function dataToPayment( $data ) {
 	    $instance = new self();
+	    
 	    $instance->id = $data['PaymentId'];
 	    $instance->creditCard = CreditCard::GetCreditCard( $data['CreditCardNumber'] );
 	    $instance->amount = $data['Amount'];
-	    $instacne->timeDate = new TimeDate( $data['TimeDate'] );
+	    $instance->timeDate = new DateTime( $data['DateTime'] );
+	    
 	    return $instance;
 	}
     }

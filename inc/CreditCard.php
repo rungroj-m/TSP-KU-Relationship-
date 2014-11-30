@@ -5,7 +5,7 @@
 	public $cvv;
 	public $name;
 	public $expDate;
-	public $isVertify = true;
+	public $isVertify = 0;
 	
 	public function __construct(){
 	}
@@ -20,7 +20,7 @@
 	}
 	
 	public static function GetCreditCard( $number ) {
-	    return CreditCard::dataToCreditCard( PaymentDao::getCreditCardByNumber( $number ) );
+	    return CreditCard::dataToCreditCard( PaymentDao::GetInstance()->getCreditCardByNumber( $number ) );
 	}
 	
 	private static function dataToCreditCard( $data ) {
@@ -28,7 +28,7 @@
 	    $instance->cardNumber = $data['Number'];
 	    $instance->cvv = $data['Cvv'];
 	    $instance->name = $data['Name'];
-	    $instance->expDate = new TimeDate( $data['ExpDate'] );
+	    $instance->expDate = new DateTime( $data['ExpDate'] );
 	    return $instance;
 	}
 	

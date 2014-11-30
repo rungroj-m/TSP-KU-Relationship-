@@ -1,5 +1,5 @@
 <?php
-    class WishLists {
+    class WishList {
 	
 	public $id;
 	public $closed;

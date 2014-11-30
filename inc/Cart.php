@@ -14,7 +14,7 @@
 	}
 	
 	public static function GetCart( $cartId ) {
-	    return Cart::dataToCart( InventoryDao::getCart( $cartId ) );
+	    return Cart::dataToCart( InventoryDao::GetInstance()->getCart( $cartId ) );
 	}
 	
 	private static function dataToCart( $data ){

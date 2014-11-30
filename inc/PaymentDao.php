@@ -100,7 +100,7 @@
 	public function getPayment( $paymentId ) {
 	    $STH = $this->db->prepare(  "SELECT * FROM `Payments` WHERE `PaymentId` = $paymentId" );
 	    $STH->execute();
-	    return $STH->fetchAll();
+	    return $STH->fetch();
 	}
 	
 	public function addPromotion( $type, $percent, $startDate, $endDate, $adminId ) {
