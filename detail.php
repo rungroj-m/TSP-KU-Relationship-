@@ -362,7 +362,16 @@
 	});
 
 	function addToWish(productId) {
-		
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"add_to_wishlist": $.cookie("customerid"),
+				"product_id": $_GET["id"]
+			}
+		}).done(function(response) {
+			alert(productId + " added to wish " +response);
+		});
 	}
 
 	function postAndRedirectToSignin() {

@@ -256,17 +256,17 @@
 	});
 
 	$("#button-pay").click(function() {
-		var passAmoung = 0; 
+		var passfee = 0; 
 		var option = $("input:radio[name=option]:checked").val();
 			if (option == 1)
-				passAmoung = $("#emstotal").text();
+				passfee = $("#emsfee").text();
 			else if (option == 2)
-				passAmoung = $("#deliverytotal").text();
+				passfee = $("#deliveryfee").text();
 		
 		if (option == undefined)
 			alert("Please choose shipping method.");
 		else
-			post("?page=dummycredit", {total: passAmoung});
+			post("?page=dummycredit", {fee: passfee});
 	});
 
 	function post(path, params) {

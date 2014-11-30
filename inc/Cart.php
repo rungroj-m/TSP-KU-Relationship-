@@ -5,7 +5,7 @@
 	public $closed;
 	public $customer;
 	public $lastUpdate;
-	public $totalPrice;
+	public $fee;
 	
 	public static function GetCartFromCustomer( $customer ) {
 	    $dao = InventoryDao::GetInstance();
@@ -39,14 +39,13 @@
 	    $products = $this->GetProducts();
 	    $total = 0;
 	    foreach( $products as &$product ) {
-	//	$total = $total + ( $product['Product']->price * $product['Quantity'] );
-		$total = $totalPrice;
+		$total = $total + ( $product['Product']->price * $product['Quantity'] );
 	    }
-	    return Promotion::Total( $total );
+	    return Promotion::Total( $total ) + $this->fee;
 	}
 	
-	public function setTotalPrice($tot){
-		$totalPrice = $tot;
+	public function setFee($fee){
+		$this->fee = $fee;
 	}
 	
 	public function GetProducts() {

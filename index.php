@@ -46,6 +46,7 @@ body {
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "member") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=member">Member</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "profile") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=profile">Profile</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "transaction") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=transaction">Transaction</a></li>
+		      					<?php if (isset($_GET['page']) && $_GET['page'] == "wishlist") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=wishlist">Wish List</a></li>
 					        </ul>
 					        <ul class="nav navbar-nav navbar-right" id="username">
 					        </ul>

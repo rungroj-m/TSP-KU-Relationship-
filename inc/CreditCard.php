@@ -42,6 +42,7 @@
 	public function pay( $amount ) {
 	    if ( $this->isVertify == false ) return null;
 	    if( PaymentDao::requestMoney( $this->cardNumber, $amount ) ) {
+	    	echo("in pay");
 		return Payment::CreatePayment( $this, $amount );
 	    }
 	    return null;

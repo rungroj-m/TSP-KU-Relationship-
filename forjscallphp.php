@@ -307,7 +307,7 @@ if (isset($_POST["sign-in"])) {
 if (isset($_POST["remove"])) {
 	require_once('inc/Product.php');
 	require_once('inc/ProductDao.php');
-	echo("in remove");
+	
 	Product::GetProduct($_POST["remove"])->disable();
 }
 
@@ -380,16 +380,90 @@ if (isset($_POST["confirm-payment"])) {
 	include_once 'inc/Cart.php';
 	include_once 'inc/Sale.php';
 	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDao.php');
+	require_once ('inc/Promotion.php');
+	require_once ('inc/PaymentDao.php');
+	require_once ('inc/Payment.php');
+	
 	$card = CreditCard::CreateCreditCard($_POST["name"], $_POST["number"], $_POST["cvv"], $_POST["expYear"], $_POST["expMonth"]);
 	$customer = Customer::GetCustomer($_POST['customerid']);
-	$amount = $_POST["amount"];
 	$cart = $customer->getCart();
+	$cart->setFee($_POST["fee"]);
 	$sale = $cart->purchase($card);
 	if($cart !== null){
-		//go to tracking
+		echo("ok");
 	}else{
 		echo("verify fail or not enough money please change to other credit card");
 	}
 }
 
+if (isset($_POST["get_wishlist_product"])) {
+	$customerId = isset($_POST["get_wishlist_product"]);
+	$wishlist = WishLists::GetWishListFromCustomer(Customer::GetCustomer($customerId));
+	$products = $wishlist -> GetProducts();
+	
+	foreach ($products as $p) {
+		// 		echo("test");
+		// 		print_r($p);
+		//		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
+		createProductBoxForWishList($p);
+	}
+	//????????????????????????????
+	
+}
+
+if (isset($_POST["add_to_wishlist"])) {
+	$customerId = isset($_POST["add_to_wishlist"]);
+	$productId = isset($_POST["product_id"]);
+	$wishlist = WishLists::GetWishListFromCustomer(Customer::GetCustomer($customerId));
+	$wishlist -> addProduct(Product::GetProduct($productId),1);
+	//????????????????????????????
+
+}
+
+function createProductBoxForWishList($product) {
+	if (!($product -> id))
+		return "";
+	require_once ('inc/Inventory.php');
+	include_once ('inc/InventoryDao.php');
+
+	$productId = $product->id;
+	$productName = $product->productDescription->productName;
+	$price = $product->price;
+	$imageLen = count($product->productDescription->images);
+	$maxQuan = Inventory::getQuntity($productId);
+
+	$buttonStatus = $maxQuan > 0 ? "" : "disabled";
+
+	$wishQuan = WishLists::
+	
+	echo "
+		
+	<div class=\"thumbnail productbox\">
+
+	<a href=\"?page=detail&id=$productId\">
+	<!-- May change link of pic to product desc page -->
+	<img src=\"{$product->productDescription->images[$imageLen-1]}\">
+	 
+	<div class=\"name\" id=\"name\">$productName</div>
+	</a>
+
+	<div id=\"price\">&#3647;$price</div>
+
+	<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price, 1/*, $maxQuan*/);\" $buttonStatus>ADD</button>
+	</div>
+	<button type=\"button\" class=\"btn btn-Danger\" onclick=\"removeWishProduct('$productId');\">REMOVE</button>
+
+	";
+
+}
+
+if (isset($_POST["remove_wish"])) {
+	$customerId = isset($_POST["remove_wish"]);
+	$productId = isset($_POST["product_id"]);
+	$wishlist = WishLists::GetWishListFromCustomer(Customer::GetCustomer($customerId));
+	$wishlist -> RemoveProduct(Product::GetProduct($productId),1);
+	////
+}
 
