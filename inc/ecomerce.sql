@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 27, 2014 at 08:41 AM
+-- Generation Time: Nov 30, 2014 at 11:23 AM
 -- Server version: 5.6.20
 -- PHP Version: 5.5.15
 
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `Admins` (
 CREATE TABLE IF NOT EXISTS `Brands` (
 `BrandId` int(11) NOT NULL,
   `Name` varchar(50) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 -- --------------------------------------------------------
 
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `Customers` (
   `LastName` text NOT NULL,
   `Password` text NOT NULL,
   `UserName` varchar(20) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `InventoryTransactions` (
   `ProductId` int(11) NOT NULL,
   `Quantity` int(11) NOT NULL,
   `Deposition` tinyint(1) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=53 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
 
 -- --------------------------------------------------------
 
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `ProductDescriptions` (
   `Description` text NOT NULL,
   `CreateDate` datetime NOT NULL,
   `Weight` decimal(10,2) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
 
 -- --------------------------------------------------------
 
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `ProductImages` (
 `ImageId` int(11) NOT NULL,
   `ProductDescriptionId` int(11) NOT NULL,
   `ImageAddress` text NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
@@ -199,15 +199,15 @@ CREATE TABLE IF NOT EXISTS `Products` (
   `Price` float NOT NULL,
   `CreateDate` datetime NOT NULL,
   `Status` tinyint(1) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Promotion`
+-- Table structure for table `Promotions`
 --
 
-CREATE TABLE IF NOT EXISTS `Promotion` (
+CREATE TABLE IF NOT EXISTS `Promotions` (
 `PromotionId` int(11) NOT NULL,
   `Type` int(1) NOT NULL,
   `Value` decimal(20,2) NOT NULL,
@@ -237,7 +237,20 @@ CREATE TABLE IF NOT EXISTS `Sales` (
 CREATE TABLE IF NOT EXISTS `Tags` (
 `TagId` int(11) NOT NULL,
   `Key` varchar(100) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=151 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=155 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `WishLists`
+--
+
+CREATE TABLE IF NOT EXISTS `WishLists` (
+`WishListId` int(11) NOT NULL,
+  `LastUpdate` datetime NOT NULL,
+  `CustomerId` int(11) NOT NULL,
+  `Closed` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Indexes for dumped tables
@@ -322,9 +335,9 @@ ALTER TABLE `Products`
  ADD PRIMARY KEY (`ProductId`);
 
 --
--- Indexes for table `Promotion`
+-- Indexes for table `Promotions`
 --
-ALTER TABLE `Promotion`
+ALTER TABLE `Promotions`
  ADD PRIMARY KEY (`PromotionId`);
 
 --
@@ -340,6 +353,12 @@ ALTER TABLE `Tags`
  ADD PRIMARY KEY (`TagId`), ADD UNIQUE KEY `Key` (`Key`);
 
 --
+-- Indexes for table `WishLists`
+--
+ALTER TABLE `WishLists`
+ ADD PRIMARY KEY (`WishListId`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -352,7 +371,7 @@ MODIFY `AdminId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `Brands`
 --
 ALTER TABLE `Brands`
-MODIFY `BrandId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+MODIFY `BrandId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `Carts`
 --
@@ -367,12 +386,12 @@ MODIFY `CategoryId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 -- AUTO_INCREMENT for table `Customers`
 --
 ALTER TABLE `Customers`
-MODIFY `CustomerId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+MODIFY `CustomerId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `InventoryTransactions`
 --
 ALTER TABLE `InventoryTransactions`
-MODIFY `TransactionId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=53;
+MODIFY `TransactionId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=56;
 --
 -- AUTO_INCREMENT for table `Payments`
 --
@@ -382,21 +401,21 @@ MODIFY `PaymentId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 -- AUTO_INCREMENT for table `ProductDescriptions`
 --
 ALTER TABLE `ProductDescriptions`
-MODIFY `ProductDescriptionId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+MODIFY `ProductDescriptionId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT for table `ProductImages`
 --
 ALTER TABLE `ProductImages`
-MODIFY `ImageId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+MODIFY `ImageId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `Products`
 --
 ALTER TABLE `Products`
-MODIFY `ProductId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
+MODIFY `ProductId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
 --
--- AUTO_INCREMENT for table `Promotion`
+-- AUTO_INCREMENT for table `Promotions`
 --
-ALTER TABLE `Promotion`
+ALTER TABLE `Promotions`
 MODIFY `PromotionId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `Sales`
@@ -407,7 +426,12 @@ MODIFY `SaleId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 -- AUTO_INCREMENT for table `Tags`
 --
 ALTER TABLE `Tags`
-MODIFY `TagId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=151;
+MODIFY `TagId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=155;
+--
+-- AUTO_INCREMENT for table `WishLists`
+--
+ALTER TABLE `WishLists`
+MODIFY `WishListId` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
