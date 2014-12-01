@@ -24,7 +24,7 @@
 		</label>
 		<br>
 		<label>
-			Forget password? <a id="recovery">Recovery</a>
+			Forgot password? <a id="recovery">Recovery</a>
 		</label>
 	</div>
 </div>

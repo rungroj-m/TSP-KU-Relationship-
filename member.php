@@ -1,6 +1,7 @@
 
-<!-- Sign in form -->
+
 <div class="container" align="center" id="container-form">
+	<!-- Sign in form -->
 	<div class="jumbotron" style="box-shadow: 4px 4px 6px #cccccc; width: 50%" id="container-login">
 		<form class="form-signin" id="signin-form" role="form">
 			<h2 class="form-signin-heading">Please sign in</h2>
@@ -15,7 +16,7 @@
 		</form>
 		
 		<label>
-			Forget password? <a id="recovery">Recovery</a>
+			Forgot password? <a id="recovery">Recovery</a>
 		</label>
 		<br>
 		<label>
@@ -47,7 +48,7 @@
 		</label>
 		<br>
 		<label>
-			Forget password? <a id="recovery">Recovery</a>
+			Forgot password? <a id="recovery">Recovery</a>
 		</label>
 	</div>
 
@@ -69,6 +70,26 @@
 		</label>
 	</div>
 </div>
+
+<?php 
+	if (isset($_GET["function"])) {
+		echo "
+		<script type=\"text/javascript\">
+			$(document).ready(function() {
+				$(\"#container-form\").children(\"div\").each(function() {
+					if (!($(this).attr(\"id\").toLowerCase() == \"container-\" + \"{$_GET["function"]}\")) {
+						$(this).fadeOut();
+					}
+					else {
+						$(this).fadeIn();
+					}
+				});
+			});
+		</script>
+		";
+	}
+
+?>
 
 <script type="text/javascript">
 	$("a").click(function() {

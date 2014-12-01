@@ -89,6 +89,13 @@ if (isset($_POST["search_product_for_shopping"])) {
 		}
 	}
 	
+	echo "<div style=\"width: 100%;\">";
+	if (count($productdescs) == 0)
+		echo "No result.";
+	else 
+		echo count($productdescs) ." result(s).<br>";
+	echo "</div>";
+	
 	if (isset($_POST["customer_id"])) {
 		$wishList = WishList::GetWishListFromCustomer(Customer::GetCustomer($customerId));
 		foreach ($productdescs as $p) {
@@ -107,11 +114,6 @@ if (isset($_POST["search_product_for_shopping"])) {
 		}
 	
 	}
-
-	
-	
-	if (count($productdescs) == 0)
-		echo "No result.";
 }
 
 if (isset($_POST["search_product_for_inventory"])) {
@@ -147,13 +149,15 @@ if (isset($_POST["search_product_for_inventory"])) {
 		}
 	}
 
+	if (count($productdescs) == 0)
+		echo "No result.";
+	else
+		echo count($productdescs) ." result(s).<br>";
+	
 	foreach ($productdescs as $p) {
 		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
 		createProductBoxForInventory($product);
 	}
-	
-	if (count($productdescs) == 0)
-		echo "No result.";
 }
 
 function createProductBoxForShopping($product, $isWish) {
@@ -376,10 +380,6 @@ if (isset($_POST["remove"])) {
 	require_once('inc/ProductDao.php');
 	
 	Product::GetProduct($_POST["remove"])->disable();
-}
-
-if (isset($_POST["get_promotion"])) {
-	echo '[{"date":"27\/2\/","title":"Getting Contacts Barcelona - test1","link":"http:\/\/gettingcontacts.com\/events\/view\/barcelona","color":"red"},{"date":"25\/5\/","title":"test2","link":"http:\/\/gettingcontacts.com\/events\/view\/barcelona","color":"pink"},{"date":"20\/6\/","title":"test2","link":"http:\/\/gettingcontacts.com\/events\/view\/barcelona","color":"green"},{"date":"7\/10\/","title":"test3","link":"http:\/\/gettingcontacts.com\/events\/view\/barcelona","color":"blue","class":"miclasse ","content":"contingut popover';
 }
 
 if (isset($_POST["get_all_product_in_cart"])) {
@@ -608,6 +608,46 @@ if (isset($_POST["get_admin_list"])) {
 	// bat เสจแล้วทักมาใน facebook นะ กุออกก่อนละกัน
 	
 	echo json_encode($admins);
+}
+
+if (isset($_POST["get_customer_detail"])) {
+	$customerId = $_POST["get_customer_detail"];
+	
+	$customer = 1;
+	
+	echo "
+	{
+	\"username\" : \"{$result->username}\",
+	\"firstname\" : \"{$result->firstName}\",
+	\"lastname\" : \"{$result->lastName}\",
+	\"address\" : {$result->address},
+	\"address2\" : {$result->address2},
+	\"district\" : {$result->district},
+	\"provinct\" : {$result->provinct},
+	\"country\" : {$result->country},
+	\"zip\" : {$result->zip},
+	\"phone\" : {$result->phone}
+	}";
+}
+
+if (isset($_POST["save_customer_detail"])) {
+	$customerId = $_POST["save_customer_detail"];
+	
+	$_POST["password"];
+	$_POST["firstname"];
+	$_POST["lastname"];
+	$_POST["address"];
+	$_POST["address2"];
+	$_POST["district"];
+	$_POST["provinct"];
+	$_POST["country"];
+	$_POST["zip"];
+	$_POST["phone"];
+
+}
+
+if (isset($_GET["get_all_promotion"])) {
+	echo "[{\"date\":\"27\/2\/\",\"title\":\"Getting Contacts Barcelona - test1\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"red\"},{\"date\":\"25\/5\/\",\"title\":\"test2\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"pink\"},{\"date\":\"20\/6\/\",\"title\":\"test2\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"green\"},{\"date\":\"7\/10\/\",\"title\":\"test3\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"blue\",\"class\":\"miclasse \",\"content\":\"contingut popover";
 }
 
 

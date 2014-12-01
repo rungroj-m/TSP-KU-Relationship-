@@ -73,7 +73,7 @@
 						<h5>Stock: <span id="quantity"></span></h5>
 						<h5>Price: <span id="price"></span></h5>
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-md-6" id="wish-button-div">
 								<div class="input-group" style="width: 100%">
 								<button type="button" class="btn btn-primary" style="width: 100%" onclick="addToWish(<?php echo $_GET["id"]; ?>);">
 									<span class="glyphicon glyphicon-heart"></span>Add to Wish
@@ -81,7 +81,7 @@
 								</div>
 							</div>
 							
-							<div class="col-md-6">
+							<div class="col-md-6" id="add-button-div">
 								<div class="input-group">
 									<input type="number" class="form-control" id="quan" value="1" min="0" max="<?php echo $maxQuan; ?>">
 									<span class="input-group-btn">
@@ -109,7 +109,32 @@
 	</div>
 	
 	<div class="col-md-3">
-		<div class="panel panel-default">
+		<div class="panel panel-default" id="signin-div">
+			<div class="panel-heading">
+				<h3 class="panel-title">Signin</h3>
+			</div>
+			<div class="panel-body">
+				<form class="form-signin" id="signin-form" role="form">
+					<input type="email" class="form-control" id="signin-email" placeholder="Email Address" required="" autofocus="">
+					<input type="password" class="form-control" id="signin-password" placeholder="Password" required="">
+					<!-- <label class="checkbox">
+						<input type="checkbox" value="remember-me">Remember me
+					</label> -->
+					<br>
+					<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+				</form>
+				
+				<label>
+					Forgot password? <a href="?page=member&function=recovery">Recovery</a>
+				</label>
+				<br>
+				<label>
+					Don't have an account? <a href="?page=member&function=signup">Sign up now</a>
+				</label>
+			</div>
+		</div>
+	
+		<div class="panel panel-default" id="cart-div">
 			<div class="panel-heading">
 				<h3 class="panel-title">Cart</h3>
 			</div>
@@ -297,6 +322,17 @@
 				if (!isset($_POST["pid"]))
 					echo "aj();";
 		?>
+
+		if ($.cookie("customerid") == undefined) {
+			$("#wish-button-div").remove();
+			$("#add-button-div").removeClass("col-md-6");
+			$("#add-button-div").addClass("col-md-12");
+
+			$("#cart-div").remove();
+		}
+		else {
+			$("#signin-div").remove();
+		}
 	});
 
 	function showAllProductsInCart() {
@@ -410,6 +446,48 @@
 	$("#button-checkout").click(function() {
 		window.location.href = "?page=payment";
 	});
+
+	$("#signin-form").submit(function () {
+		var email = $("#signin-email").val();
+		var password = $("#signin-password").val();
+		
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: { "sign-in": "",
+				"email": email,
+				"password": password
+			}
+		}).done(function(response) {
+			console.log(response);
+			var registered = $.parseJSON(response);
+			
+			if (registered.username == email) {
+				console.log("Response Pass, from sign in");
+				signin(registered);
+			}
+			else {
+				console.log("Response Fail, from sign in");
+			}
+			
+		});
+		
+		return false;
+	});
+
+	function signin(customer) {
+		$.cookie("customerid", customer.id, { expires: 15 });
+
+		$.cookie("email", customer.username, { expires: 15 });
+		$.cookie("firstname", customer.firstname, { expires: 15 });
+		$.cookie("lastname", customer.lastname, { expires: 15 });
+
+		if (customer.adminlevel != undefined)
+			$.cookie("adminlevel", customer.adminlevel, { expires: 15 });
+
+		location.reload();
+		
+	};
 </script>
 						
 <?php

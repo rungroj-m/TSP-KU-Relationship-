@@ -2,6 +2,7 @@
 <head>
 	<link rel="shortcut icon" type="image/png" href="image/logo.png"/>
 	<title>Xtreme Sport Shop</title>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 	
 	<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato">
@@ -42,11 +43,16 @@ body {
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "inventory") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=inventory">Inventory</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "news") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=news">News</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "promotion") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=promotion">Promotion</a></li>
-		      					<?php if (isset($_GET['page']) && $_GET['page'] == "customer") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=customer">Customer</a></li>
+		      					<?php if (isset($_GET['page']) && $_GET['page'] == "wishlist") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=wishlist">Wish List</a></li>
+		      					
+		      					
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "member") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=member">Member</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "profile") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=profile">Profile</a></li>
+		      					
+		      					<?php if (isset($_GET['page']) && $_GET['page'] == "customer") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=customer">Customer</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "transaction") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=transaction">Transaction</a></li>
-		      					<?php if (isset($_GET['page']) && $_GET['page'] == "wishlist") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=wishlist">Wish List</a></li>
+		      					
+		      					<?php if (isset($_GET['page']) && $_GET['page'] == "report") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=report">Report</a></li>
 					        </ul>
 					        <ul class="nav navbar-nav navbar-right" id="username">
 					        </ul>
@@ -88,16 +94,23 @@ body {
 					"<li><a href=\"#\" id=\"logout\">Logout</a></li>");
 			
 			$('.navbar-nav li:contains("Member")').remove();
-// ADMIN MODE
-// 			if ($.cookie("email") != "admin@kurel.com") {
-// 				$('.navbar-nav li:contains("Inventory")').remove();
-// 				$('.navbar-nav li:contains("News")').remove();
-// 				$('.navbar-nav li:contains("Promotion")').remove();
-// 				$('.navbar-nav li:contains("User")').remove();
-// 			}
+			
+			if ($.cookie("adminlevel") != 1 && $.cookie("adminlevel") != 2) {
+				$('.navbar-nav li:contains("Inventory")').remove();
+				$('.navbar-nav li:contains("Customer")').remove();
+				$('.navbar-nav li:contains("Transaction")').remove();
+			}
+			if ($.cookie("adminlevel") != 2) {
+				$('.navbar-nav li:contains("Report")').remove();
+			}
 		}
 		else {
+			$('.navbar-nav li:contains("Inventory")').remove();
 			$('.navbar-nav li:contains("Profile")').remove();
+			$('.navbar-nav li:contains("Wish List")').remove();
+			$('.navbar-nav li:contains("Customer")').remove();
+			$('.navbar-nav li:contains("Transaction")').remove();
+			$('.navbar-nav li:contains("Report")').remove();
 		}
 
 		$("#logout").click(function() {

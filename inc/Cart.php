@@ -52,10 +52,8 @@
 	    $data = $dao->getCartProducts( $dao->getCurrentCartId( $this->customer->id ) );
 	    $result = array();
 	    foreach( $data as &$val ) {
-		echo("in get product");
 		$detail = array();
 		if( $val['Quantity'] == 0 ) continue;
-		echo("product : ".Product::GetProduct( $val['ProductId'] ));
 		$detail['Product'] = Product::GetProduct( $val['ProductId'] );
 		$detail['Quantity'] = $val['Quantity'];
 		array_push( $result, $detail );

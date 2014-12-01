@@ -23,10 +23,44 @@
 		<h3 class="panel-title">Address</h3>
 	</div>
 	<div class="panel-body">
-		<div>
-		Address same as yours <input type="checkbox">
-			
-		</div>
+			<form class="form-signin" id="signup-form" role="form">
+				<div class="row">
+					<div class="col-md-6">
+						<input type="text" class="form-control" id="firstname" placeholder="First Name" required="">
+					</div>
+					<div class="col-md-6">
+						<input type="text" class="form-control" id="lastname" placeholder="Last Name" required="">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<input type="text" class="form-control" id="address" placeholder="Address" required="">
+					</div>
+					<div class="col-md-6">
+						<input type="text" class="form-control" id="address2" placeholder="Address 2">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<input type="text" class="form-control" id="district" placeholder="District" required="">
+					</div>
+					<div class="col-md-6">
+						<input type="text" class="form-control" id="province" placeholder="Province" required="">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<input type="text" class="form-control" id="country" placeholder="Country" required="">
+					</div>
+					<div class="col-md-4">
+						<input type="text" class="form-control" id="zip" placeholder="ZIP" required="">
+					</div>
+					
+					<div class="col-md-4">
+						<input type="text" class="form-control" id="phone" placeholder="Phone">
+					</div>
+				</div>
+			</form>
 	</div>
 </div>
 
@@ -80,6 +114,27 @@
 	
 	$(document).ready(function() {
 		showAllProductsInCart();
+
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"get_customer_detail": $.cookie("customerid")
+			}
+		}).done(function(customer_json) {
+			var customer_obj = JSON.parse(customer_json);
+			
+			$("#firstname").val(customer_obj.firstname);
+			$("#lastname").val(customer_obj.lastname);
+			$("#address").val(customer_obj.address);
+			$("#address2").val(customer_obj.address2);
+			$("#district").val(customer_obj.district);
+			$("#provinct").val(customer_obj.provinct);
+			$("#country").val(customer_obj.country);
+			$("#zip").val(customer_obj.zip);
+			$("#phone").val(customer_obj.phone);
+		});
+		
 	});
 
 	function getEMSFee(weight,amount) {
