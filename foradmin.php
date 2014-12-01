@@ -59,8 +59,7 @@
 				"lastname": lastname
 			}
 		}).done(function(response) {
-			alert(response);
-			var registered = $.parseJSON(response);
+			var registered = JSON.parse(response);
 			
 			if (registered.username == email) {
 				console.log("Response Pass, from sign up");
@@ -73,5 +72,24 @@
 
 		return false;
 	});
+
+	function signin(customer) {
+		$.cookie("customerid", customer.id, { expires: 15 });
+
+		$.cookie("email", customer.username, { expires: 15 });
+		$.cookie("firstname", customer.firstname, { expires: 15 });
+		$.cookie("lastname", customer.lastname, { expires: 15 });
+
+		if (customer.adminlevel != undefined)
+			$.cookie("adminlevel", customer.adminlevel, { expires: 15 });
+
+		<?php
+				if (isset($_POST["back_to_location"]))
+					echo "postAndRedirect();";
+				else
+					echo "window.location = window.location.pathname;";
+		?>
+		
+	};
 	
 </script>

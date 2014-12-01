@@ -47,6 +47,18 @@
 	public function getWishList (){
 	    return WishList::GetWishListFromCustomer( $this );
 	}
+	
+	public static function getAllCustomers(){
+		$dao = CustomerDao::GetInstance();
+		$datas =  $dao->getAllCustomers();
+		$return = array();
+		foreach($datas as &$data) {
+			$customer = Customer::dataToCustomer( $data ) ; 
+			array_push($return, $customer);
+		}
+		return $return;
+	}
+	
     }
     /*
     require_once( "Product.php" );

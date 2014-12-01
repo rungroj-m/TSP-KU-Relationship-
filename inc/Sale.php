@@ -28,7 +28,7 @@
 	private static function dataToSale( $data ) {
 	    $instance = new self();
 	    $instance->cart = Cart::GetCart( $data['CartId'] );
-	    $instance->payment = Payment::GetPayment( $data['Payment'] );
+	    $instance->payment = Payment::GetPayment( $data['PaymentId'] );
 	    $instance->id = $data['SaleId'];
 	    return $instance;
 	}

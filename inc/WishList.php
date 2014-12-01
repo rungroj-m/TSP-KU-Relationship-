@@ -5,7 +5,6 @@
 	public $closed;
 	public $customer;
 	public $lastUpdate;
-	public $products;
 	
 	public static function GetWishListFromCustomer( $customer ) {
 	    $dao = InventoryDao::GetInstance();
@@ -47,13 +46,11 @@
 	    $dao = InventoryDao::GetInstance();
 	    $data = $dao->getWishListProducts( $dao->getCurrentWishListId( $this->customer->id ) );
 	    $result = array();
-	    $this -> products = array();
 	    foreach( $data as &$val ) {
 		$detail = array();
 		if( $val['Quantity'] == 0 ) continue;
 		$detail['Product'] = Product::GetProduct( $val['ProductId'] );
 		$detail['Quantity'] = $val['Quantity'];
-		array_push($this -> products,Product::GetProduct( $val['ProductId'] ));
 		array_push( $result, $detail );
 	    }
 	    return $result;
@@ -81,11 +78,12 @@
 	}
 	
 	public function isWish($product){
-		$this->GetProducts();
-		if( in_array($product, $this->products) )
-			return 1;
-		else
-			return 0;
+		$all = $this->GetProducts();
+		foreach( $all as &$detail ) {
+		if($detail['Product'] == $product)
+			return $detail['Quantity'];			
+		}
+		return 0;
 	}
 	
 	

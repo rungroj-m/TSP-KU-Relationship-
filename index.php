@@ -84,7 +84,7 @@ body {
     <script type="text/javascript">
 		if ($.cookie("customerid") != undefined) {
 			
-			$("#username").html("<li><a>Hi, " + $.cookie("firstname") + " " + $.cookie("lastname") + "</a></li>" +
+			$("#username").html("<li><a>Hi, " + ($.cookie("adminlevel") != undefined ? ($.cookie("adminlevel") == 1 ? "Admin " : "Super Admin ") : "") + $.cookie("firstname") + " " + $.cookie("lastname") + "</a></li>" +
 					"<li><a href=\"#\" id=\"logout\">Logout</a></li>");
 			
 			$('.navbar-nav li:contains("Member")').remove();
@@ -105,6 +105,9 @@ body {
 			$.removeCookie("email");
 			$.removeCookie("firstname");
 			$.removeCookie("lastname");
+			if ($.cookie("adminlevel") != undefined)
+				$.removeCookie("adminlevel");
+			
 			window.location = window.location.pathname;
 		});
 

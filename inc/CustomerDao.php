@@ -78,6 +78,20 @@
 	    return $STH->fetch()['AdminId'];
 	}
 	
+	public function getAllCustomers(){
+		$STH = $this->db->prepare(  "SELECT * FROM `Customers`" );
+		$STH->execute();
+		return $STH->fetchAll();		
+	}
+	
+	
+	public function getAllAdmins(){
+		$STH = $this->db->prepare(  "SELECT * FROM `Admins`" );
+		$STH->execute();
+		return $STH->fetchAll();
+		
+	}
+	
     }
     
 ?>

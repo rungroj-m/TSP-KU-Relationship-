@@ -5,7 +5,7 @@
     	public $firstName;
     	public $lastName;
     	public $username;
-	public $level;
+		public $level;
 	
 	public static function Authenticate( $username, $password ) {
 	    $dao = CustomerDao::GetInstance();
@@ -42,6 +42,18 @@
 	    return Admin::dataToCustomer( $data );
     	}
 	
+    public static function GetAllAdmins(){
+    	$dao = CustomerDao::GetInstance();
+    	$datas =  $dao->getAllAdmins();
+    	$return = array();
+    	foreach($datas as &$data) {
+    		$admin = Admin::dataToAdmin($data);
+    		array_push($return, $admin);
+    	}
+    	return $return;
+    	 
+    }
+    	
 	public function addPercentPromotion( $percent, $startDate, $endDate ) {
 	    return Promotion::CreatePercentPromotion( $percent, $startDate, $endDate , $this );
 	}

@@ -62,7 +62,9 @@ if (isset($_POST["search_product_for_shopping"])) {
 	
 	$cat = $_POST["category"];
 	$str = $_POST["search_product_for_shopping"];
-	$customerId = $_POST["customer_id"];
+	if (isset($_POST["customer_id"]))
+		$customerId = $_POST["customer_id"];
+	
 	$productdescs = array();
 	if ($str == "") {
 		if ($cat == "Category" || $cat == "All") {
@@ -87,18 +89,23 @@ if (isset($_POST["search_product_for_shopping"])) {
 		}
 	}
 	
-	$wishList = WishList::GetWishListFromCustomer(Customer::GetCustomer($customerId));
-// 	print_r($wishList);
-// 	$productandquan = $wishList->GetProducts();
-// 	print_r($productandquan);
+	if (isset($_POST["customer_id"])) {
+		$wishList = WishList::GetWishListFromCustomer(Customer::GetCustomer($customerId));
+		foreach ($productdescs as $p) {
+			$product = Product::GetEnabledProductByProductDescriptionId($p->id);
+			
+			$isWish = $wishList->isWish($product);
+			
+			createProductBoxForShopping($product, $isWish);
+		}
+	}
+	else {
+		foreach ($productdescs as $p) {
+			$product = Product::GetEnabledProductByProductDescriptionId($p->id);
+								
+			createProductBoxForShopping($product, 0);
+		}
 	
-	foreach ($productdescs as $p) {
-		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
-		
-		
-		$isWish = $wishList->isWish($product);
-		
-		createProductBoxForShopping($product, $isWish);
 	}
 
 	
@@ -171,7 +178,7 @@ function createProductBoxForShopping($product, $isWish) {
 	   	<a href=\"?page=detail&id=$productId\">
 	   		<!-- May change link of pic to product desc page -->
 	   		<img src=\"{$product->productDescription->images[$imageLen-1]}\">
-	   		<span style=\"position: relative; top: -20px; left: 80px;\" class=\"glyphicon glyphicon-heart\"></span>
+	   		<span style=\"position: relative; top: -20px; left: 70px;\" class=\"glyphicon glyphicon-heart\">$isWish</span> 
 			<div class=\"name\" id=\"name\">$productName</div>
 		</a>
 	
@@ -335,17 +342,33 @@ if (isset($_POST["sign_up"])) {
 if (isset($_POST["sign-in"])) {
 	require_once ('inc/CustomerDao.php');
 	require_once ('inc/Customer.php');
+	require_once ('inc/Admin.php');
 	
 // 	var_dump($_POST);
 	
 	$result = Customer::Authenticate($_POST["email"], $_POST["password"]);
-	echo "
-	{
+	if ($result->id != 0) {
+		echo "
+		{
+			\"id\" : {$result->id},
+			\"username\" : \"{$result->username}\",
+			\"firstname\" : \"{$result->firstName}\",
+			\"lastname\" : \"{$result->lastName}\"
+		}";
+		return;
+	}
+	else {
+		$result = Admin::Authenticate($_POST["email"], $_POST["password"]);
+		echo "
+		{
 		\"id\" : {$result->id},
 		\"username\" : \"{$result->username}\",
 		\"firstname\" : \"{$result->firstName}\",
-		\"lastname\" : \"{$result->lastName}\"
-	}";
+		\"lastname\" : \"{$result->lastName}\",
+		\"adminlevel\" : \"{$result->level}\"
+		}";
+		return;
+	}
 }
 
 if (isset($_POST["remove"])) {
@@ -429,13 +452,12 @@ if (isset($_POST["confirm-payment"])) {
 	require_once ('inc/Promotion.php');
 	require_once ('inc/PaymentDao.php');
 	require_once ('inc/Payment.php');
-	
 	$card = CreditCard::CreateCreditCard($_POST["name"], $_POST["number"], $_POST["cvv"], $_POST["expYear"], $_POST["expMonth"]);
-	$customer = Customer::GetCustomer($_POST['customerid']);
+	$customer = Customer::GetCustomer($_POST['customerid']);	
 	$cart = $customer->getCart();
 	$cart->setFee($_POST["fee"]);
 	$sale = $cart->purchase($card);
-	if($cart !== null){
+	if($sale !== null){
 		echo("ok");
 	}else{
 		echo("verify fail or not enough money please change to other credit card");
@@ -530,7 +552,64 @@ if (isset($_POST["sign_up_admin"])) {
 	\"id\" : {$result->id},
 	\"username\" : \"{$result->username}\",
 	\"firstname\" : \"{$result->firstName}\",
-	\"lastname\" : \"{$result->lastName}\"
+	\"lastname\" : \"{$result->lastName}\",
+	\"adminlevel\" : {$result->level}
 	}";
 }
+
+if (isset($_POST["get_all_transaction"])) {
+	require_once ('inc/Sale.php');
+	require_once ('inc/PaymentDao.php');
+	require_once ('inc/Cart.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/Payment.php');
+	require_once ('inc/Creditcard.php');
+	
+	$allSale = Sale::GetAll();
+	echo json_encode($allSale);
+}
+
+if (isset($_POST["get_product_in_transaction"])) {
+	require_once ('inc/Sale.php');
+	require_once ('inc/PaymentDao.php');
+	require_once ('inc/Cart.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/Payment.php');
+	require_once ('inc/Creditcard.php');
+	
+	$cartId = $_POST["get_product_in_transaction"];
+	$products = Cart::GetCart($cartId)->GetProducts();
+//  	echo("------------------------------------------------------------".print_r($products)."---------------->");
+	echo json_encode($products);
+}
+
+
+
+
+if (isset($_POST["get_customer_list"])) {
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	
+	$customers = Customer:: getAllCustomers();
+	
+	echo json_encode($customers);
+}
+
+
+if (isset($_POST["get_admin_list"])) {
+	require_once ('inc/Admin.php');
+	require_once ('inc/CustomerDao.php');
+
+	$admins = Admin::getAllAdmins();
+	// bat เสจแล้วทักมาใน facebook นะ กุออกก่อนละกัน
+	
+	echo json_encode($admins);
+}
+
+
+
 

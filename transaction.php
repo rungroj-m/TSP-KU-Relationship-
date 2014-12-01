@@ -27,6 +27,7 @@
 					<td>Date</td>
 					<td>Customer</td>
 					<td>Total</td>
+					<td>Promotion</td>
 					<td>Status</td>
 				</tr>
 			</tbody>
@@ -50,56 +51,46 @@
 
 	$(document).ready(function() {
 		$.ajax({
-			url: 'http://localhost:11111/orders/enum'
-		}).done(function(types_json) {
-			var types = JSON.parse(types_json);
-			for (var i = 0; i < types.length; i++) {
-				$('#types-dropdown').append('<li><a>' + types[i] + '</a></li>');
-			}
-
-			$("#types-dropdown li").click(function() {
-				$("#dropdown qq").text($(this).text());
-			});
-		});
-	});
-
-	$("#button-get").click(function() {
-		alert($("#dropdown qq").text());
-		$.ajax({
-			url: 'http://localhost:11111/orders',
+			url: 'forjscallphp.php',
+			type: 'POST',
 			data: {
-				//"statue": $("#dropdown qq").text()
+				'get_all_transaction': '',
 			}
-		}).done(function(json) {
-			var json_obj = JSON.parse(xml2json(json, ""));
-			ordersToTable(json_obj)
+		}).done(function(json_str) {
+			var json_obj = JSON.parse(json_str);
+			for (var i = 0; i < json_obj.length; i++) {
+
+				var cartId =json_obj[i].cart.cartId;
+ 				var obj = json_obj[i];
+				console.log("cart id : "+cartId);
+				(function(obj) {
+					$.ajax({
+						url: 'forjscallphp.php',
+						type: 'POST',
+						data: {
+							'get_product_in_transaction': cartId
+						},
+						success: function(json_str2) {
+							console.log("------"+json_str2 );
+// 							var products_json_obj = json_str2;
+// 							console.log(products_json_obj);
+							
+							$("#orders-table").append("\
+									<tr>\
+										<td>" + obj.id + "</td>\
+										<td>" + 000 + "Products</td>\
+										<td>" + obj.payment.timeDate.date + "</td>\
+										<td>" + obj.cart.customer.firstName + " " + obj.cart.customer.lastName + "</td>\
+										<td>" + obj.payment.amount + "</td>\
+										<td>Status</td>\
+									</tr>");
+						}
+					});
+				})(obj);
+				
+				
+			} // for
 		});
+
 	});
-
-	function ordersToTable(json_obj) {
-		$("#orders-table").empty();
-		$("#orders-table").append("\
-				<tr>\
-					<td>ID</td>\
-					<td>Products</td>\
-					<td>Date</td>\
-					<td>Customer</td>\
-					<td>Total</td>\
-					<td>Status</td>\
-				</tr>");
-
-		var orders = json_obj.orders;
-		console.log(orders);
-// 		for (var i = 0; i < orders.length; i++) {
-// 			$("#orders-table").append("\
-// 					<tr>\
-// 						<td>" + (i+1) + "</td>\
-// 						<td>" +  + "Products</td>\
-// 						<td>Date</td>\
-// 						<td>Customer</td>\
-// 						<td>Total</td>\
-// 						<td>Status</td>\
-// 					</tr>");
-// 		}
-	}
 </script>

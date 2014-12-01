@@ -35,16 +35,13 @@
 	public function vertify() {
 	    $data = PaymentDao::GetInstance()->getCreditCard( $this->name, $this->cardNumber, $this->cvv, $this->expDate );
 	    $this->isVertify = $data['Number'] == $this->cardNumber;
-	    print_r( $data );
 	    return $this->isVertify;
 	}
 	
 	public function pay( $amount ) {
 	    if ( $this->isVertify == false ) return null;
-	    if( PaymentDao::requestMoney( $this->cardNumber, $amount ) ) {
-	    	echo("in pay");
-		return Payment::CreatePayment( $this, $amount );
-	    }
+	    if( PaymentDao::requestMoney( $this->cardNumber, $amount ) )
+			return Payment::CreatePayment( $this, $amount );
 	    return null;
 	}
 	

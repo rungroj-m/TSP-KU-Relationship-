@@ -95,7 +95,7 @@
 				"password": password
 			}
 		}).done(function(response) {
-			alert(response);
+			console.log(response);
 			var registered = $.parseJSON(response);
 			
 			if (registered.username == email) {
@@ -127,7 +127,7 @@
 				"lastname": lastname
 			}
 		}).done(function(response) {
-			alert(response);
+			console.log(response);
 			var registered = $.parseJSON(response);
 			
 			if (registered.username == email) {
@@ -148,7 +148,10 @@
 		$.cookie("email", customer.username, { expires: 15 });
 		$.cookie("firstname", customer.firstname, { expires: 15 });
 		$.cookie("lastname", customer.lastname, { expires: 15 });
-		
+
+		if (customer.adminlevel != undefined)
+			$.cookie("adminlevel", customer.adminlevel, { expires: 15 });
+
 		<?php
 			if (isset($_POST["back_to_location"]))
 				echo "postAndRedirect();";
