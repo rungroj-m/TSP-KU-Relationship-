@@ -17,7 +17,6 @@
 	}
 	
 	public static function GetPayment( $paymentId ) {
-	    print_r( PaymentDao::GetInstance()->getPayment( $paymentId ) );
 	    return Payment::dataToPayment( PaymentDao::GetInstance()->getPayment( $paymentId ) );
 	}
 	

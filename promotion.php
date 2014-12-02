@@ -6,7 +6,8 @@
 			</div>
 			<div class="panel-body">
 				<ul class="nav nav-pills nav-stacked" id="menu">
-					<li><a id="add">Add Promotion</a></li>
+					<li class="active"><a id="add">Add Promotion</a></li>
+					<li><a id="add">See all promotions</a></li>
 				</ul>
 			</div>
 		</div>

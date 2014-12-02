@@ -27,8 +27,7 @@
 	}
 	
 	public function purchase( $creditCard ) {
-		print_r($creditCard->isVertify);
-	    if( $creditCard->isVertify == false ) return null;
+		if($creditCard->vertify() == 0) return null;
 	    $payment = $creditCard->pay( $this->GetTotalPrice() );
 	    if( $payment == null ) return null;
 	    $this->close();
@@ -50,7 +49,7 @@
 	
 	public function GetProducts() {
 	    $dao = InventoryDao::GetInstance();
-	    $data = $dao->getCartProducts( $dao->getCurrentCartId( $this->customer->id ) );
+	    $data = $dao->getCartProducts( $this->cartId );
 	    $result = array();
 	    foreach( $data as &$val ) {
 		$detail = array();

@@ -44,7 +44,8 @@
 	
 	public function GetProducts() {
 	    $dao = InventoryDao::GetInstance();
-	    $data = $dao->getWishListProducts( $dao->getCurrentWishListId( $this->customer->id ) );
+	    $data = $dao->getWishListProducts( $this->id );
+	    print_r( $data );
 	    $result = array();
 	    foreach( $data as &$val ) {
 		$detail = array();
@@ -77,9 +78,16 @@
 	    InventoryDao::GetInstance()->closeWishList( $this->id );
 	}
 	
-	public function getTransactions() {
-	    
+	public function isWish($product){
+		$all = $this->GetProducts();
+		foreach( $all as &$detail ) {
+		if($detail['Product'] == $product)
+			return $detail['Quantity'];			
+		}
+		return 0;
 	}
+	
+	
     }
 
 ?>

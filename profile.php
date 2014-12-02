@@ -1,3 +1,9 @@
+<style>
+input {
+	margin: 5px
+}
+</style>
+
 <div class="row">
 	<div class="col-md-3">
 		<div class="panel panel-default">
@@ -22,15 +28,55 @@
 				<form class="form-signin" id="signup-form" role="form">
 					<h2 class="form-signin-heading">Login Information</h2>
 					<br>
-					<input type="email" class="form-control" id="signup-email" placeholder="Email address" required="" autofocus="">
-					<input type="password" class="form-control" id="signup-password" placeholder="Password" required="">
-					<input type="password" class="form-control" id="signup-password-confirm" placeholder="Password again" required="">
-					<br>
-					<input type="text" class="form-control" id="signup-firstname" placeholder="First Name" required="">
-					<input type="text" class="form-control" id="signup-lastname" placeholder="Last Name" required="">
 					
+					
+					<input type="email" class="form-control" id="signup-email" placeholder="Email address" autofocus="" disabled>
+					<div class="row">
+						<div class="col-md-6">
+							<input type="password" class="form-control" id="signup-password" placeholder="Password" required="">
+						</div>
+						<div class="col-md-6">
+							<input type="password" class="form-control" id="signup-password-confirm" placeholder="Password again" required="">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<input type="text" class="form-control" id="signup-firstname" placeholder="First Name" required="">
+						</div>
+						<div class="col-md-6">
+							<input type="text" class="form-control" id="signup-lastname" placeholder="Last Name" required="">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<input type="text" class="form-control" id="signup-address" placeholder="Address" required="">
+						</div>
+						<div class="col-md-6">
+							<input type="text" class="form-control" id="signup-address2" placeholder="Address 2">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<input type="text" class="form-control" id="signup-district" placeholder="District" required="">
+						</div>
+						<div class="col-md-6">
+							<input type="text" class="form-control" id="signup-province" placeholder="Province" required="">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<input type="text" class="form-control" id="signup-country" placeholder="Country" required="">
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control" id="signup-zip" placeholder="ZIP" required="">
+						</div>
+						
+						<div class="col-md-4">
+							<input type="text" class="form-control" id="signup-phone" placeholder="Phone">
+						</div>
+					</div>
 					<br>
-					<button class="btn btn-lg btn-success btn-block" type="submit">Save</button>
+					<button class="btn btn-lg btn-success btn-block" type="submit" id="save-profile-button">Save</button>
 				</form>
 			</div>
 		</div>
@@ -94,6 +140,62 @@
 			else {
 				$(this).addClass("active");
 			}
+		});
+	});
+
+	$("#save-profile-button").click(function() {
+		var password = $("#signup-password").val();
+		var firstname = $("#signup-firstname").val();
+		var lastname = $("#signup-lastname").val();
+		var address = $("#signup-address").val();
+		var address2 = $("#signup-address2").val();
+		var district = $("#signup-district").val();
+		var provinct = $("#signup-provinct").val();
+		var country = $("#signup-country").val();
+		var zip = $("#signup-zip").val();
+		var phone = $("#signup-phone").val();
+
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"save_customer_detail": $.cookie("customerid"),
+				"password": password,
+				"firstname": firstname,
+				"lastname": lastname,
+				"address": address,
+				"address2": address2,
+				"district": district,
+				"provinct": provinct,
+				"country": country,
+				"zip": zip,
+				"phone": phone
+			}
+		}).done(function(products_json) {
+
+		});
+	});
+
+	$(document).ready(function() {
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"get_customer_detail": $.cookie("customerid")
+			}
+		}).done(function(customer_json) {
+			var customer_obj = JSON.parse(customer_json);
+			
+			$("#signup-email").val(customer_obj.username);
+			$("#signup-firstname").val(customer_obj.firstname);
+			$("#signup-lastname").val(customer_obj.lastname);
+			$("#signup-address").val(customer_obj.address);
+			$("#signup-address2").val(customer_obj.address2);
+			$("#signup-district").val(customer_obj.district);
+			$("#signup-provinct").val(customer_obj.provinct);
+			$("#signup-country").val(customer_obj.country);
+			$("#signup-zip").val(customer_obj.zip);
+			$("#signup-phone").val(customer_obj.phone);
 		});
 	});
 

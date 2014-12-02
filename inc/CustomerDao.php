@@ -25,14 +25,26 @@
 	    return $dao;
 	}
 	
-	public function addCustomer( $firstName, $lastName, $username, $password ) {
-	    $STH = $this->db->prepare("INSERT INTO `Customers`( `FirstName`, `LastName`, `UserName`, `Password` ) VALUES ( :firstName, :lastName, :userName, :password)" );
+	public function addCustomer( $firstName, $lastName, $username, $password, $address, $isBlocked ) {
+	    $STH = $this->db->prepare("INSERT INTO `Customers`( `FirstName`, `LastName`, `UserName`, `Password`, `Address`, `Blocked`  ) VALUES ( :firstName, :lastName, :userName, :password, :address, :blocked)" );
 	    $STH->bindParam(':firstName', $firstName );
 	    $STH->bindParam(':lastName', $lastName );
 	    $STH->bindParam(':userName', $username );
 	    $STH->bindParam(':password', md5( $password ) );
+	    $STH->bindParam(':address', $address );
+	    $STH->bindParam(':blocked', $isBlocked );
 	    $STH->execute();
 	    return $this->db->lastInsertId();
+	}
+	
+	public function updateCustomer( $id, $firstName, $lastName, $username, $address, $isBlocked ) {
+	    $STH = $this->db->prepare( "UPDATE `Customers` SET `FirstName` = :fn, `LastName` = :ln, `UserName` = :un, `Address` = :ad, `Blocked` = :bk WHERE `CustomerId` = $id" );
+	    $STH->bindParam(':fn', $firstName );
+	    $STH->bindParam(':ln', $lastName );
+	    $STH->bindParam(':un', $username );
+	    $STH->bindParam(':ad', $address );
+	    $STH->bindParam(':bk', $isBlocked );
+	    $STH->execute();
 	}
 	
 	public function authCustomer( $username, $password ) {
@@ -42,6 +54,12 @@
 	    $STH->execute();
 	    if ( $STH->rowCount() == 0 ) return null;
 	    return $STH->fetch()['CustomerId'];
+	}
+	
+	public function updatePassword( $customerId, $pass ) {
+	     $STH = $this->db->prepare( "UPDATE `Customers` SET `Password` = :pw WHERE `CustomerId` = $customerId" );
+	     $STH->bindParam(':pw', md5( $password ) );
+	     $STH->execute();
 	}
 	
 	public function getCustomer( $customerId ) {
@@ -76,6 +94,20 @@
 	    $STH->execute();
 	    if ( $STH->rowCount() == 0 ) return null;
 	    return $STH->fetch()['AdminId'];
+	}
+	
+	public function getAllCustomers(){
+		$STH = $this->db->prepare(  "SELECT * FROM `Customers`" );
+		$STH->execute();
+		return $STH->fetchAll();		
+	}
+	
+	
+	public function getAllAdmins(){
+		$STH = $this->db->prepare(  "SELECT * FROM `Admins`" );
+		$STH->execute();
+		return $STH->fetchAll();
+		
 	}
 	
     }

@@ -27,7 +27,6 @@
 	}
 	
 	public function addInventory( $pid, $amount ) {
-	    echo($amount);
 	    $STH = $this->db->prepare("INSERT INTO `InventoryTransactions`( `DateTime`, `ProductId`, `Quantity`, `Deposition` ) VALUES ( NOW(), :pid, :quantity, 1)" );
 	    $STH->bindParam(':pid', $pid );
 	    $STH->bindParam(':quantity', $amount );
@@ -109,7 +108,7 @@
 	    $STH = $this->db->prepare("INSERT INTO `WishLists`(`CustomerId`, `LastUpdate`, `Closed`) VALUES ( :customerId, NOW(), 0 )");
 	    $STH->bindParam(':customerId', $customerId );
 	    $STH->execute();
-	    return $this->db->lastInsertId();
+	    return $this->db->lastInsertId() ;
 	}
 	
 	public function updateWishList( $wishListId ) {
@@ -272,6 +271,7 @@
 	    $STH->execute();
 	    return $STH->fetch();
 	}
+	
     }
     
 ?>

@@ -140,6 +140,11 @@
 	    return $STH->fetchAll();
 	}
 	
+	function getActiveProductsWithLimit( $limit, $pages ) {
+	    $pages = $pages - 1;
+	    $STH = $this->db->prepare("SELECT * FROM `Products` WHERE `Status` = 1 ORDER BY `CreateDate` LIMIT $limit OFFSET $pages");
+	}
+	
 	function getProductDescriptionById( $pdid ) {
 	    $STH = $this->db->prepare("SELECT * FROM `ProductDescriptions` WHERE `ProductDescriptionId` = :id");
 	    $STH->bindParam(':id', $pdid );

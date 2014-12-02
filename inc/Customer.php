@@ -5,6 +5,8 @@
     	public $firstName;
     	public $lastName;
     	public $username;
+	public $isBlocked;
+	public $Address;
     	
 	public static function Authenticate( $username, $password ) {
 	    $dao = CustomerDao::GetInstance();
@@ -19,19 +21,31 @@
 	    $result->firstName = $data['FirstName'];
 	    $result->lastName = $data['LastName'];
 	    $result->username = $data['UserName'];
+	    $result->address = $data['Address'];
+	    $result->isBlocked = $data['Blocked'];
 	    return $result;
 	}
 	
-	public static function CreateCustomer( $firstName, $lastName, $username, $password ) {
+	public static function CreateCustomer( $firstName, $lastName, $username, $password ,$address ) {
 	    $dao = CustomerDao::GetInstance();
-	    $cusId = $dao->addCustomer( $firstName, $lastName, $username, $password );
+	    $cusId = $dao->addCustomer( $firstName, $lastName, $username, $password, $address, 0 );
 	    
 	    $result = new self();
 	    $result->id = $cusId;
 	    $result->firstName = $firstName;
 	    $result->lastName = $lastName;
 	    $result->username = $username;
+	    $result->isBlocked = 0;
+	    $result->Address = $address;
 	    return $result;
+	}
+	
+	public function updateCustomer() {
+	    CustomerDao::GetInstance()->updateCustomer( $this->id, $this->firstName, $this->lastName, $this->username, $address, 0 );
+	}
+	
+	public function updatePassword( $pass ) {
+	    CustomerDao::GetInstance()->updatePassword( $this->id, $pass );
 	}
 	
 	public static function GetCustomer( $customerId ) {
@@ -47,8 +61,22 @@
 	public function getWishList (){
 	    return WishList::GetWishListFromCustomer( $this );
 	}
+	
+	public static function getAllCustomers(){
+		$dao = CustomerDao::GetInstance();
+		$datas =  $dao->getAllCustomers();
+		$return = array();
+		foreach($datas as &$data) {
+			$customer = Customer::dataToCustomer( $data ) ; 
+			array_push($return, $customer);
+		}
+		return $return;
+	}
+	
     }
     
+    /*require_once( "Product.php" );
+    require_once( "ProductDao.php");
     require_once( "CustomerDao.php" );
     require_once( "WishList.php" );
     require_once( "Sale.php" );
@@ -59,8 +87,9 @@
     require_once( "Cart.php" );
     require_once( "CreditCard.php" );
     require_once( "InventoryDao.php" );
-    $w = Customer::GetCustomer( 3 )->getWishList();
-    $w->AddProduct( Product::GetProduct( 20 ), 1 );
     
+    
+    print_r( Cart::GetCart( 4 )->GetProducts() );
+    //Customer::GetCustomer( 0 )->getWishList()->AddProduct( Product::GetProduct( 20 ), 1 );*/
     
 ?>

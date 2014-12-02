@@ -1,60 +1,70 @@
 <?php
-// search should use search product for
-if (isset($_POST["get_product_by_category_for_shopping"])) {
+// // search should use search product for
+// if (isset($_POST["get_product_by_category_for_shopping"])) {
 	
-	require_once ('inc/Product.php');
-	require_once ('inc/ProductDescription.php');
-	require_once ('inc/Category.php');
-	require_once ('inc/Brand.php');
+// 	require_once ('inc/Product.php');
+// 	require_once ('inc/ProductDescription.php');
+// 	require_once ('inc/Category.php');
+// 	require_once ('inc/Brand.php');
 	
-	$product;
-	if ($_POST["get_product_by_category_for_shopping"] == ""){
-		$product = Product::GetAllProduct();
-	}
-// 	else{
+// 	$product;
+// 	if ($_POST["get_product_by_category_for_shopping"] == ""){
+// 		$product = Product::GetAllProduct();
+// 	}
+// // 	else{
 		
-// 		$productdesc = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_shopping"]);
-// 		foreach($productdesc as $pdesc){
-// 			array_push($product,Product::GetEnabledProductByProductDescriptionId($pdesc->$pid));
-// 		}
-//	}
-	foreach ($product as $p) {
-// 		echo("test");
-// 		print_r($p);
-//		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
-		createProductBoxForShopping($p);
-	}
+// // 		$productdesc = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_shopping"]);
+// // 		foreach($productdesc as $pdesc){
+// // 			array_push($product,Product::GetEnabledProductByProductDescriptionId($pdesc->$pid));
+// // 		}
+// //	}
+// 	foreach ($product as $p) {
+// // 		echo("test");
+// // 		print_r($p);
+// //		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
+// 		createProductBoxForShopping($p);
+// 	}
 	
-}
+// 	if (count($product) == 0)
+// 		echo "No result.";
+// }
 
-if (isset($_POST["get_product_by_category_for_inventory"])) {
+// if (isset($_POST["get_product_by_category_for_inventory"])) {
 
-	require_once ('inc/Product.php');
-	require_once ('inc/ProductDescription.php');
-	require_once ('inc/Category.php');
-	require_once ('inc/Brand.php');
+// 	require_once ('inc/Product.php');
+// 	require_once ('inc/ProductDescription.php');
+// 	require_once ('inc/Category.php');
+// 	require_once ('inc/Brand.php');
 
-	$product;
-	if ($_POST["get_product_by_category_for_inventory"] == "")
-		$product = Product::GetAllProduct();
-// 	else
-// 		$productdescs = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_inventory"]);
+// 	$product;
+// 	if ($_POST["get_product_by_category_for_inventory"] == "")
+// 		$product = Product::GetAllProduct();
+// // 	else
+// // 		$productdescs = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_inventory"]);
 	
 
-	foreach ($product as $p) {
-		createProductBoxForInventory($p);
-	}
+// 	foreach ($product as $p) {
+// 		createProductBoxForInventory($p);
+// 	}
 
-}
+// 	if (count($product) == 0)
+// 		echo "No result.";
+// }
 
 if (isset($_POST["search_product_for_shopping"])) {
 	require_once ('inc/Product.php');
 	require_once ('inc/ProductDescription.php');
 	require_once ('inc/Category.php');
 	require_once ('inc/Brand.php');
+	require_once ('inc/WishList.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
 	
 	$cat = $_POST["category"];
 	$str = $_POST["search_product_for_shopping"];
+	if (isset($_POST["customer_id"]))
+		$customerId = $_POST["customer_id"];
+	
 	$productdescs = array();
 	if ($str == "") {
 		if ($cat == "Category" || $cat == "All") {
@@ -79,9 +89,30 @@ if (isset($_POST["search_product_for_shopping"])) {
 		}
 	}
 	
-	foreach ($productdescs as $p) {
-		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
-		createProductBoxForShopping($product);
+	echo "<div style=\"width: 100%;\">";
+	if (count($productdescs) == 0)
+		echo "No result.";
+	else 
+		echo count($productdescs) ." result(s).<br>";
+	echo "</div>";
+	
+	if (isset($_POST["customer_id"])) {
+		$wishList = WishList::GetWishListFromCustomer(Customer::GetCustomer($customerId));
+		foreach ($productdescs as $p) {
+			$product = Product::GetEnabledProductByProductDescriptionId($p->id);
+			
+			$isWish = $wishList->isWish($product);
+			
+			createProductBoxForShopping($product, $isWish);
+		}
+	}
+	else {
+		foreach ($productdescs as $p) {
+			$product = Product::GetEnabledProductByProductDescriptionId($p->id);
+								
+			createProductBoxForShopping($product, 0);
+		}
+	
 	}
 }
 
@@ -118,13 +149,18 @@ if (isset($_POST["search_product_for_inventory"])) {
 		}
 	}
 
+	if (count($productdescs) == 0)
+		echo "No result.";
+	else
+		echo count($productdescs) ." result(s).<br>";
+	
 	foreach ($productdescs as $p) {
 		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
 		createProductBoxForInventory($product);
 	}
 }
 
-function createProductBoxForShopping($product) {
+function createProductBoxForShopping($product, $isWish) {
 	if (!($product -> id))
 		return "";
 	require_once ('inc/Inventory.php');
@@ -138,6 +174,7 @@ function createProductBoxForShopping($product) {
 	
 	$buttonStatus = $maxQuan > 0 ? "" : "disabled";
 	
+	if ($isWish)
 	echo "
 			
 	<div class=\"thumbnail productbox\">
@@ -145,7 +182,7 @@ function createProductBoxForShopping($product) {
 	   	<a href=\"?page=detail&id=$productId\">
 	   		<!-- May change link of pic to product desc page -->
 	   		<img src=\"{$product->productDescription->images[$imageLen-1]}\">
-	  
+	   		<span style=\"position: relative; top: -20px; left: 70px;\" class=\"glyphicon glyphicon-heart\">$isWish</span> 
 			<div class=\"name\" id=\"name\">$productName</div>
 		</a>
 	
@@ -154,6 +191,24 @@ function createProductBoxForShopping($product) {
 		<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price, 1/*, $maxQuan*/);\" $buttonStatus>ADD</button>
 	</div>
 
+	";
+
+	else
+	echo "
+		
+	<div class=\"thumbnail productbox\">
+	
+	<a href=\"?page=detail&id=$productId\">
+		<!-- May change link of pic to product desc page -->
+		<img src=\"{$product->productDescription->images[$imageLen-1]}\">
+		<div class=\"name\" id=\"name\">$productName</div>
+	</a>
+
+		<div id=\"price\">&#3647;$price</div>
+
+		<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price, 1/*, $maxQuan*/);\" $buttonStatus>ADD</button>
+	</div>
+	
 	";
 	
 }
@@ -291,17 +346,33 @@ if (isset($_POST["sign_up"])) {
 if (isset($_POST["sign-in"])) {
 	require_once ('inc/CustomerDao.php');
 	require_once ('inc/Customer.php');
+	require_once ('inc/Admin.php');
 	
 // 	var_dump($_POST);
 	
 	$result = Customer::Authenticate($_POST["email"], $_POST["password"]);
-	echo "
-	{
+	if ($result->id != 0) {
+		echo "
+		{
+			\"id\" : {$result->id},
+			\"username\" : \"{$result->username}\",
+			\"firstname\" : \"{$result->firstName}\",
+			\"lastname\" : \"{$result->lastName}\"
+		}";
+		return;
+	}
+	else {
+		$result = Admin::Authenticate($_POST["email"], $_POST["password"]);
+		echo "
+		{
 		\"id\" : {$result->id},
 		\"username\" : \"{$result->username}\",
 		\"firstname\" : \"{$result->firstName}\",
-		\"lastname\" : \"{$result->lastName}\"
-	}";
+		\"lastname\" : \"{$result->lastName}\",
+		\"adminlevel\" : \"{$result->level}\"
+		}";
+		return;
+	}
 }
 
 if (isset($_POST["remove"])) {
@@ -309,10 +380,6 @@ if (isset($_POST["remove"])) {
 	require_once('inc/ProductDao.php');
 	
 	Product::GetProduct($_POST["remove"])->disable();
-}
-
-if (isset($_POST["get_promotion"])) {
-	echo '[{"date":"27\/2\/","title":"Getting Contacts Barcelona - test1","link":"http:\/\/gettingcontacts.com\/events\/view\/barcelona","color":"red"},{"date":"25\/5\/","title":"test2","link":"http:\/\/gettingcontacts.com\/events\/view\/barcelona","color":"pink"},{"date":"20\/6\/","title":"test2","link":"http:\/\/gettingcontacts.com\/events\/view\/barcelona","color":"green"},{"date":"7\/10\/","title":"test3","link":"http:\/\/gettingcontacts.com\/events\/view\/barcelona","color":"blue","class":"miclasse ","content":"contingut popover';
 }
 
 if (isset($_POST["get_all_product_in_cart"])) {
@@ -385,13 +452,12 @@ if (isset($_POST["confirm-payment"])) {
 	require_once ('inc/Promotion.php');
 	require_once ('inc/PaymentDao.php');
 	require_once ('inc/Payment.php');
-	
 	$card = CreditCard::CreateCreditCard($_POST["name"], $_POST["number"], $_POST["cvv"], $_POST["expYear"], $_POST["expMonth"]);
-	$customer = Customer::GetCustomer($_POST['customerid']);
+	$customer = Customer::GetCustomer($_POST['customerid']);	
 	$cart = $customer->getCart();
 	$cart->setFee($_POST["fee"]);
 	$sale = $cart->purchase($card);
-	if($cart !== null){
+	if($sale !== null){
 		echo("ok");
 	}else{
 		echo("verify fail or not enough money please change to other credit card");
@@ -399,30 +465,41 @@ if (isset($_POST["confirm-payment"])) {
 }
 
 if (isset($_POST["get_wishlist_product"])) {
-	$customerId = isset($_POST["get_wishlist_product"]);
-	$wishlist = WishLists::GetWishListFromCustomer(Customer::GetCustomer($customerId));
+	require_once ('inc/WishList.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDao.php');
+	
+	$customerId = $_POST["get_wishlist_product"];
+	
+	$wishlist = Customer::GetCustomer($customerId)->getWishList();
 	$products = $wishlist -> GetProducts();
 	
 	foreach ($products as $p) {
-		// 		echo("test");
-		// 		print_r($p);
-		//		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
-		createProductBoxForWishList($p);
+		createProductBoxForWishList($p["Product"], $p["Quantity"]);
 	}
-	//????????????????????????????
 	
+	if (count($products) == 0)
+		echo "No result.";
 }
 
 if (isset($_POST["add_to_wishlist"])) {
-	$customerId = isset($_POST["add_to_wishlist"]);
-	$productId = isset($_POST["product_id"]);
-	$wishlist = WishLists::GetWishListFromCustomer(Customer::GetCustomer($customerId));
-	$wishlist -> addProduct(Product::GetProduct($productId),1);
-	//????????????????????????????
-
+	require_once ('inc/WishList.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDao.php');
+	
+	$customerId = $_POST["add_to_wishlist"];
+	$productId = $_POST["product_id"];
+	$wishlist = Customer::GetCustomer($customerId) -> getWishList();
+	$wishlist -> addProduct(Product::GetProduct($productId), 1);
 }
 
-function createProductBoxForWishList($product) {
+function createProductBoxForWishList($product, $wishQuan) {
 	if (!($product -> id))
 		return "";
 	require_once ('inc/Inventory.php');
@@ -436,7 +513,6 @@ function createProductBoxForWishList($product) {
 
 	$buttonStatus = $maxQuan > 0 ? "" : "disabled";
 
-	$wishQuan = WishLists::
 	
 	echo "
 		
@@ -446,14 +522,14 @@ function createProductBoxForWishList($product) {
 	<!-- May change link of pic to product desc page -->
 	<img src=\"{$product->productDescription->images[$imageLen-1]}\">
 	 
-	<div class=\"name\" id=\"name\">$productName</div>
+	<div class=\"name\" id=\"name\">$wishQuan $productName</div>
 	</a>
 
 	<div id=\"price\">&#3647;$price</div>
 
 	<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price, 1/*, $maxQuan*/);\" $buttonStatus>ADD</button>
-	</div>
 	<button type=\"button\" class=\"btn btn-Danger\" onclick=\"removeWishProduct('$productId');\">REMOVE</button>
+	</div>
 
 	";
 
@@ -466,4 +542,114 @@ if (isset($_POST["remove_wish"])) {
 	$wishlist -> RemoveProduct(Product::GetProduct($productId),1);
 	////
 }
+
+if (isset($_POST["sign_up_admin"])) {
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/Admin.php');
+	$result = Admin::CreateAdmin($_POST["firstname"], $_POST["lastname"], $_POST["email"], $_POST["password"],1);
+	echo "
+	{
+	\"id\" : {$result->id},
+	\"username\" : \"{$result->username}\",
+	\"firstname\" : \"{$result->firstName}\",
+	\"lastname\" : \"{$result->lastName}\",
+	\"adminlevel\" : {$result->level}
+	}";
+}
+
+if (isset($_POST["get_all_transaction"])) {
+	require_once ('inc/Sale.php');
+	require_once ('inc/PaymentDao.php');
+	require_once ('inc/Cart.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/Payment.php');
+	require_once ('inc/Creditcard.php');
+	
+	$allSale = Sale::GetAll();
+	echo json_encode($allSale);
+}
+
+if (isset($_POST["get_product_in_transaction"])) {
+	require_once ('inc/Sale.php');
+	require_once ('inc/PaymentDao.php');
+	require_once ('inc/Cart.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/Payment.php');
+	require_once ('inc/Creditcard.php');
+	
+	$cartId = $_POST["get_product_in_transaction"];
+	$products = Cart::GetCart($cartId)->GetProducts();
+//  	echo("------------------------------------------------------------".print_r($products)."---------------->");
+	echo json_encode($products);
+}
+
+
+
+
+if (isset($_POST["get_customer_list"])) {
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	
+	$customers = Customer:: getAllCustomers();
+	
+	echo json_encode($customers);
+}
+
+
+if (isset($_POST["get_admin_list"])) {
+	require_once ('inc/Admin.php');
+	require_once ('inc/CustomerDao.php');
+
+	$admins = Admin::getAllAdmins();
+	// bat เสจแล้วทักมาใน facebook นะ กุออกก่อนละกัน
+	
+	echo json_encode($admins);
+}
+
+if (isset($_POST["get_customer_detail"])) {
+	$customerId = $_POST["get_customer_detail"];
+	
+	$customer = 1;
+	
+	echo "
+	{
+	\"username\" : \"{$result->username}\",
+	\"firstname\" : \"{$result->firstName}\",
+	\"lastname\" : \"{$result->lastName}\",
+	\"address\" : {$result->address},
+	\"address2\" : {$result->address2},
+	\"district\" : {$result->district},
+	\"provinct\" : {$result->provinct},
+	\"country\" : {$result->country},
+	\"zip\" : {$result->zip},
+	\"phone\" : {$result->phone}
+	}";
+}
+
+if (isset($_POST["save_customer_detail"])) {
+	$customerId = $_POST["save_customer_detail"];
+	
+	$_POST["password"];
+	$_POST["firstname"];
+	$_POST["lastname"];
+	$_POST["address"];
+	$_POST["address2"];
+	$_POST["district"];
+	$_POST["provinct"];
+	$_POST["country"];
+	$_POST["zip"];
+	$_POST["phone"];
+
+}
+
+if (isset($_GET["get_all_promotion"])) {
+	echo "[{\"date\":\"27\/2\/\",\"title\":\"Getting Contacts Barcelona - test1\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"red\"},{\"date\":\"25\/5\/\",\"title\":\"test2\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"pink\"},{\"date\":\"20\/6\/\",\"title\":\"test2\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"green\"},{\"date\":\"7\/10\/\",\"title\":\"test3\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"blue\",\"class\":\"miclasse \",\"content\":\"contingut popover";
+}
+
+
+
 

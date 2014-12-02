@@ -62,7 +62,16 @@
 		foreach ( $data as &$value ) {
 			array_push( $array, Product::NewProductByData( $value ) );
 		}
-		
+		return $array;
+	}
+	
+	public static function GetAllProductWithLimit( $limit, $pages ) {
+		$array = array();
+		$dao = ProductDao::GetInstance();
+		$data = $dao->getActiveProductsWithLimit( $limit, $pages );
+		foreach ( $data as &$value ) {
+			array_push( $array, Product::NewProductByData( $value ) );
+		}
 		return $array;
 	}
 	
