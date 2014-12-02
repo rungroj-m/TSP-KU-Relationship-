@@ -153,6 +153,26 @@
 	    return $STH->fetchAll();
 	}
 	
+	public function getWishListProductsWithLimit( $wishListId, $limit, $pages ) {
+	    $pages -= 1;
+	    $STH = $this->db->prepare("SELECT T1.ProductId, ( T1.income - COALESCE( T2.outcome , 0 ) ) as Quantity FROM
+					    ( SELECT IT.ProductId, SUM( IT.Quantity ) as income FROM `WishListTransactions` CT
+					    JOIN `InventoryTransactions` IT
+					    ON IT.TransactionId = CT.InventoryTransactionId
+					    WHERE CT.WishListId = :wishListId AND IT.Deposition = 0
+					    GROUP BY IT.ProductId) T1
+					LEFT JOIN
+					    ( SELECT IT.ProductId, SUM( IT.Quantity ) as outcome FROM `WishListTransactions` CT
+					    JOIN `InventoryTransactions` IT
+					    ON IT.TransactionId = CT.InventoryTransactionId
+					    WHERE CT.WishListId = :wishListId AND IT.Deposition = 1
+					    GROUP BY IT.ProductId ) T2
+				      ON T1.ProductId = T2.ProductId LIMIT $limit OFFSET $pages");
+	    $STH->bindParam(':wishListId', $wishListId );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
 	public function releaseWishList( $customerId ) {
 	    $data = $this->getWishListProducts( $this->getCurrentWishListId( $customerId ) );
 	    foreach ( $data as &$val ) {
@@ -252,6 +272,26 @@
 					    WHERE CT.CartId = :cartId AND IT.Deposition = 1
 					    GROUP BY IT.ProductId ) T2
 				      ON T1.ProductId = T2.ProductId");
+	    $STH->bindParam(':cartId', $cartId );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
+	public function getCartProductsWithLimit( $cartId, $limit, $pages ) {
+	    $pages -= 1;
+	    $STH = $this->db->prepare("SELECT T1.ProductId, ( T1.income - COALESCE( T2.outcome , 0 ) ) as Quantity FROM
+					    ( SELECT IT.ProductId, SUM( IT.Quantity ) as income FROM `CartTransactions` CT
+					    JOIN `InventoryTransactions` IT
+					    ON IT.TransactionId = CT.InventoryTransactionId
+					    WHERE CT.CartId = :cartId AND IT.Deposition = 0
+					    GROUP BY IT.ProductId) T1
+					LEFT JOIN
+					    ( SELECT IT.ProductId, SUM( IT.Quantity ) as outcome FROM `CartTransactions` CT
+					    JOIN `InventoryTransactions` IT
+					    ON IT.TransactionId = CT.InventoryTransactionId
+					    WHERE CT.CartId = :cartId AND IT.Deposition = 1
+					    GROUP BY IT.ProductId ) T2
+				      ON T1.ProductId = T2.ProductId LIMIT $limit OFFSET $pages");
 	    $STH->bindParam(':cartId', $cartId );
 	    $STH->execute();
 	    return $STH->fetchAll();

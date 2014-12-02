@@ -57,6 +57,21 @@
 	    return $result;
 	}
 	
+	public function GetProductsWithLimit( $limit, $pages ) {
+	    $dao = InventoryDao::GetInstance();
+	    $data = $dao->getWishListProductsWithLimit( $this->id );
+	    print_r( $data );
+	    $result = array();
+	    foreach( $data as &$val ) {
+		$detail = array();
+		if( $val['Quantity'] == 0 ) continue;
+		$detail['Product'] = Product::GetProduct( $val['ProductId'] );
+		$detail['Quantity'] = $val['Quantity'];
+		array_push( $result, $detail );
+	    }
+	    return $result;
+	}
+	
 	public function ClearProducts() {
 	    $products = $this->GetProducts();
 	    foreach( $products as &$val ) {
