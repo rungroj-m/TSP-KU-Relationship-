@@ -77,6 +77,9 @@
 	    InventoryDao::GetInstance()->closeWishList( $this->id );
 	}
 	
+	public function getTransactions() {
+	    
+	}
     }
 
 ?>

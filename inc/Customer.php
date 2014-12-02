@@ -48,16 +48,19 @@
 	    return WishList::GetWishListFromCustomer( $this );
 	}
     }
-    /*
+    
     require_once( "CustomerDao.php" );
     require_once( "WishList.php" );
     require_once( "Sale.php" );
     require_once( "PaymentDao.php" );
     require_once( "Payment.php" );
+    require_once( "Product.php" );
+    require_once( "ProductDao.php" );
     require_once( "Cart.php" );
     require_once( "CreditCard.php" );
     require_once( "InventoryDao.php" );
-    */
+    $w = Customer::GetCustomer( 3 )->getWishList();
+    $w->AddProduct( Product::GetProduct( 20 ), 1 );
     
     
 ?>
