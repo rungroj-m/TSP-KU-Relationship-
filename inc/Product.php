@@ -65,7 +65,7 @@
 		return $array;
 	}
 	
-	public static function GetAllProductWithLimit( $limit, $pages ) {
+	public static function GetAllProductWithLimit( $limit, $pages) {
 		$array = array();
 		$dao = ProductDao::GetInstance();
 		$data = $dao->getActiveProductsWithLimit( $limit, $pages );

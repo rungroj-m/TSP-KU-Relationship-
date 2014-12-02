@@ -16,6 +16,7 @@
 	protected $db;
 	public function __construct(){
 	    $this->db = new PDO("mysql:host=$this->host;dbname=$this->database;charset=utf8", $this->user, $this->password);
+	    $this->releaseUnactiveWishList( 2 );
 	}
 	
 	public static function GetInstance() {
@@ -256,6 +257,23 @@
 	    $STH->bindParam(':cartId', $cartId );
 	    $STH->execute();
 	    return $STH->fetchAll();
+	}
+	
+	public function getOpenWishList() {
+	    $STH = $this->db->prepare("SELECT * FROM `WishLists` WHERE `Closed` = 0");
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
+	public function releaseUnactiveWishList( $days ) {
+	     date_diff($datetime1, $datetime2);
+	     $wishLists = $this->getOpenWishList();
+	     $now = new DateTime('now');
+	     foreach( $wishLists as &$wishList ) {
+		if ( date_diff(new DateTime( $wishList['LastUpdate'] ), $now)->format('%R%a days') > $days ) {
+		    $this->releaseWishList( $wishList['CustomerId'] );   
+		}
+	     }
 	}
 	
 	public function getCartProducts( $cartId ) {

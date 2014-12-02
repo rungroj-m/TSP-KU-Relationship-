@@ -10,6 +10,11 @@
     	private $database="knotsupavi_tsp";
     	*/
 	
+	public static $PRODUCT_CREATE_DATE = 'CreateDate';
+	//public static $PRODUCT_NAME = 'Price';
+	public static $PRODUCT_PRICE = 'Price';
+	
+	public static $OrderBy = ProductDao::CREATE_DATE;
 	private $host="localhost";
     	private $user = "tsp";
     	private $password="tsp";
@@ -135,14 +140,14 @@
 	}
 	
 	function getActiveProducts() {
-	    $STH = $this->db->prepare("SELECT * FROM `Products` WHERE `Status` = 1 ORDER BY `CreateDate`");
+	    $STH = $this->db->prepare("SELECT * FROM `Products` WHERE `Status` = 1 ORDER BY `$OrderBy`");
 	    $STH->execute();
 	    return $STH->fetchAll();
 	}
 	
 	function getActiveProductsWithLimit( $limit, $pages ) {
 	    $pages = $pages - 1;
-	    $STH = $this->db->prepare("SELECT * FROM `Products` WHERE `Status` = 1 ORDER BY `CreateDate` LIMIT $limit OFFSET $pages");
+	    $STH = $this->db->prepare("SELECT * FROM `Products` WHERE `Status` = 1 ORDER BY `$OrderBy` LIMIT $limit OFFSET $pages");
 	}
 	
 	function getProductDescriptionById( $pdid ) {
