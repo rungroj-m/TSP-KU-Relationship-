@@ -49,7 +49,7 @@
 	
 	public function GetProducts() {
 	    $dao = InventoryDao::GetInstance();
-	    $data = $dao->getCartProducts( $dao->getCurrentCartId( $this->customer->id ) );
+	    $data = $dao->getCartProducts( $this->cartId );
 	    $result = array();
 	    foreach( $data as &$val ) {
 		$detail = array();

@@ -347,6 +347,7 @@ $.fn.bic_calendar = function(options) {
                     data: {ano: year},
                     dataType: 'json'
                 }).done(function(data) {
+//                	alert(JSON.stringify(data));
 
                     if (typeof events == 'undefined')
                         events = [];
@@ -436,12 +437,29 @@ $.fn.bic_calendar = function(options) {
 
                                 //create n fire event
                                 //to change
-                                var eventBicCalendarSelect = new CustomEvent("bicCalendarSelect", {
-                                    detail: {
-                                        dateFirst: firstDaySelected,
-                                        dateLast: lastDaySelected
-                                    }
-                                });
+                                
+                                var da = firstDaySelected.split("/");
+                                var a = new Date(da[2], da[0]-1, da[1]);
+                                
+                                var db = lastDaySelected.split("/");
+                                var b = new Date(db[2], db[0]-1, db[1]);
+
+                                if (a < b) {
+                                	var eventBicCalendarSelect = new CustomEvent("bicCalendarSelect", {
+                                        detail: {
+                                            dateFirst: a,
+                                            dateLast: b
+                                        }
+                                    });
+                                }
+                                else {
+                                	var eventBicCalendarSelect = new CustomEvent("bicCalendarSelect", {
+                                        detail: {
+                                            dateFirst: b,
+                                            dateLast: a
+                                        }
+                                    });
+                                }
                                 document.dispatchEvent(eventBicCalendarSelect);
                             } else {
                                 firstDaySelected = '';

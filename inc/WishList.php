@@ -44,7 +44,7 @@
 	
 	public function GetProducts() {
 	    $dao = InventoryDao::GetInstance();
-	    $data = $dao->getWishListProducts( $dao->getCurrentWishListId( $this->customer->id ) );
+	    $data = $dao->getWishListProducts( $this->id );
 	    $result = array();
 	    foreach( $data as &$val ) {
 		$detail = array();

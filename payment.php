@@ -32,6 +32,7 @@
 						<input type="text" class="form-control" id="lastname" placeholder="Last Name" required="">
 					</div>
 				</div>
+				<br>
 				<div class="row">
 					<div class="col-md-6">
 						<input type="text" class="form-control" id="address" placeholder="Address" required="">
@@ -40,6 +41,7 @@
 						<input type="text" class="form-control" id="address2" placeholder="Address 2">
 					</div>
 				</div>
+				<br>
 				<div class="row">
 					<div class="col-md-6">
 						<input type="text" class="form-control" id="district" placeholder="District" required="">
@@ -48,6 +50,7 @@
 						<input type="text" class="form-control" id="province" placeholder="Province" required="">
 					</div>
 				</div>
+				<br>
 				<div class="row">
 					<div class="col-md-4">
 						<input type="text" class="form-control" id="country" placeholder="Country" required="">
@@ -122,17 +125,17 @@
 				"get_customer_detail": $.cookie("customerid")
 			}
 		}).done(function(customer_json) {
-			var customer_obj = JSON.parse(customer_json);
-			
-			$("#firstname").val(customer_obj.firstname);
-			$("#lastname").val(customer_obj.lastname);
-			$("#address").val(customer_obj.address);
-			$("#address2").val(customer_obj.address2);
-			$("#district").val(customer_obj.district);
-			$("#provinct").val(customer_obj.provinct);
-			$("#country").val(customer_obj.country);
-			$("#zip").val(customer_obj.zip);
-			$("#phone").val(customer_obj.phone);
+// 			var customer_obj = JSON.parse(customer_json);
+// 			console.log(customer_obj);
+// 			$("#firstname").val(customer_obj.firstname);
+// 			$("#lastname").val(customer_obj.lastname);
+// 			$("#address").val(customer_obj.address);
+// 			$("#address2").val(customer_obj.address2);
+// 			$("#district").val(customer_obj.district);
+// 			$("#provinct").val(customer_obj.provinct);
+// 			$("#country").val(customer_obj.country);
+// 			$("#zip").val(customer_obj.zip);
+// 			$("#phone").val(customer_obj.phone);
 		});
 		
 	});
@@ -183,7 +186,7 @@
 			total += 417;
 		else if(weight < 9500)
 			total += 447;
-		else if(weight < 10000)
+		else
 			total += 477;
 		$("#emsfee").text(total);
 		$("#emstotal").text(amount + total);
@@ -209,7 +212,7 @@
 			total += 125;
 		else if(weight < 9000)
 			total += 140;
-		else if(weight < 10000)
+		else
 			total += 155;
 		$("#deliveryfee").text(total);
 		$("#deliverytotal").text(amount + total);
@@ -287,8 +290,6 @@
 				amount += quantity * unitprice;
 				totalquan += Number(quantity);
 				totalweight += Number(quantity * weight);
-
-				console.log(totalquan + " " + quantity);
 			}
 			$("#cart").append(
 					"<tr>" +

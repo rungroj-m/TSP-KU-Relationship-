@@ -17,6 +17,18 @@
 	
 	<script src="js/xml2json.js"></script>
 	<script src="js/json2xml.js"></script>
+	
+	<script type="text/javascript" src="js/jspdf.js"></script>
+	<script type="text/javascript" src="js/jspdf.plugin.addimage.js"></script>
+	<script type="text/javascript" src="js/jspdf.plugin.cell.js"></script>
+	<script type="text/javascript" src="js/jspdf.plugin.from_html.js"></script>
+	<script type="text/javascript" src="js/jspdf.plugin.ie_below_9_shim.js"></script>
+	<script type="text/javascript" src="js/jspdf.plugin.javascript.js"></script>
+	<script type="text/javascript" src="js/jspdf.plugin.sillysvgrenderer.js"></script>
+	<script type="text/javascript" src="js/jspdf.plugin.split_text_to_size.js"></script>
+	<script type="text/javascript" src="js/jspdf.plugin.standard_fonts_metrics.js"></script>
+	<script type="text/javascript" src="js/jspdf.PLUGINTEMPLATE.js"></script>
+	
 </head>
 
 <style>
@@ -44,6 +56,7 @@ body {
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "news") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=news">News</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "promotion") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=promotion">Promotion</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "wishlist") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=wishlist">Wish List</a></li>
+		      					<?php if (isset($_GET['page']) && $_GET['page'] == "tracking") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=tracking">Tracking</a></li>
 		      					
 		      					
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "member") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=member">Member</a></li>
@@ -51,6 +64,7 @@ body {
 		      					
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "customer") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=customer">Customer</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "transaction") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=transaction">Transaction</a></li>
+		      					<?php if (isset($_GET['page']) && $_GET['page'] == "update-transaction") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=update-transaction">Update Transaction</a></li>
 		      					
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "report") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=report">Report</a></li>
 					        </ul>
@@ -99,7 +113,10 @@ body {
 				$('.navbar-nav li:contains("Inventory")').remove();
 				$('.navbar-nav li:contains("Customer")').remove();
 				$('.navbar-nav li:contains("Transaction")').remove();
+				$('.navbar-nav li:contains("Update Transaction")').remove();
 			}
+			else
+				$('.navbar-nav li:contains("Shopping")').remove();
 			if ($.cookie("adminlevel") != 2) {
 				$('.navbar-nav li:contains("Report")').remove();
 			}
@@ -111,6 +128,7 @@ body {
 			$('.navbar-nav li:contains("Customer")').remove();
 			$('.navbar-nav li:contains("Transaction")').remove();
 			$('.navbar-nav li:contains("Report")').remove();
+			$('.navbar-nav li:contains("Update Transaction")').remove();
 		}
 
 		$("#logout").click(function() {

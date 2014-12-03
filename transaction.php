@@ -23,7 +23,6 @@
 			<tbody id="orders-table">
 				<tr>
 					<td>ID</td>
-					<td>Products</td>
 					<td>Date</td>
 					<td>Customer</td>
 					<td>Total</td>
@@ -47,6 +46,7 @@
 	</div>
 </div>
 
+
 <script type="text/javascript">
 
 	$(document).ready(function() {
@@ -62,35 +62,89 @@
 
 				var cartId =json_obj[i].cart.cartId;
  				var obj = json_obj[i];
-				console.log("cart id : "+cartId);
-				(function(obj) {
-					$.ajax({
-						url: 'forjscallphp.php',
-						type: 'POST',
-						data: {
-							'get_product_in_transaction': cartId
-						},
-						success: function(json_str2) {
-							console.log("------"+json_str2 );
-// 							var products_json_obj = json_str2;
-// 							console.log(products_json_obj);
-							
-							$("#orders-table").append("\
-									<tr>\
-										<td>" + obj.id + "</td>\
-										<td>" + 000 + "Products</td>\
-										<td>" + obj.payment.timeDate.date + "</td>\
-										<td>" + obj.cart.customer.firstName + " " + obj.cart.customer.lastName + "</td>\
-										<td>" + obj.payment.amount + "</td>\
-										<td>Status</td>\
-									</tr>");
-						}
-					});
-				})(obj);
+ 				(function(obj) {
+ 	 				$.ajax({
+	 					url: 'forjscallphp.php',
+	 					type: 'POST',
+	 					data: {
+	 						'get_ordertrackingid_by_cartid': cartId,
+	 					},
+	 					success: function(oid) {
+		 					if (oid > 0) {
+		 						$.ajax({
+		 							url: 'http://localhost:11111/orders/current/' + oid,
+		 							type: "GET"
+		 						}).done(function(status) {
+		 							var st = JSON.parse(status);
+			 						$("#orders-table").append("\
+			 								<tr>\
+			 									<td><a href=\"?page=transaction-detail&cartId=" + cartId + "\">" + obj.id + "</a></td>\
+			 									<td>" + obj.payment.timeDate.date + "</td>\
+			 									<td>" + obj.cart.customer.firstName + " " + obj.cart.customer.lastName + "</td>\
+			 									<td>" + obj.payment.amount + "</td>\
+			 									<td>" + 000 + "</td>\
+			 									<td><a onClick=\"post('?page=update-transaction', {oid: " + oid + ", status: '" + st.orders.order.status.type + "'});\">" + oid + " " + st.orders.order.status.type + "</a></td>\
+			 								</tr>");
+			 					});
+		 					}
+		 					else {
+		 						$("#orders-table").append("\
+		 								<tr>\
+		 									<td><a href=\"?page=transaction-detail&cartId=" + cartId + "\">" + obj.id + "</a></td>\
+		 									<td>" + obj.payment.timeDate.date + "</td>\
+		 									<td>" + obj.cart.customer.firstName + " " + obj.cart.customer.lastName + "</td>\
+		 									<td>" + obj.payment.amount + "</td>\
+		 									<td>" + 000 + "</td>\
+		 									<td>Unknown</td>\
+		 								</tr>");
+		 					}
+	 	 				}
+	 				});
+ 				})(obj);
 				
 				
 			} // for
 		});
 
+		$.ajax({
+			url: 'http://localhost:11111/orders/enum'
+		}).done(function(types_json) {
+			var types = JSON.parse(types_json);
+			for (var i = 0; i < types.length; i++) {
+				$('#types-dropdown').append('<li><a>' + types[i] + '</a></li>');
+			}
+			$("#types-dropdown li").click(function() {
+				$("#dropdown qq").text($(this).text());
+			});
+		});
+
 	});
+
+
+	$("#button-get").click(function() {
+		alert($("#dropdown qq").text());
+		
+	});
+
+	function post(path, params) {
+	    var method = "POST";
+	    
+	    var form = document.createElement("form");
+	    form.setAttribute("method", method);
+	    form.setAttribute("action", path);
+
+	    for(var key in params) {
+	        if(params.hasOwnProperty(key)) {
+	            var hiddenField = document.createElement("input");
+	            hiddenField.setAttribute("type", "hidden");
+	            hiddenField.setAttribute("name", key);
+	            hiddenField.setAttribute("value", params[key]);
+
+	            form.appendChild(hiddenField);
+	         }
+	    }
+
+	    document.body.appendChild(form);
+	    form.submit();
+	}
 </script>

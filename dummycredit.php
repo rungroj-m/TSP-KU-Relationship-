@@ -31,7 +31,39 @@
 				"fee" : <?php echo $_POST["fee"]; ?>
 			}
 		}).done(function(response) {
-		    alert(response);
+			alert(response);
+			$.ajax({
+				url: 'forjscallphp.php',
+				type: "POST",
+				data: {
+					"get_cartid_by_customerid": $.cookie("customerid")
+				}
+			}).done(function(cartid) {
+				 post("?page=confirm-payment", {cartId: cartid});
+			});
+				   
 		});
 	});
+
+	function post(path, params) {
+	    var method = "POST";
+	    
+	    var form = document.createElement("form");
+	    form.setAttribute("method", method);
+	    form.setAttribute("action", path);
+
+	    for(var key in params) {
+	        if(params.hasOwnProperty(key)) {
+	            var hiddenField = document.createElement("input");
+	            hiddenField.setAttribute("type", "hidden");
+	            hiddenField.setAttribute("name", key);
+	            hiddenField.setAttribute("value", params[key]);
+
+	            form.appendChild(hiddenField);
+	         }
+	    }
+
+	    document.body.appendChild(form);
+	    form.submit();
+	}
 </script>
