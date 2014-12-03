@@ -1,20 +1,8 @@
 TSP-KU-Relationship-
 ====================
 
-for Benz
-- search ( ทำแล้ว )
-- pic image ( ทำแล้ว )
-- quantity
-- edit
-- อยากได้ get all product มาโชว์ในหน้าแรกอ่า อาจจะ sort by added date ก็ได้ มั้ง ( ทำแล้ว )
+Branch not-for-webservice
 
-เพิ่มๆ ไปดูรีควายเม้นมา มันต้อง
-- เรียงสินค้าที่แสดงได้ด้วยนะ อาจตามชื่อ ราคา วันที่้เพิ่ม ทำนองนั้น แล้วแต่ออกแบบเลย
-
-- ทำให้สมัครสมาชิกได้ ได้แล้วนะ
-- เก็บรายการซื้อขายของลูกค้าได้ด้วย (ขอช่องให้เจ้าของร้านกรอก shipping code ให้ลูกค้าใช้ติดตามสินค้าได้ด้วยนะ)
-
-อันบนสำหรับ cycle 1 นะ ยังไม่เสร็จเลย แต่ตอนนี้เข้า cycle 2 แล้ว
-รวมทั้งมันยุบจาก 3 เหลือ 2 cycle ด้วย ก็เลยต้องเพิ่มงานเข้ามาหน่อย
-
-<a href="https://docs.google.com/spreadsheets/d/1W84JcNSNI6pz4J-NbRjy02_cAleoMr97JIy9FW0xYCY/edit#gid=0">STRAT</a>
+Current features
+- bugs "Fatal error: Undefined class constant 'ProductDao::CREATE_DATE'"
+- tracking still use OrserTrackingService
