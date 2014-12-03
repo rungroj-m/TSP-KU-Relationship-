@@ -9,7 +9,7 @@ print_r($_POST);
 ?>
 <script type="text/javascript">
 	$.ajax({
-		url: 'http://localhost:11111/orders/new',
+		url: 'http://128.199.145.53:11111/orders/new',
 		type: "GET",
 		//data : "<order/>",
 // 		headers: {
@@ -30,7 +30,7 @@ print_r($_POST);
 			}
 		}).done(function(response) {
 			$.ajax({
-				url: 'http://localhost:11111/orders/current/' + orderTrackingId,
+				url: 'http://128.199.145.53:11111/orders/current/' + orderTrackingId,
 				type: "GET"
 			}).done(function(status) {
 				var obj = JSON.parse(status);

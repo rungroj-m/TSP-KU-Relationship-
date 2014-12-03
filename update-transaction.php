@@ -53,7 +53,7 @@
 
 	$(document).ready(function() {
 // 		$.ajax({
-// 			url: 'http://localhost:11111/orders/308',
+// 			url: 'http://128.199.145.53:11111/orders/308',
 // 			type: "POST",
 // 			data: "{\"order\": { \"status\":	{ \"updatedby\": \"server\",  \"type\": \"ORDER_READY\"\ }\ }}"
 // 		}).done(function(response) {
@@ -61,7 +61,7 @@
 // 		});
 
 // 		$.ajax({
-// 			url: 'http://localhost:11111/orders/' + $("#id").val(),
+// 			url: 'http://128.199.145.53:11111/orders/' + $("#id").val(),
 // 			type: "GET"
 // 		}).done(function(status) {
 // 			console.log(status);
@@ -87,7 +87,7 @@
 		console.log(JSON.parse(json_str))
 		console.log(json_str);
 		$.ajax({
-			url: 'http://localhost:11111/orders/' + $("#id").val(),
+			url: 'http://128.199.145.53:11111/orders/' + $("#id").val(),
 			type: "POST",
 			data: json_str
 		}).done(function(response) {
@@ -106,7 +106,7 @@
 			</tr>");
 		
 		$.ajax({
-		url: 'http://localhost:11111/orders/' + $("#id").val(),
+		url: 'http://128.199.145.53:11111/orders/' + $("#id").val(),
 				type: "GET"
 			}).done(function(status) {
 				console.log(status);
@@ -136,7 +136,7 @@
 			});
 
 			$.ajax({
-				url: 'http://localhost:11111/orders/next/' + $("#id").val()
+				url: 'http://128.199.145.53:11111/orders/next/' + $("#id").val()
 			}).done(function(types_json) {
 			
 						$("#dropdown qq").text(types_json);
