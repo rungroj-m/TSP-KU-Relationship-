@@ -16,6 +16,7 @@
 	protected $db;
 	public function __construct(){
 	    $this->db = new PDO("mysql:host=$this->host;dbname=$this->database;charset=utf8", $this->user, $this->password);
+	    $this->releaseUnactiveWishList( 2 );
 	}
 	
 	public static function GetInstance() {
@@ -153,6 +154,26 @@
 	    return $STH->fetchAll();
 	}
 	
+	public function getWishListProductsWithLimit( $wishListId, $limit, $pages ) {
+	    $pages -= 1;
+	    $STH = $this->db->prepare("SELECT T1.ProductId, ( T1.income - COALESCE( T2.outcome , 0 ) ) as Quantity FROM
+					    ( SELECT IT.ProductId, SUM( IT.Quantity ) as income FROM `WishListTransactions` CT
+					    JOIN `InventoryTransactions` IT
+					    ON IT.TransactionId = CT.InventoryTransactionId
+					    WHERE CT.WishListId = :wishListId AND IT.Deposition = 0
+					    GROUP BY IT.ProductId) T1
+					LEFT JOIN
+					    ( SELECT IT.ProductId, SUM( IT.Quantity ) as outcome FROM `WishListTransactions` CT
+					    JOIN `InventoryTransactions` IT
+					    ON IT.TransactionId = CT.InventoryTransactionId
+					    WHERE CT.WishListId = :wishListId AND IT.Deposition = 1
+					    GROUP BY IT.ProductId ) T2
+				      ON T1.ProductId = T2.ProductId LIMIT $limit OFFSET $pages");
+	    $STH->bindParam(':wishListId', $wishListId );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
 	public function releaseWishList( $customerId ) {
 	    $data = $this->getWishListProducts( $this->getCurrentWishListId( $customerId ) );
 	    foreach ( $data as &$val ) {
@@ -238,6 +259,23 @@
 	    return $STH->fetchAll();
 	}
 	
+	public function getOpenWishList() {
+	    $STH = $this->db->prepare("SELECT * FROM `WishLists` WHERE `Closed` = 0");
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
+	public function releaseUnactiveWishList( $days ) {
+	     date_diff($datetime1, $datetime2);
+	     $wishLists = $this->getOpenWishList();
+	     $now = new DateTime('now');
+	     foreach( $wishLists as &$wishList ) {
+		if ( date_diff(new DateTime( $wishList['LastUpdate'] ), $now)->format('%R%a days') > $days ) {
+		    $this->releaseWishList( $wishList['CustomerId'] );   
+		}
+	     }
+	}
+	
 	public function getCartProducts( $cartId ) {
 	    $STH = $this->db->prepare("SELECT T1.ProductId, ( T1.income - COALESCE( T2.outcome , 0 ) ) as Quantity FROM
 					    ( SELECT IT.ProductId, SUM( IT.Quantity ) as income FROM `CartTransactions` CT
@@ -257,6 +295,26 @@
 	    return $STH->fetchAll();
 	}
 	
+	public function getCartProductsWithLimit( $cartId, $limit, $pages ) {
+	    $pages -= 1;
+	    $STH = $this->db->prepare("SELECT T1.ProductId, ( T1.income - COALESCE( T2.outcome , 0 ) ) as Quantity FROM
+					    ( SELECT IT.ProductId, SUM( IT.Quantity ) as income FROM `CartTransactions` CT
+					    JOIN `InventoryTransactions` IT
+					    ON IT.TransactionId = CT.InventoryTransactionId
+					    WHERE CT.CartId = :cartId AND IT.Deposition = 0
+					    GROUP BY IT.ProductId) T1
+					LEFT JOIN
+					    ( SELECT IT.ProductId, SUM( IT.Quantity ) as outcome FROM `CartTransactions` CT
+					    JOIN `InventoryTransactions` IT
+					    ON IT.TransactionId = CT.InventoryTransactionId
+					    WHERE CT.CartId = :cartId AND IT.Deposition = 1
+					    GROUP BY IT.ProductId ) T2
+				      ON T1.ProductId = T2.ProductId LIMIT $limit OFFSET $pages");
+	    $STH->bindParam(':cartId', $cartId );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
 	public function releaseCart( $customerId ) {
 	    
 	    $data = $this->getCartProducts( $this->getCurrentCartId( $customerId ) );
@@ -271,6 +329,7 @@
 	    $STH->execute();
 	    return $STH->fetch();
 	}
+	
     }
     
 ?>
