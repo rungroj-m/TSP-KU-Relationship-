@@ -14,7 +14,7 @@
 	//public static $PRODUCT_NAME = 'Price';
 	public static $PRODUCT_PRICE = 'Price';
 	
-	public static $OrderBy = ProductDao::CREATE_DATE;
+	public static $OrderBy;
 	private $host="localhost";
     	private $user = "tsp";
     	private $password="tsp";
@@ -22,6 +22,7 @@
     	
 	protected $db;
 	public function __construct(){
+	    ProductDao::$OrderBy = ProductDao::$PRODUCT_CREATE_DATE;
 	    $this->db = new PDO("mysql:host=$this->host;dbname=$this->database;charset=utf8", $this->user, $this->password);
 	}
 	
@@ -140,14 +141,18 @@
 	}
 	
 	function getActiveProducts() {
-	    $STH = $this->db->prepare("SELECT * FROM `Products` WHERE `Status` = 1 ORDER BY `$OrderBy`");
+	    $sort = ProductDao::$OrderBy;
+	    $STH = $this->db->prepare("SELECT * FROM `Products` WHERE `Status` = 1 ORDER BY `$sort`");
 	    $STH->execute();
 	    return $STH->fetchAll();
 	}
 	
 	function getActiveProductsWithLimit( $limit, $pages ) {
 	    $pages = $pages - 1;
-	    $STH = $this->db->prepare("SELECT * FROM `Products` WHERE `Status` = 1 ORDER BY `$OrderBy` LIMIT $limit OFFSET $pages");
+	    $sort = ProductDao::$OrderBy;
+	    $STH = $this->db->prepare("SELECT * FROM `Products` WHERE `Status` = 1 ORDER BY `$sort` LIMIT $limit OFFSET $pages");
+	    $STH->execute();
+	    return $STH->fetchAll();
 	}
 	
 	function getProductDescriptionById( $pdid ) {
@@ -331,5 +336,5 @@
     require_once 'Brand.php';
     require_once 'Category.php';
     require_once 'InventoryDao.php';
- 
+    //print_r( ProductDao::GetInstance()->getActiveProductsWithLimit( 1, 1 ));
 ?>
