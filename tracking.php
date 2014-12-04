@@ -26,23 +26,25 @@
 					<br>
 					<br>
 					<br>
-					<div class="row">
-						<div class="col-md-6">
-							<div class="btn-group btn-group-sm" style="width: 100%">
-								<button type="button" id="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%">
-									<qq>Status</qq> <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu" id="types-dropdown" role="menu" style="width: 100%">
-								</ul>
-							</div>   
+					<div id="update-div" style="display: none">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="btn-group btn-group-sm" style="width: 100%">
+									<button type="button" id="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%">
+										<qq>Status</qq> <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" id="types-dropdown" role="menu" style="width: 100%">
+									</ul>
+								</div>   
+							</div>
+							<div class="col-md-6">
+								<input type="text" class="form-control" id="description" placeholder="Addition description ex. EMS code">
+							</div>
 						</div>
-						<div class="col-md-6">
-							<input type="text" class="form-control" id="description" placeholder="Addition description ex. EMS code">
-						</div>
+						
+						<br>
+						<button class="btn btn-lg btn-primary btn-block" id="button-update" disable>Update</button>
 					</div>
-					
-					<br>
-					<button class="btn btn-lg btn-primary btn-block" id="button-update">Update</button>
 	
 	</div>
 </div>
@@ -50,20 +52,10 @@
 
 <script type="text/javascript">
 
-	$(document).ready(function() {
-// 		$.ajax({
-// 			url: 'http://128.199.145.53:11111/orders/308',
-// 			type: "POST",
-// 			data: "{\"order\": { \"status\":	{ \"updatedby\": \"server\",  \"type\": \"ORDER_READY\"\ }\ }}"
-// 		}).done(function(response) {
-// 		    alert(response);
-// 		});
-
-		
-
-	});
-
 	$("#button-get").click(function() {
+		if ($.cookie("adminlevel") != undefined)
+			$("#update-div").show();
+		
 		$("#orders-table").empty();
 		$("#orders-table").append("\
 			<tr>\
@@ -80,7 +72,7 @@
 				"get_order_status_by_cartid": $("#id").val()
 			}
 		}).done(function(status) {
-			console.log(status);
+			
 			var st = JSON.parse(status);
 			console.log(st);
 			
@@ -93,20 +85,63 @@
 							<td>" + st[i].UpdatedBy + "</td>\
 						</tr>");
 			}
+
+			$.ajax({
+				url: 'forjscallphp.php',
+				type: "POST",
+				data: {
+					"get_enum_values": ""
+				}
+			}).done(function(response) {
+			    var types = JSON.parse(response);
+				console.log(types)
+			    $.ajax({
+					url: 'forjscallphp.php',
+					type: "POST",
+					data: {
+						"get_lastest_order_status_by_cartid": $("#id").val()
+					}
+				}).done(function(response) {
+					var current = JSON.parse(response)[0].StatusType;
+					$("#types-dropdown").empty();
+					$("#dropdown qq").text("");
+					var found = false;
+					var first = true;
+				    for (var i = 0; i < types.length; i++) {
+					    console.log(types[i].substring(1, types[i].length-1) + " " +  current + " " + (types[i].substring(1, types[i].length-1) == current))
+					   
+					    if (found) {
+							$("#types-dropdown").append("<li><a>" + types[i].substring(1, types[i].length-1) + "</a></li>");
+							if (first) {
+								$("#dropdown qq").text(types[i].substring(1, types[i].length-1));
+								first = false;
+							}
+					    }
+					    
+					    if (!found && types[i].substring(1, types[i].length-1) == current) {
+						    found = true;
+					    }
+				    }
+				    
+				    $("#types-dropdown li").click(function() {
+				    	$("#dropdown qq").text($(this).text());
+				    });
+				});
+			});
 		});
 	});
 
-	$("#button-update").click(function() {
-		alert($("#dropdown qq").text());
-		var json_str = "{\"order\": { \"status\":	{ \"updatedby\": \"server\",  \"type\": \"" + $("#dropdown qq").text() + "\",  \"description\": \"" + $("#description").val() + "\" } }}";
-		console.log(JSON.parse(json_str))
-		console.log(json_str);
-		$.ajax({
-			url: 'http://128.199.145.53:11111/orders/' + $("#id").val(),
+	$("#button-update").click(function() {$.ajax({
+			url: 'forjscallphp.php',
 			type: "POST",
-			data: json_str
+			data: {
+				"update_order_status_by_cartid": $("#id").val(),
+				"status": $("#dropdown qq").text(),
+				"description": $("#description").val(),
+				"by": $.cookie("firstname") + " " + $.cookie("lastname")
+			}
 		}).done(function(response) {
-		    alert("OK");
+		    alert(response);
 		});
 	});
 

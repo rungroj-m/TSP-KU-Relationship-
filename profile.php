@@ -4,7 +4,7 @@ input {
 }
 </style>
 
-<div class="row">
+<div class="row" id="redzone" style="display: none">
 	<div class="col-md-3">
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -103,6 +103,15 @@ input {
 </div>
 
 <script type="text/javascript">
+
+	$(document).ready(function() {
+		if ($.cookie("customerid") != undefined) {
+			$("#redzone").show();
+		}
+		else
+			document.location.href = "?page=notfound"
+	});
+	
 	$("#menu li").click(function() {
 		var clicked = $(this).children("a").attr("id");
 		$("#content").children("div").each(function() {

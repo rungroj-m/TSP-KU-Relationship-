@@ -18,195 +18,205 @@
 	";
 
 ?>
-
-<br>
-
-<div class="row">
-	<div class="col-md-2">
-		<div class="btn-group btn-group-sm" style="width: 100%">
-			<button type="button" id="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%">
-				<qq>Category</qq> <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu" id="category-dropdown" role="menu" style="width: 100%">
-				<li><a>Clothes</a></li>
-			    <li><a>Equipments</a></li>
-			    <li><a>Balls</a></li>
-			    <li><a>Others</a></li>
-			    <li><a>All</a></li>
-			</ul>
-		</div>      
-	</div> 
-
-	<div class="col-md-10">
-		<div class="input-group input-group-sm">
-			<input type="text" class="form-control" id="search-box">
-			<span class="input-group-btn">
-				<button id="search-button" class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"/></button>
-			</span>
-		</div>
-	</div>	    
-</div>
-
-<br>
-
-<div class="row">
-	<div class="col-md-9">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title">Product Information</h3>
+<div id="redzone" style="display: none">
+	<br>
+	
+	<div class="row">
+		<div class="col-md-2">
+			<div class="btn-group btn-group-sm" style="width: 100%">
+				<button type="button" id="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%">
+					<qq>Category</qq> <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" id="category-dropdown" role="menu" style="width: 100%">
+					<li><a>Clothes</a></li>
+				    <li><a>Equipments</a></li>
+				    <li><a>Balls</a></li>
+				    <li><a>Others</a></li>
+				    <li><a>All</a></li>
+				</ul>
+			</div>      
+		</div> 
+	
+		<div class="col-md-10">
+			<div class="input-group input-group-sm">
+				<input type="text" class="form-control" id="search-box">
+				<span class="input-group-btn">
+					<button id="search-button" class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"/></button>
+				</span>
 			</div>
-			<div class="panel-body">
-				<div class="row">
-					<div class="col-md-6">
-						<div class="thumbnail">
-							<img id="image" style="width: 100%; background-color: white; border-radius: 3px;" src="">
+		</div>	    
+	</div>
+	
+	<br>
+	
+	<div class="row">
+		<div class="col-md-9">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Product Information</h3>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="thumbnail">
+								<img id="image" style="width: 100%; background-color: white; border-radius: 3px;" src="">
+							</div>
 						</div>
-					</div>
-					<div class="col-md-6">
-						<h3>Name: <span id="name"></span></h3>
-						<h4>Brand: <span id="brand"></span></h4>
-						<h6>Model Code: <span id="code"></span></h6>
-						<br>
-						<h5>Category: <span id="category"></span></h5>
-						<h5>Weight: <span id=weight></span> grams</h5>
-						<br>
-						<h5>Stock: <span id="quantity"></span></h5>
-						<h5>Price: <span id="price"></span></h5>
-						<div class="row">
-							<div class="col-md-6" id="wish-button-div">
-								<div class="input-group" style="width: 100%">
-								<button type="button" class="btn btn-primary" style="width: 100%" onclick="addToWish(<?php echo $_GET["id"]; ?>);">
-									<span class="glyphicon glyphicon-heart"></span>Add to Wish
-								</button>
+						<div class="col-md-6">
+							<h3>Name: <span id="name"></span></h3>
+							<h4>Brand: <span id="brand"></span></h4>
+							<h6>Model Code: <span id="code"></span></h6>
+							<br>
+							<h5>Category: <span id="category"></span></h5>
+							<h5>Weight: <span id=weight></span> grams</h5>
+							<br>
+							<h5>Stock: <span id="quantity"></span></h5>
+							<h5>Price: <span id="price"></span></h5>
+							<div class="row">
+								<div class="col-md-6" id="wish-button-div">
+									<div class="input-group" style="width: 100%">
+									<button type="button" class="btn btn-primary" style="width: 100%" onclick="addToWish(<?php echo $_GET["id"]; ?>);">
+										<span class="glyphicon glyphicon-heart"></span>Add to Wish
+									</button>
+									</div>
 								</div>
+								
+								<div class="col-md-6" id="add-button-div">
+									<div class="input-group">
+										<input type="number" class="form-control" id="quan" value="1" min="0" max="<?php echo $maxQuan; ?>">
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-success" id="add-button" onclick="addToCart(<?php echo $_GET["id"]; ?>, 0);">ADD</button>
+										</span>
+									</div>
+								</div>
+							
+							
 							</div>
 							
-							<div class="col-md-6" id="add-button-div">
-								<div class="input-group">
-									<input type="number" class="form-control" id="quan" value="1" min="0" max="<?php echo $maxQuan; ?>">
-									<span class="input-group-btn">
-										<button type="button" class="btn btn-success" id="add-button" onclick="addToCart(<?php echo $_GET["id"]; ?>, 0);">ADD</button>
-									</span>
-								</div>
-							</div>
-						
-						
 						</div>
-						
+					</div>
+					<br>
+					<h5>Tag: <span id="tag">Warning</span></h5>
+					<br>
+					<p id="description"></p>
+					<br>
+					<br>
+					<div class="jumbotron">
+						Comment & Like & Share
 					</div>
 				</div>
-				<br>
-				<h5>Tag: <span id="tag">Warning</span></h5>
-				<br>
-				<p id="description"></p>
-				<br>
-				<br>
-				<div class="jumbotron">
-					Comment & Like & Share
+			</div>
+		</div>
+		
+		<div class="col-md-3">
+			<div class="panel panel-default" id="signin-div">
+				<div class="panel-heading">
+					<h3 class="panel-title">Signin</h3>
+				</div>
+				<div class="panel-body">
+					<form class="form-signin" id="signin-form" role="form">
+						<input type="email" class="form-control" id="signin-email" placeholder="Email Address" required="" autofocus="">
+						<input type="password" class="form-control" id="signin-password" placeholder="Password" required="">
+						<!-- <label class="checkbox">
+							<input type="checkbox" value="remember-me">Remember me
+						</label> -->
+						<br>
+						<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+					</form>
+					
+					<label>
+						Forgot password? <a href="?page=member&function=recovery">Recovery</a>
+					</label>
+					<br>
+					<label>
+						Don't have an account? <a href="?page=member&function=signup">Sign up now</a>
+					</label>
+				</div>
+			</div>
+		
+			<div class="panel panel-default" id="cart-div">
+				<div class="panel-heading">
+					<h3 class="panel-title">Cart</h3>
+				</div>
+				<div class="panel-body">
+					<table class="table">
+						<tbody id="cart">
+							<tr>
+								<th>Product</th>
+								<th>Q.</th>
+								<th>U.P.</th>
+								<th></th>
+							</tr>
+						</tbody>
+					</table>
+					
+					<table class="table">
+						<tr>
+							<th>Total</th>
+							<th id="total">&#3647;0</th>
+						</tr>
+					</table>
+					
+					<table class="table">
+						<tr>
+							<th><button type="button" class="btn btn-success" id="button-checkout" style="width: 100%">Check Out</button></th>
+							<th><button type="button" class="btn btn-danger" id="button-clear-cart" style="width: 100%">Clear</button></th>
+						</tr>
+					</table>
 				</div>
 			</div>
 		</div>
 	</div>
 	
-	<div class="col-md-3">
-		<div class="panel panel-default" id="signin-div">
-			<div class="panel-heading">
-				<h3 class="panel-title">Signin</h3>
-			</div>
-			<div class="panel-body">
-				<form class="form-signin" id="signin-form" role="form">
-					<input type="email" class="form-control" id="signin-email" placeholder="Email Address" required="" autofocus="">
-					<input type="password" class="form-control" id="signin-password" placeholder="Password" required="">
-					<!-- <label class="checkbox">
-						<input type="checkbox" value="remember-me">Remember me
-					</label> -->
-					<br>
-					<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-				</form>
-				
-				<label>
-					Forgot password? <a href="?page=member&function=recovery">Recovery</a>
-				</label>
-				<br>
-				<label>
-					Don't have an account? <a href="?page=member&function=signup">Sign up now</a>
-				</label>
+	<!-- Confirm Clar Cart -->
+	<div class="modal fade" id="clear-cart-confirm">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">Clear Cart</h4>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure to clear cart item(s)?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-danger" id="button-confirm-clear-cart">Clear</button>
+				</div>
 			</div>
 		</div>
+	</div>
 	
-		<div class="panel panel-default" id="cart-div">
-			<div class="panel-heading">
-				<h3 class="panel-title">Cart</h3>
-			</div>
-			<div class="panel-body">
-				<table class="table">
-					<tbody id="cart">
-						<tr>
-							<th>Product</th>
-							<th>Q.</th>
-							<th>U.P.</th>
-							<th></th>
-						</tr>
-					</tbody>
-				</table>
-				
-				<table class="table">
-					<tr>
-						<th>Total</th>
-						<th id="total">&#3647;0</th>
-					</tr>
-				</table>
-				
-				<table class="table">
-					<tr>
-						<th><button type="button" class="btn btn-success" id="button-checkout" style="width: 100%">Check Out</button></th>
-						<th><button type="button" class="btn btn-danger" id="button-clear-cart" style="width: 100%">Clear</button></th>
-					</tr>
-				</table>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- Confirm Clar Cart -->
-<div class="modal fade" id="clear-cart-confirm">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title">Clear Cart</h4>
-			</div>
-			<div class="modal-body">
-				<p>Are you sure to clear cart item(s)?</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-danger" id="button-confirm-clear-cart">Clear</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- Alert signin -->
-<div class="modal fade" id="alert-signin">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title">Login</h4>
-			</div>
-			<div class="modal-body">
-				<p>Sign in to ADD product?</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-				<button type="button" class="btn btn-primary" id="signin-button" onclick="postAndRedirectToSignin();">Yes</button>
+	<!-- Alert signin -->
+	<div class="modal fade" id="alert-signin">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">Login</h4>
+				</div>
+				<div class="modal-body">
+					<p>Sign in to ADD product?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+					<button type="button" class="btn btn-primary" id="signin-button" onclick="postAndRedirectToSignin();">Yes</button>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
+	
+	$(document).ready(function() {
+		if ($.cookie("adminlevel") == undefined) {
+			$("#redzone").show();
+		}
+		else
+			document.location.href = "?page=notfound"
+	});
+
 	var product;
 	function aj() {
 	$.ajax({

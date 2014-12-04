@@ -64,7 +64,6 @@ body {
 		      					
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "customer") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=customer">Customer</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "transaction") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=transaction">Transaction</a></li>
-		      					<?php if (isset($_GET['page']) && $_GET['page'] == "update-transaction") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=update-transaction">Update Transaction</a></li>
 		      					
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "report") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=report">Report</a></li>
 					        </ul>
@@ -109,11 +108,10 @@ body {
 			
 			$('.navbar-nav li:contains("Member")').remove();
 			
-			if ($.cookie("adminlevel") != 1 && $.cookie("adminlevel") != 2) {
+			if ($.cookie("adminlevel") == undefined) {
 				$('.navbar-nav li:contains("Inventory")').remove();
 				$('.navbar-nav li:contains("Customer")').remove();
 				$('.navbar-nav li:contains("Transaction")').remove();
-				$('.navbar-nav li:contains("Update Transaction")').remove();
 			}
 			else
 				$('.navbar-nav li:contains("Shopping")').remove();
@@ -128,7 +126,6 @@ body {
 			$('.navbar-nav li:contains("Customer")').remove();
 			$('.navbar-nav li:contains("Transaction")').remove();
 			$('.navbar-nav li:contains("Report")').remove();
-			$('.navbar-nav li:contains("Update Transaction")').remove();
 		}
 
 		$("#logout").click(function() {

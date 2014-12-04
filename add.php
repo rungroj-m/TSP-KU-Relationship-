@@ -140,6 +140,9 @@ Brand:
 </table>
 
 <script type="text/javascript">
+
+
+		
 	$("#category-dropdown li").click(function() {
 		$("#category").val($(this).text());
 	});

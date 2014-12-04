@@ -52,6 +52,13 @@
 	    return $STH->fetchAll();
 	}
 	
+	public function GetAllSaleWtihLimit( $limit, $page ) {
+		$page -= 1;
+		$STH = $this->db->prepare(  "SELECT * FROM `Sales` LIMIT $limit OFFSET $page" );
+		$STH->execute();
+		return $STH->fetchAll();
+	}
+	
 	public function getCreditCard( $name, $number, $cvv, $expDate ) {
 	    $STH = $this->db->prepare(  "SELECT * FROM `CreditCards` WHERE `Name` = :name AND `Number` = :number AND `Cvv` = :cvv AND `ExpDate` = :expDate" );
 	    $STH->bindParam(':name', $name );

@@ -27,6 +27,15 @@
 	    return $result;
 	}
 	
+	public static function GetAllWithLimit( $limit, $page ) {
+		$datas = PaymentDao::GetInstance()->GetAllSaleWithLimit( $limit, $page );
+		$result = array();
+		foreach( $datas as &$val ) {
+			array_push( $result, Sale::dataToSale( $val ) );
+		}
+		return $result;
+	}
+	
 	private static function dataToSale( $data ) {
 	    $instance = new self();
 	    $instance->cart = Cart::GetCart( $data['CartId'] );

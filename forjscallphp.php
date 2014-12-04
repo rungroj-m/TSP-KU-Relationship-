@@ -62,7 +62,7 @@ if (isset($_POST["search_product_for_shopping"])) {
 	
 	$cat = $_POST["category"];
 	$str = $_POST["search_product_for_shopping"];
-	$page = $_POST["page"];
+	$pages = $_POST["page"];
 	//wait for search by tag , page
 	if (isset($_POST["customer_id"]))
 		$customerId = $_POST["customer_id"];
@@ -70,13 +70,13 @@ if (isset($_POST["search_product_for_shopping"])) {
 	$productdescs = array();
 	if ($str == "") {
 		if ($cat == "Category" || $cat == "All") {
-			$product = Product::GetAllProductWithLimit(1, 2);
+			$product = Product::GetAllProductWithLimit(30, $pages);
 			foreach ($product as $p){
 				array_push($productdescs, $p->productDescription);
 			}
 		}
 		else {
-			$productdescs = ProductDescription::SearchByTags(array($cat));
+			$productdescs = ProductDescription::SearchByTagsWithLimit(array($cat), 30, $pages);
 		}
 	}
 	else {
@@ -84,10 +84,10 @@ if (isset($_POST["search_product_for_shopping"])) {
 		
 		if (!($cat == "Category" || $cat == "All")) {
 			array_push($str, $cat);
-			$productdescs = ProductDescription::SearchByTags($str);
+			$productdescs = ProductDescription::SearchByTagsWithLimit($str, 30, $pages);
 		}
 		else {
-			$productdescs = ProductDescription::SearchByTags($str);
+			$productdescs = ProductDescription::SearchByTagsWithLimit($str, 30, $pages);
 		}
 	}
 	
@@ -127,16 +127,17 @@ if (isset($_POST["search_product_for_inventory"])) {
 
 	$cat = $_POST["category"];
 	$str = $_POST["search_product_for_inventory"];
+	$pages = $_POST["page"];
 	$productdescs = array();
 	if ($str == "") {
 		if ($cat == "Category" || $cat == "All") {
-			$product = Product::GetAllProduct();
-			foreach ($product as $p) {
+				$product = Product::GetAllProductWithLimit(30, $pages);
+				foreach ($product as $p) {
 				array_push($productdescs, $p->productDescription);
 			}		
 		}
 		else{
-			$productdescs = ProductDescription::SearchByTags(array($cat));
+			$productdescs = ProductDescription::SearchByTagsWithLimit(array($cat), 30, $pages);
 		}
 	}
 	else {
@@ -144,10 +145,10 @@ if (isset($_POST["search_product_for_inventory"])) {
 		array_map( 'trim', $tags_str );
 		if (!($cat == "Category" || $cat == "All")) {
 			array_push($str, $cat);
-			$productdescs = ProductDescription::SearchByTags($str);
+			$productdescs = ProductDescription::SearchByTagsWithLimit($str, 30, $pages);
 		}
 		else {
-			$productdescs = ProductDescription::SearchByTags($str);
+			$productdescs = ProductDescription::SearchByTagsWithLimit($str, 30, $pages);
 		}
 	}
 
@@ -477,9 +478,9 @@ if (isset($_POST["get_wishlist_product"])) {
 	require_once ('inc/ProductDao.php');
 	
 	$customerId = $_POST["get_wishlist_product"];
-	
+	$pages = $_POST["page"];
 	$wishlist = Customer::GetCustomer($customerId)->getWishList();
-	$products = $wishlist -> GetProducts();
+	$products = $wishlist -> GetProductsWithLimit(30, $pages);
 	
 	foreach ($products as $p) {
 		createProductBoxForWishList($p["Product"], $p["Quantity"]);
@@ -570,8 +571,8 @@ if (isset($_POST["get_all_transaction"])) {
 	require_once ('inc/CustomerDao.php');
 	require_once ('inc/Payment.php');
 	require_once ('inc/Creditcard.php');
-	
-	$allSale = Sale::GetAll();
+	$pages = $_POST["page"];
+	$allSale = Sale::GetAllWithLimit(30, $page);
 	echo json_encode($allSale);
 }
 
@@ -588,7 +589,8 @@ if (isset($_POST["get_product_in_transaction"])) {
 	require_once ('inc/Creditcard.php');
 	
 	$cartId = $_POST["get_product_in_transaction"];
-	$products = Cart::GetCart($cartId)->GetProducts();
+	$pages = $_POST["page"];
+	$products = Cart::GetCart($cartId)->GetProductsWithLimit(30, $pages);
 	echo json_encode($products);
 }
 
@@ -678,8 +680,8 @@ if (isset($_POST["bind_cartid"])) {
 	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
 	$STH = $db->prepare("INSERT INTO `OrderTrackings` (`CartId`, `StatusType`, `Date`, `Description`, `UpdatedBy`) VALUES (:cid, 'ORDER_RETRIEVE', :date, 'Undefined', :by)");
 	$STH->bindParam(':cid', $_POST["cartId"]);
-	$STH->bindParam(':date', new Date());
-	$STH->bindParam(':date', "System");
+	$STH->bindParam(':date', date("Y-m-d h:i:sa"));
+	$STH->bindParam(':by', "System");
 	$STH->execute();
 }
 
@@ -731,9 +733,9 @@ if (isset($_POST["is_cartid_exists"])) {
 
 if (isset($_POST["update_order_status_by_cartid"])) {
 	$cartid = $_POST["update_order_status_by_cartid"];
-	$status = 
-	$description = 
-	$date = 
+	$status = $_POST["status"];
+	$description = $_POST["description"];
+	$by = $_POST["by"];
 
 	$host="localhost";
 	$user = "tsp";
@@ -741,11 +743,29 @@ if (isset($_POST["update_order_status_by_cartid"])) {
 	$database="ecomerce";
 	 
 	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
-	$STH = $db->prepare("INSERT INTO `OrderTrackings` (`CartId`, `StatusType`, `Date`, `Description`, `UpdatedBy`) VALUES (:cid, 'ORDER_RETRIEVE', :date, 'Undefined', :by)");
-	$STH->bindParam(':cid', $_POST["cartId"]);
-	$STH->bindParam(':date', new Date());
-	$STH->bindParam(':date', "System");
+	$STH = $db->prepare("INSERT INTO `OrderTrackings` (`CartId`, `StatusType`, `Date`, `Description`, `UpdatedBy`) VALUES (:cid, :type, :date, :desc, :by)");
+	$STH->bindParam(':cid', $cartid);
+	$STH->bindParam(':type', $status);
+	$STH->bindParam(':date', date("Y/m/d h:i:s A"));
+	$STH->bindParam(':desc', $description);
+	$STH->bindParam(':by', $by);
 	$STH->execute();
+}
+
+if (isset($_POST["get_enum_values"])) {
+	$host="localhost";
+	$user = "tsp";
+	$password="tsp";
+	$database="ecomerce";
+	
+	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
+	$STH = $db->prepare("SHOW COLUMNS FROM `OrderTrackings` WHERE `Field`='StatusType'");
+	$STH->execute();
+	$row = $STH->fetch();
+	$type = $row['Type'];
+	preg_match('/enum\((.*)\)$/', $type, $matches);
+	$vals = explode(',', $matches[1]);
+	echo json_encode($vals);
 }
 
 if (isset($_POST["get_customer_detail_by_cartid"])) {
