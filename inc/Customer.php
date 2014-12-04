@@ -21,7 +21,7 @@
 	    $result->firstName = $data['FirstName'];
 	    $result->lastName = $data['LastName'];
 	    $result->username = $data['UserName'];
-	    $result->address = $data['Address'];
+	    $result->Address = $data['Address'];
 	    $result->isBlocked = $data['Blocked'];
 	    return $result;
 	}
@@ -41,7 +41,7 @@
 	}
 	
 	public function updateCustomer() {
-	    CustomerDao::GetInstance()->updateCustomer( $this->id, $this->firstName, $this->lastName, $this->username, $address, 0 );
+	    CustomerDao::GetInstance()->updateCustomer( $this->id, $this->firstName, $this->lastName, $this->username, $this->Address, 0 );
 	}
 	
 	public function updatePassword( $pass ) {

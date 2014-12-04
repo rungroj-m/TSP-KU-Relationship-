@@ -153,7 +153,7 @@ Brand:
 				"code": $("#code").val(),
 				"price": $("#price").val(),
 				"weight": $("#weight").val(),
-				"desc": $("#desc").code(),
+				"desc": replaceAll($("#desc").code(), "'", "***"),
 				"image": $("#image").val(),
 				"category": $("#category").val(),
 				"tag": $("#tag").val(),
@@ -188,7 +188,7 @@ Brand:
 				"code": $("#code").val(),
 				"price": $("#price").val(),
 				"weight": $("#weight").val(),
-				"desc": $("#desc").code(),
+				"desc": $("#desc").code().replace("'", "***"),
 				"image": $("#image").val(),
 				"category": $("#category").val(),
 				"tag": $("#tag").val(),
@@ -212,12 +212,16 @@ Brand:
 	});
 
 	function replaceDoubleQuote(str) {
+		console.log( str.replace('"', '\\"'));
 		return str.replace('"', '\\"');
 	}
-
 	$("input[type=number]").on("mousewheel", function(e) {
 	    $(this).blur(); 
 	});
+
+	function replaceAll(string, find, replace) {
+		  return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+		}
 
 	
 </script>

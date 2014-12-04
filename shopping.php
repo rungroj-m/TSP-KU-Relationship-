@@ -236,8 +236,6 @@
 	});
 
 	$(document).ready(function() {
-		showAllProductsInCart();
-
 		if ($.cookie("customerid") == undefined) {
 			$("#wish-button-div").remove();
 			$("#add-button-div").removeClass("col-md-6");
@@ -246,6 +244,9 @@
 			$("#cart-div").remove();
 		}
 		else {
+
+			showAllProductsInCart();
+				
 			$("#signin-div").remove();
 		}
 	});
@@ -258,7 +259,6 @@
 				"get_all_product_in_cart": $.cookie("customerid")
 			}
 		}).done(function(products_json) {
-//			alert(products_json);
 			$("#cart").empty();
 			$("#cart").append("\
 				<tr>\

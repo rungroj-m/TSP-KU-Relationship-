@@ -125,17 +125,18 @@
 				"get_customer_detail": $.cookie("customerid")
 			}
 		}).done(function(customer_json) {
-// 			var customer_obj = JSON.parse(customer_json);
-// 			console.log(customer_obj);
-// 			$("#firstname").val(customer_obj.firstname);
-// 			$("#lastname").val(customer_obj.lastname);
-// 			$("#address").val(customer_obj.address);
-// 			$("#address2").val(customer_obj.address2);
-// 			$("#district").val(customer_obj.district);
-// 			$("#provinct").val(customer_obj.provinct);
-// 			$("#country").val(customer_obj.country);
-// 			$("#zip").val(customer_obj.zip);
-// 			$("#phone").val(customer_obj.phone);
+			console.log(customer_json);
+			var customer_obj = JSON.parse(customer_json);
+			console.log(customer_obj);
+			$("#firstname").val(customer_obj.firstname);
+			$("#lastname").val(customer_obj.lastname);
+			$("#address").val(customer_obj.address);
+			$("#address2").val(customer_obj.address2);
+			$("#district").val(customer_obj.district);
+			$("#province").val(customer_obj.province);
+			$("#country").val(customer_obj.country);
+			$("#zip").val(customer_obj.zip);
+			$("#phone").val(customer_obj.phone);
 		});
 		
 	});
@@ -321,8 +322,14 @@
 		
 		if (option == undefined)
 			alert("Please choose shipping method.");
-		else
-			post("?page=dummycredit", {fee: passfee});
+		else {
+			var cd = $("#firstname").val() + " " + $("#lastname").val() + "**" + 
+			$("#address").val() + "**" + $("#address2").val() + "**" + 
+			$("#district").val() + "**" + $("#province").val() + "**" + 
+			$("#country").val() + "**" + $("#zip").val() + "**" + 
+			$("#phone").val();
+			post("?page=dummycredit", {fee: passfee, customer_detail: cd});
+		}
 	});
 
 	function post(path, params) {

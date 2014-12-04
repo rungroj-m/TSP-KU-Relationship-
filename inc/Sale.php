@@ -3,12 +3,14 @@
 	public $id;
 	public $payment;
 	public $cart;
+	public $customerDetail;
 	
-	public static function CreateSale( $payment, $cart ) {
+	public static function CreateSale( $payment, $cart, $customerDetail ) {
 	    $instance = new self();
-	    $instance->id = PaymentDao::GetInstance()->CreateSale( $payment, $cart );
+	    $instance->id = PaymentDao::GetInstance()->CreateSale( $payment, $cart, $customerDetail );
 	    $instance->payment = $payment;
 	    $instance->cart = $cart;
+	    $instance->customerDetail = $customerDetail;
 	    return $instance;
 	}
 	
@@ -30,6 +32,7 @@
 	    $instance->cart = Cart::GetCart( $data['CartId'] );
 	    $instance->payment = Payment::GetPayment( $data['PaymentId'] );
 	    $instance->id = $data['SaleId'];
+	    $this->customerDetail = $data['CustomerDetail'];
 	    return $instance;
 	}
     }

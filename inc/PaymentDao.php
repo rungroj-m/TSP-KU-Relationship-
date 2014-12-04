@@ -37,10 +37,11 @@
 	    $STH->execute();
 	}
 	
-	public function CreateSale( $payment, $cart ) {
-	    $STH = $this->db->prepare(  "INSERT INTO `Sales`(`CartId`, `PaymentId` ) VALUES ( :cartId, :paymentId)" );
+	public function CreateSale( $payment, $cart , $customerDetail ) {
+	    $STH = $this->db->prepare(  "INSERT INTO `Sales`(`CartId`, `PaymentId` , `CustomerDetail`) VALUES ( :cartId, :paymentId, :customerDetail)" );
 	    $STH->bindParam(':cartId', $cart->cartId );
 	    $STH->bindParam(':paymentId', $payment->id );
+	    $STH->bindParam(':customerDetail', $customerDetail );
 	    $STH->execute();
 	    return $this->db->lastInsertId();
 	}

@@ -25,7 +25,7 @@ input {
 				<h3 class="panel-title">Profile</h3>
 			</div>
 			<div class="panel-body">
-				<form class="form-signin" id="signup-form" role="form">
+			
 					<h2 class="form-signin-heading">Login Information</h2>
 					<br>
 					
@@ -76,8 +76,7 @@ input {
 						</div>
 					</div>
 					<br>
-					<button class="btn btn-lg btn-success btn-block" type="submit" id="save-profile-button">Save</button>
-				</form>
+					<button class="btn btn-lg btn-success btn-block" id="save-profile-button">Save</button>
 			</div>
 		</div>
 		
@@ -133,11 +132,11 @@ input {
 		var address = $("#signup-address").val();
 		var address2 = $("#signup-address2").val();
 		var district = $("#signup-district").val();
-		var provinct = $("#signup-provinct").val();
+		var province = $("#signup-province").val();
 		var country = $("#signup-country").val();
 		var zip = $("#signup-zip").val();
 		var phone = $("#signup-phone").val();
-
+		
 		$.ajax({
 			url: 'forjscallphp.php',
 			type: "POST",
@@ -149,13 +148,13 @@ input {
 				"address": address,
 				"address2": address2,
 				"district": district,
-				"provinct": provinct,
+				"province": province,
 				"country": country,
 				"zip": zip,
 				"phone": phone
 			}
-		}).done(function(products_json) {
-
+		}).done(function(response) {
+			location.reload();
 		});
 	});
 
@@ -175,7 +174,7 @@ input {
 			$("#signup-address").val(customer_obj.address);
 			$("#signup-address2").val(customer_obj.address2);
 			$("#signup-district").val(customer_obj.district);
-			$("#signup-provinct").val(customer_obj.provinct);
+			$("#signup-province").val(customer_obj.province);
 			$("#signup-country").val(customer_obj.country);
 			$("#signup-zip").val(customer_obj.zip);
 			$("#signup-phone").val(customer_obj.phone);

@@ -148,7 +148,7 @@
 				"lastname": lastname
 			}
 		}).done(function(response) {
-			console.log(response);
+			alert(response);
 			var registered = $.parseJSON(response);
 			
 			if (registered.username == email) {

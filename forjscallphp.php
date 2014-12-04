@@ -62,13 +62,15 @@ if (isset($_POST["search_product_for_shopping"])) {
 	
 	$cat = $_POST["category"];
 	$str = $_POST["search_product_for_shopping"];
+	$page = $_POST["page"];
+	//wait for search by tag , page
 	if (isset($_POST["customer_id"]))
 		$customerId = $_POST["customer_id"];
 	
 	$productdescs = array();
 	if ($str == "") {
 		if ($cat == "Category" || $cat == "All") {
-			$product = Product::GetAllProduct();
+			$product = Product::GetAllProductWithLimit(1, 2);
 			foreach ($product as $p){
 				array_push($productdescs, $p->productDescription);
 			}
@@ -333,7 +335,7 @@ if (isset($_POST["sign_up"])) {
 	require_once ('inc/CustomerDao.php');
 	require_once ('inc/Customer.php');
 	
-	$result = Customer::CreateCustomer($_POST["firstname"], $_POST["lastname"], $_POST["email"], $_POST["password"]);
+	$result = Customer::CreateCustomer($_POST["firstname"], $_POST["lastname"], $_POST["email"], $_POST["password"], "");
 	echo "
 	{
 		\"id\" : {$result->id},
@@ -454,9 +456,11 @@ if (isset($_POST["confirm-payment"])) {
 	require_once ('inc/Payment.php');
 	$card = CreditCard::CreateCreditCard($_POST["name"], $_POST["number"], $_POST["cvv"], $_POST["expYear"], $_POST["expMonth"]);
 	$customer = Customer::GetCustomer($_POST['customerid']);	
+	$customerDetail = $_POST["customerDetail"];
 	$cart = $customer->getCart();
 	$cart->setFee($_POST["fee"]);
-	$sale = $cart->purchase($card);
+	$sale = $cart->purchase($card, $customerDetail);
+	
 	if($sale !== null){
 		echo("Pass");
 	}else{
@@ -585,8 +589,6 @@ if (isset($_POST["get_product_in_transaction"])) {
 	
 	$cartId = $_POST["get_product_in_transaction"];
 	$products = Cart::GetCart($cartId)->GetProducts();
-// 	print_r($products);
-//  	echo("------------------------------------------------------------".print_r($products)."---------------->");
 	echo json_encode($products);
 }
 
@@ -624,46 +626,49 @@ if(isset($_POST["get_cartid_by_customerid"])){
 }
 
 if (isset($_POST["get_customer_detail"])) {
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	
 	$customerId = $_POST["get_customer_detail"];
 	
-	$customer = 1;
+	$customer = Customer::GetCustomer($customerId);
+	$address = explode("**", $customer->Address);
 	
 	echo "
 	{
-	\"username\" : \"{$result->username}\",
-	\"firstname\" : \"{$result->firstName}\",
-	\"lastname\" : \"{$result->lastName}\",
-	\"address\" : {$result->address},
-	\"address2\" : {$result->address2},
-	\"district\" : {$result->district},
-	\"provinct\" : {$result->provinct},
-	\"country\" : {$result->country},
-	\"zip\" : {$result->zip},
-	\"phone\" : {$result->phone}
+	\"username\" : \"{$customer->username}\",
+	\"firstname\" : \"{$customer->firstName}\",
+	\"lastname\" : \"{$customer->lastName}\",
+	\"address\" : \"{$address[0]}\",
+	\"address2\" : \"{$address[1]}\",
+	\"district\" : \"{$address[2]}\",
+	\"province\" : \"{$address[3]}\",
+	\"country\" : \"{$address[4]}\",
+	\"zip\" : \"{$address[5]}\",
+	\"phone\" : \"{$address[6]}\"
 	}";
 }
 
 if (isset($_POST["save_customer_detail"])) {
-	$customerId = $_POST["save_customer_detail"];
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
 	
-	$_POST["password"];
-	$_POST["firstname"];
-	$_POST["lastname"];
-	$_POST["address"];
-	$_POST["address2"];
-	$_POST["district"];
-	$_POST["provinct"];
-	$_POST["country"];
-	$_POST["zip"];
-	$_POST["phone"];
-
+	$customerId = $_POST["save_customer_detail"];
+	$customer = Customer::GetCustomer($customerId);
+	$customer ->updatePassword( $_POST["password"] );
+	$customer -> firstName = $_POST["firstname"];
+	$customer -> lastName = $_POST["lastname"];
+	$customer ->  Address = $_POST["address"] . "**" . $_POST["address2"] . "**" . $_POST["district"] . "**" . $_POST["province"] . "**" . $_POST["country"] . "**" . $_POST["zip"] . "**" . $_POST["phone"];
+	$customer->updateCustomer();
 }
 
 if (isset($_GET["get_all_promotion"])) {
 	echo "[{\"date\":\"27\/2\/\",\"title\":\"Getting Contacts Barcelona - test1\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"red\"},{\"date\":\"25\/5\/\",\"title\":\"test2\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"pink\"},{\"date\":\"20\/6\/\",\"title\":\"test2\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"green\"},{\"date\":\"7\/10\/\",\"title\":\"test3\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"blue\",\"class\":\"miclasse \",\"content\":\"contingut popover";
 }
 
-if (isset($_POST["bind_cartid_ordertrackingid"])) {
+
+// StatusType :: 'ORDER_RETRIEVE','ORDER_PICK','ORDER_READY','ORDER_SCAN','ORDER_TRANSIT'
+if (isset($_POST["bind_cartid"])) {
 	
 	$host="localhost";
 	$user = "tsp";
@@ -671,25 +676,94 @@ if (isset($_POST["bind_cartid_ordertrackingid"])) {
 	$database="ecomerce";
 	 
 	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
-	$STH = $db->prepare("INSERT INTO `OrderTrackings` (`CartId`, `OrderTrackingId`) VALUES (:cid, :oid)");
+	$STH = $db->prepare("INSERT INTO `OrderTrackings` (`CartId`, `StatusType`, `Date`, `Description`, `UpdatedBy`) VALUES (:cid, 'ORDER_RETRIEVE', :date, 'Undefined', :by)");
 	$STH->bindParam(':cid', $_POST["cartId"]);
-	$STH->bindParam(':oid', $_POST["orderTrackingId"]);
-	echo $STH->execute();
+	$STH->bindParam(':date', new Date());
+	$STH->bindParam(':date', "System");
+	$STH->execute();
 }
 
-if (isset($_POST["get_ordertrackingid_by_cartid"])) {
+if (isset($_POST["get_lastest_order_status_by_cartid"])) {
+	$cartid = $_POST["get_lastest_order_status_by_cartid"];
+	
+	$host="localhost";
+	$user = "tsp";
+	$password="tsp";
+	$database="ecomerce";
+	
+	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
+	$STH = $db->prepare("SELECT * FROM `OrderTrackings` WHERE `CartId`=:cid ORDER BY `Key` DESC LIMIT 1");
+	$STH->bindParam(':cid', $cartid);
+	$STH->execute();
+	echo json_encode($STH->fetchAll());
+}
+
+if (isset($_POST["get_order_status_by_cartid"])) {
+	$cartid = $_POST["get_order_status_by_cartid"];
+	
+	$host="localhost";
+	$user = "tsp";
+	$password="tsp";
+	$database="ecomerce";
+	
+	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
+	$STH = $db->prepare("SELECT * FROM `OrderTrackings` WHERE `CartId`=:cid ORDER BY `Key`");
+	$STH->bindParam(':cid', $cartid);
+	$STH->execute();
+	echo json_encode($STH->fetchAll());
+}
+
+if (isset($_POST["is_cartid_exists"])) {
+	$cartid = $_POST["is_cartid_exists"];
+	
+	$host="localhost";
+	$user = "tsp";
+	$password="tsp";
+	$database="ecomerce";
+	
+	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
+	$STH = $db->prepare("SELECT COUNT(*) AS num FROM `OrderTrackings` WHERE `CartId`=:cid");
+	$STH->bindParam(':cid', $cartid);
+	$STH->execute();
+	
+	echo $STH->fetch()["num"];
+}
+
+if (isset($_POST["update_order_status_by_cartid"])) {
+	$cartid = $_POST["update_order_status_by_cartid"];
+	$status = 
+	$description = 
+	$date = 
 
 	$host="localhost";
 	$user = "tsp";
 	$password="tsp";
 	$database="ecomerce";
-
+	 
 	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
-	$STH = $db->prepare("SELECT `OrderTrackingId` FROM `OrderTrackings` WHERE CartId=:cid");
-	$STH->bindParam(':cid', $_POST["get_ordertrackingid_by_cartid"]);
+	$STH = $db->prepare("INSERT INTO `OrderTrackings` (`CartId`, `StatusType`, `Date`, `Description`, `UpdatedBy`) VALUES (:cid, 'ORDER_RETRIEVE', :date, 'Undefined', :by)");
+	$STH->bindParam(':cid', $_POST["cartId"]);
+	$STH->bindParam(':date', new Date());
+	$STH->bindParam(':date', "System");
 	$STH->execute();
-	echo $STH->fetch()["OrderTrackingId"];
 }
+
+if (isset($_POST["get_customer_detail_by_cartid"])) {
+	$cartId = $_POST["get_customer_detail_by_cartid"];
+	
+	$host="localhost";
+	$user = "tsp";
+	$password="tsp";
+	$database="ecomerce";
+	
+	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
+	$STH = $db->prepare("SELECT `CustomerDetail` FROM `Sales` WHERE `CartId`=:cid");
+	$STH->bindParam(':cid', $cartId);
+	$STH->execute();
+	echo $STH->fetch()[0];
+}
+
+
 
 
 

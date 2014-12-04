@@ -18,9 +18,7 @@
 	public static function CreateProductDescription( $category, $brand, $description, $modelCode, $additionTags, $productName, $weight ) {
 	    $dao = ProductDao::GetInstance();
 	    $now = new DateTime( 'now' );
-	    print_r($now);
-	    $pdid = $dao->addProductDescription( $category->id, $brand->id, $productName, $modelCode, $description , $additionTags, $now->format('Y-m-d H:i:s'), $weight );
-	    
+	    $pdid = $dao->addProductDescription( $category->id, $brand->id, $productName, $modelCode, $description , $additionTags, $now->format('Y-m-d H:i:s'), $weight );	    
 	    $instance = new self();
 	    $instance->id = $pdid;
 	    $instance->brand = $brand;

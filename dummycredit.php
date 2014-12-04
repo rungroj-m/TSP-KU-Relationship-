@@ -1,3 +1,4 @@
+
 <div class="panel panel-default">
 	<div class="panel-heading">
 		<h3 class="panel-title">Credit card</h3>
@@ -28,10 +29,11 @@
 				"expMonth" : $("#month").val(),
 				"expYear" : $("#year").val(),
 				"customerid" : $.cookie("customerid"),
-				"fee" : <?php echo $_POST["fee"]; ?>
+				"fee" : <?php echo $_POST["fee"]; ?>,
+				"customerDetail": "<?php echo $_POST["customer_detail"]; ?>"
 			}
 		}).done(function(response) {
-			alert(response);
+			console.log(response);
 			$.ajax({
 				url: 'forjscallphp.php',
 				type: "POST",
@@ -39,7 +41,7 @@
 					"get_cartid_by_customerid": $.cookie("customerid")
 				}
 			}).done(function(cartid) {
-				 post("?page=confirm-payment", {cartId: cartid});
+				 post("?page=transaction-detail&cartId=" + (cartid - 1), {});
 			});
 				   
 		});

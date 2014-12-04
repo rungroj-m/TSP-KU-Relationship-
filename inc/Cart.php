@@ -26,12 +26,12 @@
 	    return $instance;
 	}
 	
-	public function purchase( $creditCard ) {
+	public function purchase( $creditCard, $customerDetail ) {
 		if($creditCard->vertify() == 0) return null;
 	    $payment = $creditCard->pay( $this->GetTotalPrice() );
 	    if( $payment == null ) return null;
 	    $this->close();
-	    return Sale::CreateSale( $payment, $this );
+	    return Sale::CreateSale( $payment, $this, $customerDetail );
 	}
 	
 	public function GetTotalPrice() {
