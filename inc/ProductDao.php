@@ -344,6 +344,11 @@
     	private $database="knotsupavi_tsp";
     	*/
 	
+	public static $PRODUCT_CREATE_DATE = 'CreateDate';
+	//public static $PRODUCT_NAME = 'Price';
+	public static $PRODUCT_PRICE = 'Price';
+	
+	public static $OrderBy;
 	private $host="localhost";
     	private $user = "tsp";
     	private $password="tsp";
@@ -351,6 +356,7 @@
     	
 	protected $db;
 	public function __construct(){
+	    ProductDao::$OrderBy = ProductDao::$PRODUCT_CREATE_DATE;
 	    $this->db = new PDO("mysql:host=$this->host;dbname=$this->database;charset=utf8", $this->user, $this->password);
 	}
 	
@@ -469,7 +475,23 @@
 	}
 	
 	function getActiveProducts() {
-	    $STH = $this->db->prepare("SELECT * FROM `Products` WHERE `Status` = 1 ORDER BY `CreateDate`");
+	    $sort = ProductDao::$OrderBy;
+	    $STH = $this->db->prepare("SELECT * FROM `Products` WHERE `Status` = 1 ORDER BY `$sort`");
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
+	function getActiveProductsCount() {
+	    $sort = ProductDao::$OrderBy;
+	    $STH = $this->db->prepare("SELECT COUNT(*) as c FROM `Products` WHERE `Status` = 1 ORDER BY `$sort`");
+	    $STH->execute();
+	    return $STH->fetch()['c'];
+	}
+	
+	function getActiveProductsWithLimit( $limit, $pages ) {
+	    $pages = $pages - 1;
+	    $sort = ProductDao::$OrderBy;
+	    $STH = $this->db->prepare("SELECT * FROM `Products` WHERE `Status` = 1 ORDER BY `$sort` LIMIT $limit OFFSET $pages");
 	    $STH->execute();
 	    return $STH->fetchAll();
 	}
@@ -576,6 +598,16 @@
 	    return $returnArray;
 	}
 	
+	public function findProductDescriptionByTagsWithLimit( $tagArray ,$limit, $pages) {
+	    $tagIds = $this->getTags( array_unique( array_map('strtolower', $tagArray) ) );
+	    $array = $this->findProductDescriptionByTagIdsWithLimit( $tagIds, $limit, $pages );
+	    $returnArray = array();
+	    foreach ( $array as &$value ) {
+		array_push( $returnArray, ProductDescription::GetProductDescription( $value['ProductDescriptionId'] ) );
+	    }
+	    return $returnArray;
+	}
+	
 	//public function 
 	
 	private function getAdditionTagByProductDescriptionId ( $pdid ) {
@@ -620,6 +652,24 @@
 	    return $STH->fetchAll();
 	}
 	
+	private function findProductDescriptionByTagIdsWithLimit( $tagArray , $limit, $pages) {
+	    $pages -= 1;
+	    $tagCount = count( $tagArray );
+	    $orQuery = "";
+	    foreach ( $tagArray as &$value ) {
+		$orQuery .= " PDT.TagId = $value OR";
+	    }
+	    $orQuery = substr($orQuery, 0, -2);
+	    $query = "SELECT PDT.ProductDescriptionId, Count( PDT.TagId ) as TC FROM
+			( SELECT * FROM AdditionProductDescriptionTags UNION SELECT * FROM ProductDescriptionTags ) PDT
+			WHERE$orQuery
+			GROUP BY PDT.ProductDescriptionId
+			HAVING TC = $tagCount LIMIT $limit OFFSET $pages";
+	    $STH = $this->db->prepare( $query );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
 	public function addAdditionProductDescriptionTagId ( $productDescriptionId, $tagIdArray ) {
 	    $this->addTagIdByTable( 'AdditionProductDescriptionTags', $productDescriptionId, $tagIdArray );
 	}
@@ -655,5 +705,5 @@
     require_once 'Brand.php';
     require_once 'Category.php';
     require_once 'InventoryDao.php';
- 
+    //print_r( ProductDao::GetInstance()->getActiveProductsWithLimit( 1, 1 ));
 ?>
