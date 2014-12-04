@@ -147,6 +147,13 @@
 	    return $STH->fetchAll();
 	}
 	
+	function getActiveProductsCount() {
+	    $sort = ProductDao::$OrderBy;
+	    $STH = $this->db->prepare("SELECT COUNT(*) as c FROM `Products` WHERE `Status` = 1 ORDER BY `$sort`");
+	    $STH->execute();
+	    return $STH->fetch()['c'];
+	}
+	
 	function getActiveProductsWithLimit( $limit, $pages ) {
 	    $pages = $pages - 1;
 	    $sort = ProductDao::$OrderBy;
@@ -257,6 +264,16 @@
 	    return $returnArray;
 	}
 	
+	public function findProductDescriptionByTagsWithLimit( $tagArray ,$limit, $pages) {
+	    $tagIds = $this->getTags( array_unique( array_map('strtolower', $tagArray) ) );
+	    $array = $this->findProductDescriptionByTagIdsWithLimit( $tagIds, $limit, $pages );
+	    $returnArray = array();
+	    foreach ( $array as &$value ) {
+		array_push( $returnArray, ProductDescription::GetProductDescription( $value['ProductDescriptionId'] ) );
+	    }
+	    return $returnArray;
+	}
+	
 	//public function 
 	
 	private function getAdditionTagByProductDescriptionId ( $pdid ) {
@@ -296,6 +313,24 @@
 			WHERE$orQuery
 			GROUP BY PDT.ProductDescriptionId
 			HAVING TC = $tagCount";
+	    $STH = $this->db->prepare( $query );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
+	private function findProductDescriptionByTagIdsWithLimit( $tagArray , $limit, $pages) {
+	    $pages -= 1;
+	    $tagCount = count( $tagArray );
+	    $orQuery = "";
+	    foreach ( $tagArray as &$value ) {
+		$orQuery .= " PDT.TagId = $value OR";
+	    }
+	    $orQuery = substr($orQuery, 0, -2);
+	    $query = "SELECT PDT.ProductDescriptionId, Count( PDT.TagId ) as TC FROM
+			( SELECT * FROM AdditionProductDescriptionTags UNION SELECT * FROM ProductDescriptionTags ) PDT
+			WHERE$orQuery
+			GROUP BY PDT.ProductDescriptionId
+			HAVING TC = $tagCount LIMIT $limit OFFSET $pages";
 	    $STH = $this->db->prepare( $query );
 	    $STH->execute();
 	    return $STH->fetchAll();

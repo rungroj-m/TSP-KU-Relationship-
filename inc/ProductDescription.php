@@ -92,6 +92,11 @@
 	    $dao = ProductDao::GetInstance();
 	    return $dao->findProductDescriptionByTags( $stringArray );
 	}
+	
+	public static function SearchByTagsWithLimit ( $stringArray, $limit, $pages ) {
+	    $dao = ProductDao::GetInstance();
+	    return $dao->findProductDescriptionByTagsWithLimit( $stringArray, $limit, $pages);
+	}
     }
     
     /*require_once( 'ProductDao.php' );
