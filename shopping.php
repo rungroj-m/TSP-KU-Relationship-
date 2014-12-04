@@ -148,19 +148,23 @@
 			$("#redzone").show();
 		}
 		else
-			document.location.href = "?page=notfound"
+			document.location.href = "?page=inventory"
 	});
-
-	$.ajax({
-		url: 'forjscallphp.php',
-		type: "POST",
-		data: {
-			"search_product_for_shopping": "",
-			"category": "All",
-			"customer_id": $.cookie("customerid")
-		}
-	}).done(function(response) {
-	    $("#productBoxContainer").html(response);
+	
+	$(document).ready(function() {
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"search_product_for_shopping": <?php echo isset($_GET["search"]) ? "\"{$_GET["search"]}\"" : "\"\"" ?>,
+				"category": <?php echo isset($_GET["category"]) ? "\"{$_GET["category"]}\"" : "\"All\"" ?>,
+				"customer_id": $.cookie("customerid") == undefined ? 0 : $.cookie("customerid"),
+				"page": <?php echo isset($_GET["p"]) ? $_GET["p"] : 1 ?>
+						
+			}
+		}).done(function(response) {
+		    $("#productBoxContainer").html(response);
+		});
 	});
 	
 	var pid, pn, p, q/*, mq*/;
@@ -199,20 +203,11 @@
 	});
 	
 	$("#search-button").click(function() {
-		search();
+		search($("#dropdown qq").text(), ($("#search-box").val() == "" ? "" : "&search=" + $("#search-box").val()));
 	});
 
-	function search() {
-		$.ajax({
-			url: 'forjscallphp.php',
-			type: "POST",
-			data: {
-				"search_product_for_shopping": $("#search-box").val(),
-				"category": $("#dropdown qq").text()
-			}
-		}).done(function(response) {
-		    $("#productBoxContainer").html(response);
-		});
+	function search(category, search, p) {
+		document.location.href = "?page=shopping" + (category == "-" ? <?php echo isset($_GET["category"]) ? $_GET["category"] : ""; ?> : "&category=" + category) + (search == "-" ? <?php echo isset($_GET["search"]) ? $_GET["search"] : ""; ?> : "&search=" + search) + (p == "-" ? "" : "&p=" + p);                                
 	}
 
 	$("#button-clear-cart").click(function() {
