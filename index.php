@@ -113,8 +113,11 @@ body {
 				$('.navbar-nav li:contains("Customer")').remove();
 				$('.navbar-nav li:contains("Transaction")').remove();
 			}
-			else
+			else{
+				$('.navbar-nav li:contains("Wish List")').remove();
 				$('.navbar-nav li:contains("Shopping")').remove();
+			}
+			
 			if ($.cookie("adminlevel") != 2) {
 				$('.navbar-nav li:contains("Report")').remove();
 			}
