@@ -385,10 +385,10 @@ if (isset($_POST["remove"])) {
 if (isset($_POST["get_all_product_in_cart"])) {
 	require_once ('inc/CustomerDao.php');
 	require_once ('inc/Customer.php');
-	require_once ('inc/Cart.php');
-	require_once ('inc/InventoryDao.php');
 	require_once ('inc/Product.php');
 	require_once ('inc/ProductDao.php');
+	require_once ('inc/Cart.php');
+	require_once ('inc/InventoryDao.php');
 	require_once ('inc/ProductDescription.php');
 	require_once ('inc/Category.php');
 	require_once ('inc/Brand.php');
@@ -458,9 +458,9 @@ if (isset($_POST["confirm-payment"])) {
 	$cart->setFee($_POST["fee"]);
 	$sale = $cart->purchase($card);
 	if($sale !== null){
-		echo("ok");
+		echo("Pass");
 	}else{
-		echo("verify fail or not enough money please change to other credit card");
+		echo("Fail");
 	}
 }
 
@@ -572,6 +572,8 @@ if (isset($_POST["get_all_transaction"])) {
 }
 
 if (isset($_POST["get_product_in_transaction"])) {
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDao.php');
 	require_once ('inc/Sale.php');
 	require_once ('inc/PaymentDao.php');
 	require_once ('inc/Cart.php');
@@ -583,6 +585,7 @@ if (isset($_POST["get_product_in_transaction"])) {
 	
 	$cartId = $_POST["get_product_in_transaction"];
 	$products = Cart::GetCart($cartId)->GetProducts();
+// 	print_r($products);
 //  	echo("------------------------------------------------------------".print_r($products)."---------------->");
 	echo json_encode($products);
 }
@@ -608,6 +611,16 @@ if (isset($_POST["get_admin_list"])) {
 	// bat เสจแล้วทักมาใน facebook นะ กุออกก่อนละกัน
 	
 	echo json_encode($admins);
+}
+
+if(isset($_POST["get_cartid_by_customerid"])){
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/Cart.php');
+	require_once ('inc/InventoryDao.php');
+	
+	$customer = Customer::GetCustomer($_POST["get_cartid_by_customerid"]);
+	echo( $customer->getCart()->cartId );
 }
 
 if (isset($_POST["get_customer_detail"])) {
@@ -650,6 +663,33 @@ if (isset($_GET["get_all_promotion"])) {
 	echo "[{\"date\":\"27\/2\/\",\"title\":\"Getting Contacts Barcelona - test1\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"red\"},{\"date\":\"25\/5\/\",\"title\":\"test2\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"pink\"},{\"date\":\"20\/6\/\",\"title\":\"test2\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"green\"},{\"date\":\"7\/10\/\",\"title\":\"test3\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"blue\",\"class\":\"miclasse \",\"content\":\"contingut popover";
 }
 
+if (isset($_POST["bind_cartid_ordertrackingid"])) {
+	
+	$host="localhost";
+	$user = "tsp";
+	$password="tsp";
+	$database="ecomerce";
+	 
+	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
+	$STH = $db->prepare("INSERT INTO `OrderTrackings` (`CartId`, `OrderTrackingId`) VALUES (:cid, :oid)");
+	$STH->bindParam(':cid', $_POST["cartId"]);
+	$STH->bindParam(':oid', $_POST["orderTrackingId"]);
+	echo $STH->execute();
+}
+
+if (isset($_POST["get_ordertrackingid_by_cartid"])) {
+
+	$host="localhost";
+	$user = "tsp";
+	$password="tsp";
+	$database="ecomerce";
+
+	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
+	$STH = $db->prepare("SELECT `OrderTrackingId` FROM `OrderTrackings` WHERE CartId=:cid");
+	$STH->bindParam(':cid', $_POST["get_ordertrackingid_by_cartid"]);
+	$STH->execute();
+	echo $STH->fetch()["OrderTrackingId"];
+}
 
 
 

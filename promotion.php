@@ -23,7 +23,7 @@
 				<div id="calendari_lateral1"></div>
 			</div>
 			<br>
-			<div class="row" style="padding: 20px">
+			<div class="row" style="margin: 20px">
 				<div class="col-md-9">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon glyphicon-calendar"></span></span>
@@ -33,7 +33,21 @@
 				<div class="col-md-3">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-tag"></span></span>
-						<input type="text" class="form-control" id="date-show" placeholder="% Discount">
+						<input type="text" class="form-control" id="discount-value" placeholder="% Discount">
+					</div>
+				</div>
+			</div>
+			<div class="row" style="margin: 20px">
+				<div class="col-md-4">
+					<div class="input-group">
+						<span class="input-group-addon"><span class="glyphicon glyphicon-pencil"></span></span>
+						<input type="text" class="form-control" id="title-value" placeholder="Title">
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="input-group">
+						<span class="input-group-addon"><span class="glyphicon glyphicon-pencil"></span></span>
+						<input type="text" class="form-control" id="description-value" placeholder="Description">
 					</div>
 				</div>
 				<div class="col-md-12" style="padding: 20px">
@@ -84,10 +98,31 @@ $(document).ready(function() {
 //             data: {
 //     			"get_promotion": ""
 //     		}
-		    url: 'http://bic.cat/bic_calendar/index.php',
+
+            
+		    url: 'http://localhost:8888/tsp/us.php',
 		    type: 'get',
         }
     });
 });
 
+
+$(document).ready(function() {
+    document.addEventListener('bicCalendarSelect', function(e) {
+        var a = e.detail.dateFirst.getDay() + "/" + (e.detail.dateFirst.getMonth()+1) + "/" + e.detail.dateFirst.getYear();
+        var b = e.detail.dateLast.getDay() + "/" + (e.detail.dateLast.getMonth()+1) + "/" + e.detail.dateLast.getYear();
+        
+		$("#date-show").val(a + ' - ' + b);
+
+		for (var i = e.detail.dateFirst; i <= e.detail.dateLast; i.setDate(i.getDate() + 1)) {
+			alert(i);
+		}
+		
+        //maybe you would like to send these data by ajax...
+        //$.ajax...
+
+        //or asign to a form...
+        //$('input').val(...
+    });
+});
 </script>
