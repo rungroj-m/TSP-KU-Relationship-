@@ -38,8 +38,8 @@
 	
 	public static function GetAdmin( $adminId ) {
 	    $dao = CustomerDao::GetInstance();
-	    $data = $dao->getAdmin( $customerId );
-	    return Admin::dataToCustomer( $data );
+	    $data = $dao->getAdmin( $adminId );
+	    return Admin::dataToAdmin( $data );
     	}
 	
     public static function GetAllAdmins(){

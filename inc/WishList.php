@@ -44,8 +44,7 @@
 	
 	public function GetProducts() {
 	    $dao = InventoryDao::GetInstance();
-	    $data = $dao->getWishListProducts( $this->id );
-	    $data = $dao->getWishListProducts( $this->id );
+	    $data = $dao->getWishListProducts($this->id);
 	    $result = array();
 	    foreach( $data as &$val ) {
 		$detail = array();
@@ -58,18 +57,21 @@
 	}
 	
 	public function GetProductsWithLimit( $limit, $pages ) {
-	    $dao = InventoryDao::GetInstance();
-	    $data = $dao->getWishListProductsWithLimit( $this->id );
-	    print_r( $data );
-	    $result = array();
-	    foreach( $data as &$val ) {
-		$detail = array();
-		if( $val['Quantity'] == 0 ) continue;
-		$detail['Product'] = Product::GetProduct( $val['ProductId'] );
-		$detail['Quantity'] = $val['Quantity'];
-		array_push( $result, $detail );
-	    }
-	    return $result;
+		$dao = InventoryDao::GetInstance();
+		$data = $dao->getWishListProductsWithLimit( $this->id ,$limit,$pages );
+		$result = array();
+		foreach( $data as &$val ) {
+			$detail = array();
+			if( $val['Quantity'] == 0 ) continue;
+			$detail['Product'] = Product::GetProduct( $val['ProductId'] );
+			$detail['Quantity'] = $val['Quantity'];
+			array_push( $result, $detail );
+		}
+		return $result;
+	}
+	
+	public function GetProductsCount() {
+		return count($this->GetProducts());
 	}
 	
 	public function ClearProducts() {

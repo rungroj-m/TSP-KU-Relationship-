@@ -32,17 +32,6 @@
 			</tbody>
 		</table>
 		
-		<nav align="right">
-			<ul class="pagination">
-				<li class="disabled"><a href="#"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>
-			   	<li class="active"><a href="#">1</a></li>
-			    <li><a href="#">2</a></li>
-			    <li><a href="#">3</a></li>
-			    <li><a href="#">4</a></li>
-			    <li><a href="#">5</a></li>
-			    <li><a href="#"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>
-			</ul>
-		</nav>
 	</div>
 </div>
 
@@ -74,8 +63,9 @@
  	 				$.ajax({
 	 					url: 'forjscallphp.php',
 	 					type: 'POST',
+	 					async: false,
 	 					data: {
-	 						'get_ordertrackingid_by_cartid': cartId,
+	 						'get_lastest_order_status_by_cartid': cartId,
 	 					},
 	 					success: function(oid) {
 		 					if (oid > 0) {
@@ -91,7 +81,7 @@
 			 									<td>" + obj.cart.customer.firstName + " " + obj.cart.customer.lastName + "</td>\
 			 									<td>" + obj.payment.amount + "</td>\
 			 									<td>" + 000 + "</td>\
-			 									<td><a onClick=\"post('?page=update-transaction', {oid: " + oid + ", status: '" + st.orders.order.status.type + "'});\">" + oid + " " + st.orders.order.status.type + "</a></td>\
+			 									<td><a href=\"?page=tracking&id=" + cartId + "\">" + oid + " " + st.orders.order.status.type + "</a></td>\
 			 								</tr>");
 			 					});
 		 					}
@@ -114,17 +104,6 @@
 			} // for
 		});
 
-		$.ajax({
-			url: 'http://localhost:11111/orders/enum'
-		}).done(function(types_json) {
-			var types = JSON.parse(types_json);
-			for (var i = 0; i < types.length; i++) {
-				$('#types-dropdown').append('<li><a>' + types[i] + '</a></li>');
-			}
-			$("#types-dropdown li").click(function() {
-				$("#dropdown qq").text($(this).text());
-			});
-		});
 
 	});
 

@@ -9,18 +9,22 @@
 	public $endDate;
 	public $value;
 	public $type;
+	public $title;
+	public $description;
 	
 	public static function Total( $total ) {
 	    //GET TODAY
 	    return $total * 0.8;
 	}
 	
-	public static function CreatePercentPromotion( $percent, $startDate, $endDate, $admin ) {
+	public static function CreatePercentPromotion( $percent, $startDate, $endDate, $admin, $title, $description ) {
 	    $instance = new self();
-	    $instance->id = PaymentDao::GetInstance()->addPromotion( Promotion::$PERCENT_TYPE, $percent, $startDate, $endDate, $Admin-id );
+	    $instance->id = PaymentDao::GetInstance()->addPromotion( Promotion::$PERCENT_TYPE, $percent, $startDate, $endDate, $admin->id, $title, $description );
 	    $instacne->startDate = $startDate;
 	    $instacne->endDate = $endDate;
 	    $instacne->admin = $admin;
+	    $instancs->title = $title;
+	    $instance->description = $description;
 	    return $instance;
 	}
 	
@@ -57,12 +61,19 @@
 	
 	private static function DataToPromo( $data ) {
 	    $instance = new self();
+	    $instance->id = $data['PromotionId'];
 	    $instance->admin = Admin::GetAdmin( $data['AdminId'] );
 	    $instance->startDate = new DateTime( $data['StartDate'] );
 	    $instance->endDate = new DateTime( $data['EndDate'] );
 	    $instance->value = $data['Value'];
 	    $instance->type = $data['Type'];
+	    $instance->title = $data['Title'];
+	    $instance->description = $data['Description'];
 	    return $instance; 
+	}
+	
+	public static function checkOverlapPromotion($date) {
+		echo PaymentDao::GetInstance()->checkOverlapPromotion($date);
 	}
     }
 

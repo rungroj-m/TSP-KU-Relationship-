@@ -48,10 +48,16 @@
 				<div class="panel-heading">
 					<h3 class="panel-title">Inventory</h3>
 				</div>
+				
 				<div class="panel-body">
 					<div id="productBoxContainer">
 					</div>
 				</div>
+				
+				<nav align="right">
+					<ul class="pagination">
+					</ul>
+				</nav>
 			</div>
 		</div>
 	</div>
@@ -104,47 +110,92 @@
 		else
 			document.location.href = "?page=notfound"
 	});
-	
-	$.ajax({
-		url: 'forjscallphp.php',
-		type: "POST",
-		data: {
-			"search_product_for_inventory": "",
-			"category": "All"
-		}
-	}).done(function(response) {
-	    $("#productBoxContainer").html(response);
+
+	$(document).ready(function() {
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			async: false,
+			data: {
+				"get_num_page": "",
+				"s": <?php echo isset($_GET["s"]) ? "\"{$_GET["s"]}\"" : "\"\"" ?>,
+				"c": <?php echo isset($_GET["c"]) ? "\"{$_GET["c"]}\"" : "\"All\"" ?>
+			}
+		}).done(function(num) {
+			$("#productBoxContainer").append(num + " Result(s).<br> ");
+			
+			var p = GET_P();
+			var max =  Math.ceil(num/30);
+			
+			if (p == 1)
+				$(".pagination").append('<li class="disabled"><a><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>');
+			else
+				$(".pagination").append('<li><a onclick="p(1);"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>');
+				
+			for (var i = 1; i <= max; i++) {
+				if (i == p)
+					$(".pagination").append('<li class="active"><a onclick="p(' + i + ');">' + i + '</a></li>');
+				else 
+					$(".pagination").append('<li><a onclick="p(' + i + ');">' + i + '</a></li>');
+			}
+
+			if (p == max)
+				$(".pagination").append('<li class="disabled"><a><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>');
+			else
+				$(".pagination").append('<li><a onclick="p(' + max + ');"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>');
+		});
+		
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"search_product_for_inventory": "",
+				"category": "All",
+				"page": <?php echo isset($_GET["p"]) ? ($_GET["p"]-1)*30 + 1 : 1?>
+			}
+		}).done(function(response) {
+		    $("#productBoxContainer").append(response);
+		});
+
+		<?php
+			if (isset($_GET["c"])) {
+				echo "$(\"#dropdown qq\").text(\"{$_GET["c"]}\");";
+			}
+			
+			if (isset($_GET["s"])) {
+				echo "$(\"#search-box\").val(\"{$_GET["s"]}\");";
+			}
+			
+		?>
 	});
 	
 	$("#category-dropdown li").click(function() {
 		$("#dropdown qq").text($(this).text());
-		search();
+		search($("#dropdown qq").text(), $("#search-box").val(), <?php echo isset($_GET["p"]) ? $_GET["p"] : "\"-\""; ?>);
 	});
 
 	$("#search-box").keypress(function(event) {
 		// 13 means ENTER
 		if (event.which == 13) {
-			search();
-			var input = $("#search-box")
-
+			search($("#dropdown qq").text(), $("#search-box").val(), <?php echo isset($_GET["p"]) ? $_GET["p"] : "\"-\""; ?>);
 		}
 	});
 	
 	$("#search-button").click(function() {
-		search();
+		search($("#dropdown qq").text(), $("#search-box").val(), <?php echo isset($_GET["p"]) ? $_GET["p"] : "\"-\""; ?>);
 	});
 
-	function search() {
-		$.ajax({
-			url: 'forjscallphp.php',
-			type: "POST",
-			data: {
-				"search_product_for_inventory": $("#search-box").val(),
-				"category": $("#dropdown qq").text()
-			}
-		}).done(function(response) {
-		    $("#productBoxContainer").html(response);
-		});
+	function p(p) {
+// 		alert(p);
+		search("-", "-", p);
+	}
+
+	function search(category, search, p) {
+		document.location.href = "?page=inventory" + (category == "-" ? "&c=" + $("#dropdown qq").text() : "&c=" + category) + (search == "-" ? "&s=" + $("#search-box").val() : "&s=" + search) + (p == "-" ? "" : "&p=" + p);                                
+	}
+
+	function search(category, search, p) {
+		document.location.href = "?page=inventory" + (category == "-" ? "&c=" + $("#dropdown qq").text() : "&c=" + category) + (search == "-" ? "&s=" + $("#search-box").val() : "&s=" + search) + (p == "-" ? "" : "&p=" + p);                                
 	}
 
 	$("#menu-add").click(function() {
@@ -191,7 +242,13 @@
 		});
 		$("#remove-product-confirm").modal('hide');
 	});
-	
+
+	function GET_P(){
+	    if (window.location.href.split("&p=")[1] == undefined)
+		    return 1;
+	    else
+		    return window.location.href.split("&p=")[1];
+	}
 </script>
 
 

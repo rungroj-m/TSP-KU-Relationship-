@@ -41,7 +41,7 @@
 	}
 	
 	public function updateCustomer() {
-	    CustomerDao::GetInstance()->updateCustomer( $this->id, $this->firstName, $this->lastName, $this->username, $this->Address, 0 );
+	    CustomerDao::GetInstance()->updateCustomer( $this->id, $this->firstName, $this->lastName, $this->username, $this->Address, $this->isBlocked );
 	}
 	
 	public function updatePassword( $pass ) {
@@ -68,6 +68,17 @@
 		$return = array();
 		foreach($datas as &$data) {
 			$customer = Customer::dataToCustomer( $data ) ; 
+			array_push($return, $customer);
+		}
+		return $return;
+	}
+	
+	public static function getAllBlockedCustomers(){
+		$dao = CustomerDao::GetInstance();
+		$datas =  $dao->getAllBlockedCustomers();
+		$return = array();
+		foreach($datas as &$data) {
+			$customer = Customer::dataToCustomer( $data ) ;
 			array_push($return, $customer);
 		}
 		return $return;

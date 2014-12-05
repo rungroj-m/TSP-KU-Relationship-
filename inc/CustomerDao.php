@@ -102,6 +102,12 @@
 		return $STH->fetchAll();		
 	}
 	
+	public function getAllBlockedCustomers(){
+		$STH = $this->db->prepare(  "SELECT * FROM `Customers` WHERE `Blocked`=1" );
+		$STH->execute();
+		return $STH->fetchAll();
+	}
+	
 	
 	public function getAllAdmins(){
 		$STH = $this->db->prepare(  "SELECT * FROM `Admins`" );

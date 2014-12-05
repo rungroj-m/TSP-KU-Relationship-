@@ -64,6 +64,12 @@
 		}
 		return $array;
 	}
+		
+	public static function GetAllProductCount() {
+		$dao = ProductDao::GetInstance();
+		$number = $dao->getActiveProductsCount();
+		return $number;
+	}
 	
 	public static function GetAllProductWithLimit( $limit, $pages) {
 		$array = array();

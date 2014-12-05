@@ -342,12 +342,16 @@ $.fn.bic_calendar = function(options) {
             if (reqAjax != false) {
                 //peticio ajax
                 $.ajax({
-                    type: reqAjax.type,
-                    url: reqAjax.url,
-                    data: {ano: year},
-                    dataType: 'json'
+//     	            url: 'getpromotion.php',
+//     	            type: 'GET',
+    				url: 'forjscallphp.php',
+    	            type: 'POST',
+    	            data: {
+    	    			"get_all_promotion_for_calendar": ""
+    	            },
+     	            dataType: 'json'
                 }).done(function(data) {
-//                	alert(JSON.stringify(data));
+//                	console.log(data);
 
                     if (typeof events == 'undefined')
                         events = [];
