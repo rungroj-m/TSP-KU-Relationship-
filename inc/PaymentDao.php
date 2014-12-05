@@ -111,14 +111,19 @@
 	    return $STH->fetch();
 	}
 	
-	public function addPromotion( $type, $percent, $startDate, $endDate, $adminId ) {
-	    $STH = $this->db->prepare(  "INSERT INTO `Promotions`(`Type`, `Value`, `StartDate`, `EndDate`, `AdminId`) VALUES ( :type, :val, :std, :ed, :adminId )" );
+	public function addPromotion( $type, $percent, $startDate, $endDate, $adminId, $title, $description ) {
+		$str = "INSERT INTO `Promotions`(`Type`, `Value`, `StartDate`, `EndDate`, `AdminId`, `Title`, `Description`) VALUES ( $type, $percent, \"$startDate\", \"$endDate\", $adminId, \"$title\", \"$description\" )";
+// 				"INSERT INTO `Promotions`(`Type`, `Value`, `StartDate`, `EndDate`, `AdminId`, `Title`, `Description`) VALUES ( :type, :val, :std, :ed, :adminId, :title, :desc )"
+	    $STH = $this->db->prepare( $str  );
 	    $STH->bindParam(':type', $type );
 	    $STH->bindParam(':val', $percent );
-	    $STH->bindParam(':std', $startDate->format('Y-m-d H:i:s') );
-	    $STH->bindParam(':ed', $endDate->format('Y-m-d H:i:s') );
+	    $STH->bindParam(':std', $startDate );
+	    $STH->bindParam(':ed', $endDate );
 	    $STH->bindParam(':adminId', $adminId );
+	    $STH->bindParam(':title', $title );
+	    $STH->bindParam(':desc', $description );
 	    $STH->execute();
+	    echo $str;
 	    return $this->db->lastInsertId();
 	}
 	
@@ -143,6 +148,12 @@
 	    $STH = $this->db->prepare(  "SELECT * FROM `Promotions` WHERE `StartDate` <= NOW() AND `EndDate` >= NOW()" );
 	    $STH->execute();
 	    return $STH->fetchAll();
+	}
+	
+	public function checkOverlapPromotion($date) {
+		$STH = $this->db->prepare(  "SELECT COUNT(*) AS num FROM `Promotions` WHERE `StartDate` <= '$date' AND `EndDate` >= '$date'" );
+		$STH->execute();
+		return $STH->fetch()["num"];
 	}
     }
     

@@ -7,10 +7,16 @@
 				<div class="panel-heading">
 					<h3 class="panel-title">Wist List</h3>
 				</div>
+				
 				<div class="panel-body">
 					<div id="productBoxContainer">
 					</div>
 				</div>
+				
+				<nav align="right">
+					<ul class="pagination">
+					</ul>
+				</nav>
 			</div>
 		</div>
 		
@@ -116,6 +122,51 @@
 		else
 			document.location.href = "?page=notfound"
 	});
+
+	$(document).ready(function() {
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			async: false,
+			data: {
+				"get_number_wishlist": $.cookie("customerid")
+			}
+		}).done(function(num) {
+			$("#productBoxContainer").append(num + " Result(s).<br>");
+		
+			var p = GET_P();
+			var max =  Math.ceil(num/30);
+			
+			if (p == 1)
+				$(".pagination").append('<li class="disabled"><a><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>');
+			else
+				$(".pagination").append('<li><a onclick="p(1);"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>');
+				
+			for (var i = 1; i <= max; i++) {
+				if (i == p)
+					$(".pagination").append('<li class="active"><a onclick="p(' + i + ');">' + i + '</a></li>');
+				else 
+					$(".pagination").append('<li><a onclick="p(' + i + ');">' + i + '</a></li>');
+			}
+
+			if (p == max)
+				$(".pagination").append('<li class="disabled"><a><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>');
+			else
+				$(".pagination").append('<li><a onclick="p(' + max + ');"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>');
+		});
+		
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			async: false,
+			data: {
+				"get_wishlist_product": $.cookie("customerid"),
+				"page": <?php echo isset($_GET["p"]) ? ($_GET["p"]-1)*30 + 1 : 1?>
+			}
+		}).done(function(response) {
+			$("#productBoxContainer").append(response);
+		});
+	});
 	
 	$("#button-clear-cart").click(function() {
 	    $("#clear-cart-confirm").modal({
@@ -146,22 +197,6 @@
 			$("#clear-cart-confirm").modal('hide');
 		});
 	});
-
-	$(document).ready(function() {
-		showWishList();
-	});
-
-	function showWishList() {
-		$.ajax({
-			url: 'forjscallphp.php',
-			type: "POST",
-			data: {
-				"get_wishlist_product": $.cookie("customerid")
-			}
-		}).done(function(response) {
-			$("#productBoxContainer").html(response);
-		});
-	}
 	
 	function postAndRedirect() {
 	    var postFormStr = "<form method='POST' action='" + window.location.pathname + "?page=member'>";
@@ -205,5 +240,10 @@
 		$("#remove-wish-product-confirm").modal('hide');
 	});
 		
-	
+	function GET_P(){
+	    if (window.location.href.split("&p=")[1] == undefined)
+		    return 1;
+	    else
+		    return window.location.href.split("&p=")[1];
+	}
 </script>

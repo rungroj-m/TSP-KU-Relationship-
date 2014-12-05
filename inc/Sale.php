@@ -41,7 +41,7 @@
 	    $instance->cart = Cart::GetCart( $data['CartId'] );
 	    $instance->payment = Payment::GetPayment( $data['PaymentId'] );
 	    $instance->id = $data['SaleId'];
-	    $this->customerDetail = $data['CustomerDetail'];
+	    $instance->customerDetail = $data['CustomerDetail'];
 	    return $instance;
 	}
     }

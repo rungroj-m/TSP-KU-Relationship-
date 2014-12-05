@@ -1,55 +1,40 @@
 <?php
-// // search should use search product for
-// if (isset($_POST["get_product_by_category_for_shopping"])) {
+if (isset($_POST["get_num_page"])) {
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDescription.php');
+	require_once ('inc/Category.php');
+	require_once ('inc/Brand.php');
+	require_once ('inc/WishList.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
 	
-// 	require_once ('inc/Product.php');
-// 	require_once ('inc/ProductDescription.php');
-// 	require_once ('inc/Category.php');
-// 	require_once ('inc/Brand.php');
+	$cat = $_POST["c"];
+	$str = $_POST["s"];
 	
-// 	$product;
-// 	if ($_POST["get_product_by_category_for_shopping"] == ""){
-// 		$product = Product::GetAllProduct();
-// 	}
-// // 	else{
-		
-// // 		$productdesc = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_shopping"]);
-// // 		foreach($productdesc as $pdesc){
-// // 			array_push($product,Product::GetEnabledProductByProductDescriptionId($pdesc->$pid));
-// // 		}
-// //	}
-// 	foreach ($product as $p) {
-// // 		echo("test");
-// // 		print_r($p);
-// //		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
-// 		createProductBoxForShopping($p);
-// 	}
+	$count;
+	if ($str == "") {
+		if ($cat == "Category" || $cat == "All") {
+			$count = Product::GetAllProductCount();
+		}
+		else {
+			$count = ProductDescription::SearchByTagsCount(array($cat));
+		}
+	}
+	else {
+		$str = array_map( 'trim', explode(",", $str) );
 	
-// 	if (count($product) == 0)
-// 		echo "No result.";
-// }
-
-// if (isset($_POST["get_product_by_category_for_inventory"])) {
-
-// 	require_once ('inc/Product.php');
-// 	require_once ('inc/ProductDescription.php');
-// 	require_once ('inc/Category.php');
-// 	require_once ('inc/Brand.php');
-
-// 	$product;
-// 	if ($_POST["get_product_by_category_for_inventory"] == "")
-// 		$product = Product::GetAllProduct();
-// // 	else
-// // 		$productdescs = ProductDescription::GetProductDescriptionsByCategoryId($_POST["get_product_by_category_for_inventory"]);
+		if (!($cat == "Category" || $cat == "All")) {
+			array_push($str, $cat);
+			$count = ProductDescription::SearchByTagsCount($str);
+		}
+		else {
+			$count = ProductDescription::SearchByTagsCount($str);
+		}
+	}
+	echo $count;
 	
+}
 
-// 	foreach ($product as $p) {
-// 		createProductBoxForInventory($p);
-// 	}
-
-// 	if (count($product) == 0)
-// 		echo "No result.";
-// }
 
 if (isset($_POST["search_product_for_shopping"])) {
 	require_once ('inc/Product.php');
@@ -62,9 +47,9 @@ if (isset($_POST["search_product_for_shopping"])) {
 	
 	$cat = $_POST["category"];
 	$str = $_POST["search_product_for_shopping"];
-	$pages = $_POST["page"];
-	//wait for search by tag , page
-	if (isset($_POST["customer_id"]))
+	$pages = isset($_POST["page"]) ? $_POST["page"] : 1;
+	
+	if ($_POST["customer_id"] != 0)
 		$customerId = $_POST["customer_id"];
 	
 	$productdescs = array();
@@ -91,14 +76,7 @@ if (isset($_POST["search_product_for_shopping"])) {
 		}
 	}
 	
-	echo "<div style=\"width: 100%;\">";
-	if (count($productdescs) == 0)
-		echo "No result.";
-	else 
-		echo count($productdescs) ." result(s).<br>";
-	echo "</div>";
-	
-	if (isset($_POST["customer_id"])) {
+	if ($_POST["customer_id"] != 0) {
 		$wishList = WishList::GetWishListFromCustomer(Customer::GetCustomer($customerId));
 		foreach ($productdescs as $p) {
 			$product = Product::GetEnabledProductByProductDescriptionId($p->id);
@@ -119,7 +97,6 @@ if (isset($_POST["search_product_for_shopping"])) {
 }
 
 if (isset($_POST["search_product_for_inventory"])) {
-
 	require_once ('inc/Product.php');
 	require_once ('inc/ProductDescription.php');
 	require_once ('inc/Category.php');
@@ -128,6 +105,7 @@ if (isset($_POST["search_product_for_inventory"])) {
 	$cat = $_POST["category"];
 	$str = $_POST["search_product_for_inventory"];
 	$pages = $_POST["page"];
+	
 	$productdescs = array();
 	if ($str == "") {
 		if ($cat == "Category" || $cat == "All") {
@@ -152,11 +130,6 @@ if (isset($_POST["search_product_for_inventory"])) {
 		}
 	}
 
-	if (count($productdescs) == 0)
-		echo "No result.";
-	else
-		echo count($productdescs) ." result(s).<br>";
-	
 	foreach ($productdescs as $p) {
 		$product = Product::GetEnabledProductByProductDescriptionId($p->id);
 		createProductBoxForInventory($product);
@@ -481,13 +454,25 @@ if (isset($_POST["get_wishlist_product"])) {
 	$pages = $_POST["page"];
 	$wishlist = Customer::GetCustomer($customerId)->getWishList();
 	$products = $wishlist -> GetProductsWithLimit(30, $pages);
-	
 	foreach ($products as $p) {
 		createProductBoxForWishList($p["Product"], $p["Quantity"]);
 	}
 	
-	if (count($products) == 0)
-		echo "No result.";
+}
+
+if (isset($_POST["get_number_wishlist"])) {
+	require_once ('inc/WishList.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDao.php');
+
+	$customerId = $_POST["get_number_wishlist"];
+	
+	$wishlist = Customer::GetCustomer($customerId)->getWishList();
+	echo $wishlist -> GetProductsCount();
+
 }
 
 if (isset($_POST["add_to_wishlist"])) {
@@ -541,9 +526,17 @@ function createProductBoxForWishList($product, $wishQuan) {
 }
 
 if (isset($_POST["remove_wish"])) {
+	require_once ('inc/WishList.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDao.php');
+	
 	$customerId = isset($_POST["remove_wish"]);
 	$productId = isset($_POST["product_id"]);
-	$wishlist = WishLists::GetWishListFromCustomer(Customer::GetCustomer($customerId));
+	echo $customerId . " " .$productId;
+	$wishlist = WishList::GetWishListFromCustomer(Customer::GetCustomer($customerId));
 	$wishlist -> RemoveProduct(Product::GetProduct($productId),1);
 	////
 }
@@ -572,7 +565,7 @@ if (isset($_POST["get_all_transaction"])) {
 	require_once ('inc/Payment.php');
 	require_once ('inc/Creditcard.php');
 	$pages = $_POST["page"];
-	$allSale = Sale::GetAllWithLimit(30, $page);
+	$allSale = Sale::GetAll();
 	echo json_encode($allSale);
 }
 
@@ -597,7 +590,7 @@ if (isset($_POST["get_product_in_transaction"])) {
 
 
 
-if (isset($_POST["get_customer_list"])) {
+if (isset($_POST["get_all_customer"])) {
 	require_once ('inc/Customer.php');
 	require_once ('inc/CustomerDao.php');
 	
@@ -606,13 +599,21 @@ if (isset($_POST["get_customer_list"])) {
 	echo json_encode($customers);
 }
 
+if (isset($_POST["get_all_blocked_customer"])) {
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
 
-if (isset($_POST["get_admin_list"])) {
+	$customers = Customer:: getAllBlockedCustomers();
+
+	echo json_encode($customers);
+}
+
+
+if (isset($_POST["get_all_admin"])) {
 	require_once ('inc/Admin.php');
 	require_once ('inc/CustomerDao.php');
 
 	$admins = Admin::getAllAdmins();
-	// bat เสจแล้วทักมาใน facebook นะ กุออกก่อนละกัน
 	
 	echo json_encode($admins);
 }
@@ -634,10 +635,11 @@ if (isset($_POST["get_customer_detail"])) {
 	$customerId = $_POST["get_customer_detail"];
 	
 	$customer = Customer::GetCustomer($customerId);
-	$address = explode("**", $customer->Address);
+	$address = explode("¿", $customer->Address);
 	
 	echo "
 	{
+	\"id\": $customerId,
 	\"username\" : \"{$customer->username}\",
 	\"firstname\" : \"{$customer->firstName}\",
 	\"lastname\" : \"{$customer->lastName}\",
@@ -647,7 +649,8 @@ if (isset($_POST["get_customer_detail"])) {
 	\"province\" : \"{$address[3]}\",
 	\"country\" : \"{$address[4]}\",
 	\"zip\" : \"{$address[5]}\",
-	\"phone\" : \"{$address[6]}\"
+	\"phone\" : \"{$address[6]}\",
+	\"isblocked\" : $customer->isBlocked
 	}";
 }
 
@@ -657,15 +660,46 @@ if (isset($_POST["save_customer_detail"])) {
 	
 	$customerId = $_POST["save_customer_detail"];
 	$customer = Customer::GetCustomer($customerId);
-	$customer ->updatePassword( $_POST["password"] );
+	$customer -> username = $_POST["email"];
 	$customer -> firstName = $_POST["firstname"];
 	$customer -> lastName = $_POST["lastname"];
-	$customer ->  Address = $_POST["address"] . "**" . $_POST["address2"] . "**" . $_POST["district"] . "**" . $_POST["province"] . "**" . $_POST["country"] . "**" . $_POST["zip"] . "**" . $_POST["phone"];
-	$customer->updateCustomer();
+	$customer ->  Address = $_POST["address"] . "¿" . $_POST["address2"] . "¿" . $_POST["district"] . "¿" . $_POST["province"] . "¿" . $_POST["country"] . "¿" . $_POST["zip"] . "¿" . $_POST["phone"];
+	echo $customer->updateCustomer();
+	
+	if ($_POST["password"] != "")
+		$customer ->updatePassword( $_POST["password"] );
 }
 
-if (isset($_GET["get_all_promotion"])) {
-	echo "[{\"date\":\"27\/2\/\",\"title\":\"Getting Contacts Barcelona - test1\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"red\"},{\"date\":\"25\/5\/\",\"title\":\"test2\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"pink\"},{\"date\":\"20\/6\/\",\"title\":\"test2\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"green\"},{\"date\":\"7\/10\/\",\"title\":\"test3\",\"link\":\"http:\/\/gettingcontacts.com\/events\/view\/barcelona\",\"color\":\"blue\",\"class\":\"miclasse \",\"content\":\"contingut popover";
+if (isset($_POST["get_all_promotion_for_calendar"])) {
+	require_once 'inc/Admin.php';
+	require_once 'inc/CustomerDao.php';
+	require_once 'inc/Promotion.php';
+	require_once 'inc/PaymentDao.php';
+	
+	$pros = Promotion::GetAllPromotions();
+	$jstr = "[";
+	
+	for ($i = 0; $i < count($pros); $i++) {
+		$sdate = strtotime($pros[$i]->startDate->format("Y-m-d H:i:s"));
+		$edate = strtotime($pros[$i]->endDate->format("Y-m-d H:i:s"));
+		
+		while ($sdate <= $edate) {
+			$jstr .= "{\"date\": \"" . (int)date("d", $sdate) . "/" .(int)date("m", $sdate) . "/" . (int)date("Y", $sdate) . "\", \"title\": \"" . $pros[$i]->value . "% " . $pros[$i]->title ."\", \"color\": \"" . ($pros[$i]->value >= 50 ? "red" : ($pros[$i]->value >= 25 ? "green" : "blue")) ."\", \"class\": \"miclasse\", \"content\": \"" . $pros[$i]->description ." by " .$pros[$i]->admin->firstName . " " .$pros[$i]->admin->lastName ."\"}, ";
+			$sdate += 86400;
+		}
+	}
+	$jstr = substr($jstr, 0, $jstr.length-2) . "]";
+	
+	echo $jstr;
+}
+
+if (isset($_POST["get_all_promotion"])) {
+	require_once 'inc/Admin.php';
+	require_once 'inc/CustomerDao.php';
+	require_once 'inc/Promotion.php';
+	require_once 'inc/PaymentDao.php';
+
+	echo json_encode(Promotion::GetAllPromotions());
 }
 
 
@@ -783,7 +817,109 @@ if (isset($_POST["get_customer_detail_by_cartid"])) {
 	echo $STH->fetch()[0];
 }
 
+if (isset($_POST["check_overlap"])) {
+	require_once 'inc/Promotion.php';
+	require_once 'inc/PaymentDao.php';
+	
+	return Promotion::checkOverlapPromotion($_POST["check_overlap"]);
+}
 
+if (isset($_POST["create_promotion"])) {
+	require_once 'inc/Promotion.php';
+	require_once 'inc/PaymentDao.php';
+	require_once 'inc/Admin.php';
+	require_once 'inc/CustomerDao.php';
+	//[{"date":"7/10/2014","title":"test3","color":"blue","class":"miclasse ","content":"contingut popover"}]
+	//echo json_encode(Promotion::GetAllPromotions());
 
+	$adminid = $_POST["adminid"];
+	$startDate = $_POST["start"];
+	$endDate = $_POST["end"];
+	$value = $_POST["value"];
+	$title = $_POST["title"];
+	$description = $_POST["description"];
+	Promotion::CreatePercentPromotion($value, $startDate, $endDate, Admin::GetAdmin($adminid), $title, $description);
+}
+
+if (isset($_POST["get_news"])) {
+	require_once 'inc/Product.php';
+	require_once 'inc/ProductDao.php';
+	
+	$products = Product::GetAllProduct();
+	
+	$j = 5;
+	for ($i = count($products) - 1; $i >= 0; $i--) {
+		if ($j == 0)
+			return;
+		
+		createBoxForNews($products[$i]);
+		$j--;
+	}
+}
+
+function createBoxForNews($product) {
+	require_once ('inc/Inventory.php');
+	include_once ('inc/InventoryDao.php');
+	
+	$productId = $product->id;
+	$productName = $product->productDescription->productName;
+	$price = $product->price;
+	$imageLen = count($product->productDescription->images);
+	$pic = $product->productDescription->images[$imageLen-1];
+	$brand = $product->productDescription->brand->value;
+	$catgory = $product->productDescription->category->value;
+	$quan = Inventory::getQuntity($product->id);
+	$date = $product->createDate->format('Y-m-d H:i:s');
+	
+	echo "
+	<div class=\"list-group\">
+		<a href=\"?page=detail&id={$product->productDescription->id}\" class=\"list-group-item\">
+			<div class=\"row\">
+				<div class=\"col-md-3\">
+					<img src=\"$pic\" width=\"256px\">
+				</div>
+				<div class=\"col-md-5\">
+	    			<h4 class=\"list-group-item-heading\">$productName</h4>
+	    			<h3 id=\"price\">&#3647;$price</h3>
+	    			<br>
+	    			<h4>Brand: $brand<h4	
+					<h5>Category: $catgory</h5>
+					<h5>Stock: $quan</h5>
+					<h5>Created: $date</h5>
+	    		</div>
+	  		</div>
+	  	</a>
+	</div>
+	";	
+}
+
+if (isset($_POST["current_promotion"])) {
+	require_once 'inc/Promotion.php';
+	require_once 'inc/PaymentDao.php';
+	require_once 'inc/Admin.php';
+	require_once 'inc/CustomerDao.php';
+	
+	echo json_encode(Promotion::GetCurrentPromotions());
+}
+
+if (isset($_POST["block"])) {
+	require_once 'inc/Customer.php';
+	require_once 'inc/CustomerDao.php';
+	
+	$cid = $_POST["block"];
+	$customer = Customer::GetCustomer($cid);
+	$customer->isBlocked = 1;
+	$customer->updateCustomer();
+}
+
+if (isset($_POST["unblock"])) {
+	require_once 'inc/Customer.php';
+	require_once 'inc/CustomerDao.php';
+
+	$cid = $_POST["unblock"];
+	$customer = Customer::GetCustomer($cid);
+	$customer->isBlocked = 0;
+	$customer->updateCustomer();
+}
 
 

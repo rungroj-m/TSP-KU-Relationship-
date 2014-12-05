@@ -32,11 +32,9 @@
 </head>
 
 <style>
-body {
-	background-color: rgba(252, 252, 252, 0.5);
-}
-*{
-	font-family: Lato;
+table {
+	table-layout: fixed;
+	word-wrap:break-word;
 }
 </style>
 
@@ -62,7 +60,7 @@ body {
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "member") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=member">Member</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "profile") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=profile">Profile</a></li>
 		      					
-		      					<?php if (isset($_GET['page']) && $_GET['page'] == "customer") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=customer">Customer</a></li>
+		      					<?php if (isset($_GET['page']) && $_GET['page'] == "user") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=user">User</a></li>
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "transaction") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=transaction">Transaction</a></li>
 		      					
 		      					<?php if (isset($_GET['page']) && $_GET['page'] == "report") echo "<li class=\"active\">"; else echo "<li>"; ?><a href="?page=report">Report</a></li>
@@ -83,7 +81,7 @@ body {
 		if (isset($_GET['page']))
 			include_once $_GET['page'] .".php";
 		else {
-			include_once "main.php";
+			include_once "shopping.php";
 		}
 		
 		
@@ -110,7 +108,7 @@ body {
 			
 			if ($.cookie("adminlevel") == undefined) {
 				$('.navbar-nav li:contains("Inventory")').remove();
-				$('.navbar-nav li:contains("Customer")').remove();
+				$('.navbar-nav li:contains("User")').remove();
 				$('.navbar-nav li:contains("Transaction")').remove();
 			}
 			else{
@@ -126,7 +124,7 @@ body {
 			$('.navbar-nav li:contains("Inventory")').remove();
 			$('.navbar-nav li:contains("Profile")').remove();
 			$('.navbar-nav li:contains("Wish List")').remove();
-			$('.navbar-nav li:contains("Customer")').remove();
+			$('.navbar-nav li:contains("User")').remove();
 			$('.navbar-nav li:contains("Transaction")').remove();
 			$('.navbar-nav li:contains("Report")').remove();
 		}

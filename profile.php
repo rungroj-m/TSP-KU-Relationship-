@@ -26,19 +26,12 @@ input {
 			</div>
 			<div class="panel-body">
 			
-					<h2 class="form-signin-heading">Login Information</h2>
+					<h2 class="form-signin-heading">Profile Information</h2>
 					<br>
 					
 					
-					<input type="email" class="form-control" id="signup-email" placeholder="Email address" autofocus="" disabled>
-					<div class="row">
-						<div class="col-md-6">
-							<input type="password" class="form-control" id="signup-password" placeholder="Password" required="">
-						</div>
-						<div class="col-md-6">
-							<input type="password" class="form-control" id="signup-password-confirm" placeholder="Password again" required="">
-						</div>
-					</div>
+					<input type="email" class="form-control" id="signup-email" placeholder="Email address" disabled>
+					
 					<div class="row">
 						<div class="col-md-6">
 							<input type="text" class="form-control" id="signup-firstname" placeholder="First Name" required="">
@@ -76,7 +69,21 @@ input {
 						</div>
 					</div>
 					<br>
-					<button class="btn btn-lg btn-success btn-block" id="save-profile-button">Save</button>
+						<div class="checkbox">
+						    <label>
+						    	<input type="checkbox" id="change-password-checkbox">Change password
+						    </label>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<input type="password" class="form-control" id="signup-password" placeholder="Password">
+							</div>
+							<div class="col-md-6">
+								<input type="password" class="form-control" id="signup-password-confirm" placeholder="Password again">
+							</div>
+						</div>
+						<br>
+						<button class="btn btn-lg btn-primary btn-block" id="save-profile-button">Save</button>
 			</div>
 		</div>
 		
@@ -134,39 +141,6 @@ input {
 		});
 	});
 
-	$("#save-profile-button").click(function() {
-		var password = $("#signup-password").val();
-		var firstname = $("#signup-firstname").val();
-		var lastname = $("#signup-lastname").val();
-		var address = $("#signup-address").val();
-		var address2 = $("#signup-address2").val();
-		var district = $("#signup-district").val();
-		var province = $("#signup-province").val();
-		var country = $("#signup-country").val();
-		var zip = $("#signup-zip").val();
-		var phone = $("#signup-phone").val();
-		
-		$.ajax({
-			url: 'forjscallphp.php',
-			type: "POST",
-			data: {
-				"save_customer_detail": $.cookie("customerid"),
-				"password": password,
-				"firstname": firstname,
-				"lastname": lastname,
-				"address": address,
-				"address2": address2,
-				"district": district,
-				"province": province,
-				"country": country,
-				"zip": zip,
-				"phone": phone
-			}
-		}).done(function(response) {
-			location.reload();
-		});
-	});
-
 	$(document).ready(function() {
 		$.ajax({
 			url: 'forjscallphp.php',
@@ -187,7 +161,55 @@ input {
 			$("#signup-country").val(customer_obj.country);
 			$("#signup-zip").val(customer_obj.zip);
 			$("#signup-phone").val(customer_obj.phone);
+
+
+			$("#signup-password").prop('disabled', true);
+			$("#signup-password-confirm").prop('disabled', true);
 		});
+	});
+
+	$("#save-profile-button").click(function() {
+		var email = $("#signup-email").val();
+		var password = $("#signup-password").val();
+		var firstname = $("#signup-firstname").val();
+		var lastname = $("#signup-lastname").val();
+		var address = $("#signup-address").val();
+		var address2 = $("#signup-address2").val();
+		var district = $("#signup-district").val();
+		var province = $("#signup-province").val();
+		var country = $("#signup-country").val();
+		var zip = $("#signup-zip").val();
+		var phone = $("#signup-phone").val();
+		
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"save_customer_detail": $.cookie("customerid"),
+				"email": email,
+				"password": $('#change-password-checkbox').is(':checked') ? password : "",
+				"firstname": firstname,
+				"lastname": lastname,
+				"address": address,
+				"address2": address2,
+				"district": district,
+				"province": province,
+				"country": country,
+				"zip": zip,
+				"phone": phone
+			}
+		}).done(function(response) {
+			location.reload();
+		});
+	});
+
+	$("#change-password-checkbox").click(function() {
+		console.log($('#change-password-checkbox').is(':checked'));
+			$("#signup-password").prop('disabled', !$('#change-password-checkbox').is(':checked'));
+			$("#signup-password-confirm").prop('disabled', !$('#change-password-checkbox').is(':checked'));
+			
+			$("#signup-password").prop('required', $('#change-password-checkbox').is(':checked'));
+			$("#signup-password-confirm").prop('required', $('#change-password-checkbox').is(':checked'));
 	});
 
 </script>
