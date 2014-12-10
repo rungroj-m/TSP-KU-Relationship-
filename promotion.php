@@ -121,6 +121,11 @@
 	var end = 0;
 	
 	$(document).ready(function() {
+		if ($.cookie("adminlevel") != undefined)
+			$("#calendar").text("Add Promotion");
+		else
+			$("#calendar").text("Calendar");
+		
 		$.ajax({
 			url: 'forjscallphp.php',
 			type: "POST",
