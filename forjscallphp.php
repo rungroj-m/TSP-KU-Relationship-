@@ -385,6 +385,7 @@ if (isset($_POST["add_to_cart"])) {
 	require_once ('inc/ProductDescription.php');
 	require_once ('inc/Category.php');
 	require_once ('inc/Brand.php');
+	require_once ('inc/Inventory.php');
 
 	$customer = Customer::GetCustomer($_POST["add_to_cart"]);
 	$cart = $customer->getCart();
@@ -393,7 +394,9 @@ if (isset($_POST["add_to_cart"])) {
 	$amount = $_POST["quantity"];
 	
 	if ($amount > 0) {
-		$cart->AddProduct($product, $amount);
+		if (Inventory::getQuntity($product->id) <= $amount) {}
+		else
+			$cart->AddProduct($product, $amount);
 	}
 	else if ($amount < 0) {
 		$cart->RemoveProduct($product, -1 * $amount);
@@ -485,8 +488,9 @@ if (isset($_POST["add_to_wishlist"])) {
 	
 	$customerId = $_POST["add_to_wishlist"];
 	$productId = $_POST["product_id"];
+	$quan = $_POST["quantity"];
 	$wishlist = Customer::GetCustomer($customerId) -> getWishList();
-	$wishlist -> addProduct(Product::GetProduct($productId), 1);
+	$wishlist -> addProduct(Product::GetProduct($productId), $quan);
 }
 
 function createProductBoxForWishList($product, $wishQuan) {
@@ -517,7 +521,7 @@ function createProductBoxForWishList($product, $wishQuan) {
 
 	<div id=\"price\">&#3647;$price</div>
 
-	<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, '$productName', $price, 1/*, $maxQuan*/);\" $buttonStatus>ADD</button>
+	<button type=\"button\" class=\"btn btn-success\" onclick=\"addToCart($productId, $wishQuan);\" $buttonStatus>ADD</button>
 	<button type=\"button\" class=\"btn btn-Danger\" onclick=\"removeWishProduct('$productId');\">REMOVE</button>
 	</div>
 
@@ -920,6 +924,49 @@ if (isset($_POST["unblock"])) {
 	$customer = Customer::GetCustomer($cid);
 	$customer->isBlocked = 0;
 	$customer->updateCustomer();
+}
+
+if (isset($_POST["add_to_cart_by_wish"])) {
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/Cart.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDao.php');
+	require_once ('inc/ProductDescription.php');
+	require_once ('inc/Category.php');
+	require_once ('inc/Brand.php');
+	require_once ('inc/WishList.php');
+	require_once ('inc/Inventory.php');
+	
+	$cid = $_POST["add_to_cart_by_wish"];
+	$pid = $_POST["product_id"];
+	$wishQuan = $_POST["quantity"];
+
+	$customer = Customer::GetCustomer($cid);
+	$cart = $customer->getCart();
+	$product = Product::GetProduct($pid);
+	
+	WishList::GetWishListFromCustomer($customer)->RemoveProduct($product, $wishQuan);
+	
+	$cart->AddProduct($product, $wishQuan);
+}
+
+if (isset($_POST["is_wish"])) {
+	require_once ('inc/WishList.php');
+	require_once ('inc/Customer.php');
+	require_once ('inc/CustomerDao.php');
+	require_once ('inc/InventoryDao.php');
+	require_once ('inc/Product.php');
+	require_once ('inc/ProductDao.php');
+
+	$customerId = $_POST["is_wish"];
+	$pid = $_POST["productId"];
+
+	$wishlist = Customer::GetCustomer($customerId)->getWishList();
+	
+	echo $wishlist -> isWish(Product::GetProduct($pid));
+
 }
 
 

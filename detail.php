@@ -72,18 +72,22 @@
 							<br>
 							<h5>Stock: <span id="quantity"></span></h5>
 							<h5>Price: <span id="price"></span></h5>
+							
 							<div class="row">
 								<div class="col-md-6" id="wish-button-div">
-									<div class="input-group" style="width: 100%">
-									<button type="button" class="btn btn-primary" style="width: 100%" onclick="addToWish(<?php echo $_GET["id"]; ?>);">
-										<span class="glyphicon glyphicon-heart"></span>Add to Wish
-									</button>
+									<div class="input-group">
+										<input type="number" class="form-control" id="wish" value="0" min="1" max="10">
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-primary" id="wish_button" style="width: 100%" onclick="addToWish(<?php echo $_GET["id"]; ?>);">
+												<span class="glyphicon glyphicon-heart"></span>Add to Wish
+											</button>
+										</span>
 									</div>
 								</div>
 								
 								<div class="col-md-6" id="add-button-div">
 									<div class="input-group">
-										<input type="number" class="form-control" id="quan" value="1" min="0" max="<?php echo $maxQuan; ?>">
+										<input type="number" class="form-control" id="quan" value="1" min="0">
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-success" id="add-button" onclick="addToCart(<?php echo $_GET["id"]; ?>, 0);">ADD</button>
 										</span>
@@ -276,7 +280,8 @@
 					"quantity": quantity
 				}
 			}).done(function(response) {
-				showAllProductsInCart();
+// 				showAllProductsInCart();
+				location.reload();
 			});
 		}
 	}
@@ -343,6 +348,21 @@
 		else {
 			$("#signin-div").remove();
 		}
+
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"is_wish": $.cookie("customerid"),
+				"productId": <?php echo $_GET["id"]; ?>
+			}
+		}).done(function(wishNum) {
+			if (wishNum != 0) {
+				$("#wish_button").attr('disabled','disabled');
+				$("#wish").attr('value', Number(wishNum));
+			}
+			
+		});
 	});
 
 	function showAllProductsInCart() {
@@ -414,9 +434,11 @@
 			type: "POST",
 			data: {
 				"add_to_wishlist": $.cookie("customerid"),
-				"product_id": productId
+				"product_id": productId,
+				"quantity": $("#wish").val() > 10 ? 10 : $("#wish").val()
 			}
 		}).done(function(response) {
+			location.reload();
 			alert(productId + " added to wish ");
 		});
 	}

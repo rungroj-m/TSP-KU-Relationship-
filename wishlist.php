@@ -124,6 +124,8 @@
 	});
 
 	$(document).ready(function() {
+		showAllProductsInCart();
+		
 		$.ajax({
 			url: 'forjscallphp.php',
 			type: "POST",
@@ -245,5 +247,73 @@
 		    return 1;
 	    else
 		    return window.location.href.split("&p=")[1];
+	}
+
+	function addToCart(productId, wishQuan) {
+		if ($.cookie("customerid") == undefined) {
+			$("#alert-signin").modal({
+				show: true
+			});
+			pid = productId; pn = productName; p = price; q = quantity;// mq = maxQuan;
+		}
+		else {
+			$.ajax({
+				url: 'forjscallphp.php',
+				type: "POST",
+				data: {
+					"add_to_cart_by_wish": $.cookie("customerid"),
+					"product_id": productId,
+					"quantity": wishQuan
+				}
+			}).done(function(response) {
+// 				showAllProductsInCart();
+				location.reload();
+			});
+		}
+	}
+
+	function showAllProductsInCart() {
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"get_all_product_in_cart": $.cookie("customerid")
+			}
+		}).done(function(products_json) {
+			$("#cart").empty();
+			$("#cart").append("\
+				<tr>\
+					<th>Product</th>\
+					<th>Q.</th>\
+					<th>U.P.</th>\
+					<th></th>\
+				</tr>\
+			");
+
+			var array = JSON.parse(products_json);
+			var total = 0;
+			for (var i = 0; i < array.length; i++) {
+
+				var productName = array[i].Product.productDescription.productName;
+				var quantity = array[i].Quantity;
+				var unitprice = array[i].Product.price;
+
+				var pid = array[i].Product.id;
+				
+				$("#cart").append(
+						"<tr>" +
+							"<th>" + productName + "</th>" +
+							"<th>" + quantity + "</th>" +
+							"<th>" + unitprice + "</th>" +
+							"<th>" +
+								"<span class=\"label alert-danger\" onclick=\"addToCart(" + pid + ", '" + productName + "', " + unitprice + ", -1);\">-</span>" +
+								"<span class=\"label alert-success\" onclick=\"addToCart(" + pid + ", '" + productName + "', " + unitprice + ", 1);\">+</span>" +
+							"</th>" +
+						"</tr>"
+				);
+				total += quantity * unitprice;
+			}
+			$("#total").text("\u0E3F" + total);
+		});
 	}
 </script>
