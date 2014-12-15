@@ -587,7 +587,7 @@ if (isset($_POST["get_product_in_transaction"])) {
 	
 	$cartId = $_POST["get_product_in_transaction"];
 	$pages = $_POST["page"];
-	$products = Cart::GetCart($cartId)->GetProductsWithLimit(30, $pages);
+	$products = Cart::GetCart($cartId)->GetProducts();
 	echo json_encode($products);
 }
 
