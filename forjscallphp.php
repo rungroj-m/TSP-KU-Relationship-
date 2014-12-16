@@ -1020,15 +1020,8 @@ function confirmemail($email, $name) {
 	Xtreme Sport Shop<br>
 	";
 	
-	$flgSend = @mail($strTo,$strSubject,$strMessage,$strHeader);  // @ = No Show Error //
-	if($flgSend)
-	{
-		echo "Email Sending. " .$flgSend;
-	}
-	else
-	{
-		echo "Email Can Not Send. " .$flgSend;
-	}
+	echo mail($strTo,$strSubject,$strMessage,$strHeader);  // @ = No Show Error //
+	
 }
 
 
