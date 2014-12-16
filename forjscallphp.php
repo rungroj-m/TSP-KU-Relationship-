@@ -1030,4 +1030,60 @@ function confirmemail($email, $name) {
 // 	}
 }
 
+if (isset($_POST["recovery"])) {
+	$email = $_POST["recovery"];
+	
+	$host="localhost";
+	$user = "tsp";
+	$password="tsp";
+	$database="ecomerce";
+	
+	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
+	$STH = $db->prepare( "SELECT `CustomerId` FROM `Customers` WHERE `UserName` = " .$email);
+	$cid = $STH->execute()->fetch();
+	if ($cid == 0) {
+		echo "Email not found.";
+		return;	
+	}
+	else {
+		$STH = $db->prepare( "SELECT `Tag` FROM `Recoveries` WHERE `CustomerId` = :cid AND `Date` < DATE_SUB(CURDATE(), INTERVAL 1 DAY)" );
+		$STH->bindParam(':cid', $cid );
+		$tag = $STH->execute()->fetch();
+		
+		if ($tag == "") {
+			$STH = $db->prepare("INSERT INTO `Recoveries` (`CustomerId`, `Date`, `Tag`) VALUES (:cid, :d, :t) ");
+	    	$STH->bindParam(':cid', $cid );
+	    	$STH->bindParam(':d', new Date() );
+	    	$STH->bindParam(':t', md5($email) );
+	    	$STH->execute();
+		}
+		
+		$STH = $db->prepare( "SELECT `Tag` FROM `Recoveries` WHERE `CustomerId` = :cid AND `Date` < DATE_SUB(CURDATE(), INTERVAL 1 DAY)" );
+		$STH->bindParam(':cid', $cid );
+		$tag = $STH->execute()->fetch();
+		recovery($email, $tag);
+		echo "Email is sent.";
+	}
+}
+
+function recovery($email, $tag) {
+	$strTo = $email;
+	$strSubject = "=?UTF-8?B?".base64_encode("Recovery password for XTremeSportShop")."?=";
+	$strHeader .= "MIME-Version: 1.0' . \r\n";
+	$strHeader .= "Content-type: text/html; charset=utf-8\r\n";
+	$strHeader .= "From: Super admin<admin@xtremesportshop.com>\r\nReply-To: admin@xtremesportshop.com";
+	
+	$strMessage = "
+	<h3>Welcome, $email<br>
+	<p>This email is sent for recovery your password fro our e-commerce website XTremeSportShop.
+	Click a link below to reset your password within 24 hours since you get this email.</p>
+	<br>
+	<a href=\"http://128.199.145.53/tsp/?page=recovery?tag=$tag\">Recovery</a>
+	<br>
+	Thanks!<br>
+	Xtreme Sport Shop<br>
+	";
+	
+	$flgSend = @mail($strTo,$strSubject,$strMessage,$strHeader);
+}
 
