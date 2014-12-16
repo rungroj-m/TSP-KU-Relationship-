@@ -1000,7 +1000,6 @@ if (isset($_POST["is_wish"])) {
 }
 
 function confirmemail($email, $name) {
-	
 	$strTo = $email;
 	$strSubject = "=?UTF-8?B?".base64_encode("Welcome to XTremeSportShop")."?=";
 	$strHeader .= "MIME-Version: 1.0' . \r\n";
@@ -1020,8 +1019,15 @@ function confirmemail($email, $name) {
 	Xtreme Sport Shop<br>
 	";
 	
-	echo mail($strTo,$strSubject,$strMessage,$strHeader);  // @ = No Show Error //
-	
+	$flgSend = @mail($strTo,$strSubject,$strMessage,$strHeader);  // @ = No Show Error //
+	if($flgSend)
+	{
+		echo "Email Sending. " .$flgSend;
+	}
+	else
+	{
+		echo "Email Can Not Send. " .$flgSend;
+	}
 }
 
 
