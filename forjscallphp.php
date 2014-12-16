@@ -1020,14 +1020,14 @@ function confirmemail($email, $name) {
 	";
 	
 	$flgSend = @mail($strTo,$strSubject,$strMessage,$strHeader);  // @ = No Show Error //
-	if($flgSend)
-	{
-		echo "Email Sending. " .$flgSend;
-	}
-	else
-	{
-		echo "Email Can Not Send. " .$flgSend;
-	}
+// 	if($flgSend)
+// 	{
+// 		echo "Email Sending. " .$flgSend;
+// 	}
+// 	else
+// 	{
+// 		echo "Email Can Not Send. " .$flgSend;
+// 	}
 }
 
 
