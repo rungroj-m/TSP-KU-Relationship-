@@ -117,6 +117,9 @@ input {
 		}
 		else
 			document.location.href = "?page=notfound"
+
+		if ($.cookie("adminlevel") != undefined)
+			$("#transaction").hide();
 	});
 	
 	$("#menu li").click(function() {

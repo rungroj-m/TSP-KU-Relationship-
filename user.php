@@ -65,6 +65,7 @@
 							<td>Name</td>
 							<td>Email</td>
 							<td>Level</td>
+							<td></td>
 						</tr>
 					</tbody>
 				</table>
@@ -113,7 +114,22 @@
 		showCustomer();
 		showBlocked();
 		showAdmin();
+		
+		<?php
+			if ($_GET["section"] == "admin") {
+				echo "showA();";
+			}
+		?>
 	});
+
+	function showA() {
+		$("#div-user").hide();
+		$("#div-admin").show();
+
+		///////// not work ////////
+		$("#menu li #user").removeClass("active");
+		$("#menu li #admin").addClass("active");
+	}
 
 	function showCustomer() {
 		$.ajax({
@@ -197,8 +213,9 @@
 						<td>ID</td>\
 						<td>Name</td>\
 						<td>Email</td>\
-						<td>Level</td>\
-					</tr>");
+						<td>Level</td>"
+						+ ($.cookie("adminlevel") == 2 ? "<td></td>" : "") +
+					"</tr>");
 			
 			for (var i = 0; i < admins.length; i++) {
 				$("#admin-table").append("\
@@ -206,8 +223,9 @@
 						<td>" + admins[i].id + "</td>\
 						<td>" + admins[i].firstName + " " + admins[i].lastName + "</td>\
 						<td>" + admins[i].username + "</td>\
-						<td>" + admins[i].level + "</td>\
-					</tr>");
+						<td>" + admins[i].level + "</td>"
+						+ ($.cookie("adminlevel") == 2 ? "<td>" + ($.cookie("customerid") != admins[i].id ? (admins[i].level == 1 ? '<a href="#" onclick="upgrade(' + admins[i].id  + ')">upgrade</a>' : '<a href="#" onclick="downgrade(' + admins[i].id  + ')">downgrade</a>') : "") + "</td>" : "") +
+					"</tr>");
 			}
 
 		});
@@ -236,6 +254,33 @@
 			}
 		}).done(function(response) {
 			document.location.href = "?page=user#" + id
+			location.reload();
+		});
+	}
+
+	function upgrade(id) {
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"upgrade": id
+			}
+		}).done(function(response) {
+			console.log(response);
+			document.location.href = "?page=user&section=admin#" + id;
+			location.reload();
+		});
+	}
+
+	function downgrade(id) {
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"downgrade": id
+			}
+		}).done(function(response) {
+			document.location.href = "?page=user&section=admin#" + id;
 			location.reload();
 		});
 	}

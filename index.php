@@ -15,6 +15,9 @@
 	<script src="js/bic_calendar.js"></script>
 	<link href="css/bic_calendar.css" rel="stylesheet">
 	
+	<link href="css/datepicker.css" rel="stylesheet">
+	<script src="js/bootstrap-datepicker.js"></script>
+	
 	<script src="js/xml2json.js"></script>
 	<script src="js/json2xml.js"></script>
 	
@@ -153,7 +156,6 @@ table {
 
 
 </html>
-
 
 
 

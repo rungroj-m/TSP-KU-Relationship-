@@ -317,6 +317,8 @@ if (isset($_POST["sign_up"])) {
 		\"firstname\" : \"{$result->firstName}\",
 		\"lastname\" : \"{$result->lastName}\"
 	}";
+	
+	confirmemail($_POST["email"], $_POST["firstname"]." ".$_POST["lastname"]);
 }
 
 if (isset($_POST["sign-in"])) {
@@ -926,6 +928,34 @@ if (isset($_POST["unblock"])) {
 	$customer->updateCustomer();
 }
 
+if (isset($_POST["upgrade"])) {
+	$host="localhost";
+	$user = "tsp";
+	$password="tsp";
+	$database="ecomerce";
+	
+	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
+	
+	$cid = $_POST["upgrade"];
+	
+	$STH = $db->prepare( "UPDATE `Admins` SET `Level` = 2 WHERE `AdminId` = " . $cid);
+	$STH->execute();
+}
+
+if (isset($_POST["downgrade"])) {
+	$host="localhost";
+	$user = "tsp";
+	$password="tsp";
+	$database="ecomerce";
+	
+	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
+	
+	$cid = $_POST["downgrade"];
+
+	$STH = $db->prepare( "UPDATE `Admins` SET `Level` = 1 WHERE `AdminId` = " . $cid);
+	$STH->execute();
+}
+
 if (isset($_POST["add_to_cart_by_wish"])) {
 	require_once ('inc/CustomerDao.php');
 	require_once ('inc/Customer.php');
@@ -967,6 +997,38 @@ if (isset($_POST["is_wish"])) {
 	
 	echo $wishlist -> isWish(Product::GetProduct($pid));
 
+}
+
+function confirmemail($email, $name) {
+	
+	$strTo = $email;
+	$strSubject = "=?UTF-8?B?".base64_encode("Welcome to XTremeSportShop")."?=";
+	$strHeader .= "MIME-Version: 1.0' . \r\n";
+	$strHeader .= "Content-type: text/html; charset=utf-8\r\n";
+	$strHeader .= "From: Super admin<admin@xtremesportshop.com>\r\nReply-To: admin@xtremesportshop.com";
+	
+	$strMessage = "
+	<h1>XTreme Sport Shop confirm your register.</h1><br>
+	<br>
+	<h3>Welcome, $name<br>
+	<p>This email is sent to confirm your register to our e-commerce website XTreme Sport Shop.
+	You can signin to our website and edit your profile including your address, used for shipment
+	your items later.</p>
+	<br>
+	<br>
+	Thanks!<br>
+	Xtreme Sport Shop<br>
+	";
+	
+	$flgSend = @mail($strTo,$strSubject,$strMessage,$strHeader);  // @ = No Show Error //
+	if($flgSend)
+	{
+		echo "Email Sending. " .$flgSend;
+	}
+	else
+	{
+		echo "Email Can Not Send. " .$flgSend;
+	}
 }
 
 
