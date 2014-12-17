@@ -13,8 +13,7 @@
 	public $description;
 	
 	public static function Total( $total ) {
-	    //GET TODAY
-	    return $total * 0.8;
+	    return $total * (100 - PaymentDao::GetInstance()->getCurrentPromotionPercent()) / 100.0;
 	}
 	
 	public static function CreatePercentPromotion( $percent, $startDate, $endDate, $admin, $title, $description ) {
