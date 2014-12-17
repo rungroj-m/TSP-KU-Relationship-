@@ -1116,3 +1116,18 @@ if (isset($_POST["get_transaction_by_daterange"])) {
 
 }
 
+if (isset($_POST["get_transaction_by_cartid"])) {
+	require_once 'inc/Sale.php';
+	require_once 'inc/PaymentDao.php';
+	require_once 'inc/Cart.php';
+	require_once 'inc/InventoryDao.php';
+	require_once 'inc/Customer.php';
+	require_once 'inc/CustomerDao.php';
+	require_once 'inc/Payment.php';
+	require_once 'inc/CreditCard.php';
+
+
+	echo json_encode(Sale::GetSaleByDateTime($start, $end, 30, 1));
+
+}
+

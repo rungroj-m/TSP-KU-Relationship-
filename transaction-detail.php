@@ -30,8 +30,9 @@
 			</tbody>
 		</table>
 		
-		<p>Customer Name: <p id="customer-name"></p></p>
-		<p>Customer Address: <p id="customer-address"></p></p>
+		<p><b>Customer Name:</b> <p id="customer-name"></p></p>
+		<p><b>Customer Address:</b> <p id="customer-address"></p></p>
+		<p><b>Date:</b> <p id="date"></p></p>
 		
 		
 		<div class="row" style="padding: 10px">
@@ -54,7 +55,6 @@
 				'get_product_in_transaction': <?php echo $_GET["cartId"];?>
 			},
 			success: function(json_str2) {
-// 				console.log(json_str2);
 				var products = JSON.parse(json_str2);
 				var totalQuan = 0;
 				var total = 0;
@@ -117,7 +117,7 @@
 		}).done(function(lasteststatus) {
 			var obj = JSON.parse(lasteststatus);
 			console.log(lasteststatus);
-			$("#status").text(obj[0].StatusType);
+			$("#status").html('<a href="?page=tracking&id=<?php echo $_GET["cartId"] ?>">' + obj[0].StatusType + '</a>');
 		});
 
 		$("#button-reciept").click(function() {
@@ -134,8 +134,9 @@
 			console.log(customer_detail);
 			var res = customer_detail.split("**");
  			$("#customer-name").text(res[0]);
- 			$("#customer-address").text(res[1] + " " + res[2] + "<br>District: " + res[3] + " Province: " + res[4] + "<br>Country: " + res[5] + " ZIP: " + res[6] + " Phone: " + res[7]);
+ 			$("#customer-address").html("<p>" + res[1] + " " + res[2] + "<br>District: " + res[3] + " Province: " + res[4] + "<br>Country: " + res[5] + " ZIP: " + res[6] + " Phone: " + res[7] + "/<p>");
 		});
+		
 		
 	});
 
