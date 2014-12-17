@@ -27,6 +27,24 @@
 	    return $result;
 	}
 	
+	public static function GetSaleByDateTime( $start, $end, $limit, $page ) {
+	    $datas = PaymentDao::GetInstance()->GetSaleByTimeDate( $start, $end, $limit, $page );
+	    $result = array();
+	    foreach( $datas as &$val ) {
+	    	array_push( $result, Sale::dataToSale( $val ) );
+	    }
+	    return $result;
+	}
+	
+	public static function GetSaleByCustomer( $customer, $limit, $page ) {
+	    $datas = PaymentDao::GetInstance()->GetSaleByCustomerId( $customer->id, $limit, $page );
+	    $result = array();
+	    foreach( $datas as &$val ) {
+	    	array_push( $result, Sale::dataToSale( $val ) );
+	    }
+	    return $result;
+	}
+	
 	public static function GetAllWithLimit( $limit, $page ) {
 		$datas = PaymentDao::GetInstance()->GetAllSaleWithLimit( $limit, $page );
 		$result = array();

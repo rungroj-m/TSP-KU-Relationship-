@@ -155,6 +155,29 @@
 		$STH->execute();
 		return $STH->fetch()["num"];
 	}
+	
+	public function GetSaleByTimeDate( $start, $end, $limit, $page ) {
+	    $STH = $this->db->prepare(  "SELECT * FROM
+				      ( Sales s JOIN Payments p ON
+				      s.PaymentId = p.PaymentId ) WHERE p.DateTime > :start AND p.DateTime < :end  LIMIT :limit OFFSET :page" );
+	    $STH->bindParam(':limit', $limit );
+	    $STH->bindParam(':page', $limit * ( $page - 1 ) );
+	    $STH->bindParam(':start', $start );
+	    $STH->bindParam(':end', $end );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
+	public function GetSaleByCustomer( $customerId, $limit, $page ) {
+	    $STH = $this->db->prepare(  "SELECT * FROM
+				      ( Sales s JOIN Carts c ON
+				      s.CartId = c.CartId ) WHERE c.CustomerId = :customerId LIMIT :limit OFFSET :page" );
+	    $STH->bindParam(':limit', $limit );
+	    $STH->bindParam(':page', $limit * ( $page - 1 ) );
+	    $STH->bindParam(':customerId', $customerId );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
     }
     
 ?>
