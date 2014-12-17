@@ -68,6 +68,12 @@ $.fn.bic_calendar = function(options) {
             reqAjax = opts.reqAjax;
         else
             reqAjax = false;
+        
+        var auto;
+        if (typeof opts.auto != "undefined")
+        	auto = opts.auto;
+        else
+        	auto = true;
 
         var enableSelect = false;
         if (typeof opts.enableSelect != 'undefined')
@@ -372,6 +378,8 @@ $.fn.bic_calendar = function(options) {
          * mark all the events n create logic for them
          */
         function markEvents(year) {
+        	if (auto == false)
+        		events = null;
 
             for (var i = 0; i < events.length; i++) {
 

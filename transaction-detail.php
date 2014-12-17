@@ -76,7 +76,7 @@
 							<td>Total</td>\
 							<td>" + totalQuan + "</td>\
 							<td></td>\
-							<td>" + total + "</td>\
+							<td id=\"tot\">" + total + "</td>\
 						</tr>");
 			}
 		});
@@ -116,7 +116,7 @@
 			}
 		}).done(function(lasteststatus) {
 			var obj = JSON.parse(lasteststatus);
-			console.log(lasteststatus);
+// 			console.log(lasteststatus);
 			$("#status").html('<a href="?page=tracking&id=<?php echo $_GET["cartId"] ?>">' + obj[0].StatusType + '</a>');
 		});
 
@@ -131,12 +131,46 @@
 				"get_customer_detail_by_cartid": <?php echo $_GET["cartId"] ?>
 			}
 		}).done(function(customer_detail) {
-			console.log(customer_detail);
+// 			console.log(customer_detail);
 			var res = customer_detail.split("**");
  			$("#customer-name").text(res[0]);
  			$("#customer-address").html("<p>" + res[1] + " " + res[2] + "<br>District: " + res[3] + " Province: " + res[4] + "<br>Country: " + res[5] + " ZIP: " + res[6] + " Phone: " + res[7] + "/<p>");
 		});
 		
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data : {
+				"get_transaction_by_cartid": <?php echo $_GET["cartId"] ?>
+			}
+		}).done(function(tran) {
+			var date = JSON.parse(tran).payment.timeDate.date
+			console.log(tran);
+			$("#date").text(date);
+			
+			$.ajax({
+				url: 'forjscallphp.php',
+				type: "POST",
+				data : {
+					"get_promotion_by_datetime": "",
+					"start": date,
+					"end": date
+				}
+			}).done(function(tran) {
+// 				console.log(tran);
+				var pro = JSON.parse(tran)[0];
+				$("#orders-table").append("\
+						<tr>\
+							<td></td>\
+							<td>Promotion " + pro.title + "</td>\
+							<td>Discount " + pro.value + "%</td>\
+							<td>-" + (pro.value/100.0 * Number($("#tot").text())).toFixed(2) + "</td>\
+							<td><b>" + (Number($("#tot").text()) * (100-pro.value)/100).toFixed(2) + "</b></td>\
+						</tr>");
+				
+			});
+		});
+
 		
 	});
 

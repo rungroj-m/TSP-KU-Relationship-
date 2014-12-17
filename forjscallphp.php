@@ -1126,8 +1126,21 @@ if (isset($_POST["get_transaction_by_cartid"])) {
 	require_once 'inc/Payment.php';
 	require_once 'inc/CreditCard.php';
 
+	$cartId = $_POST["get_transaction_by_cartid"];
+	echo json_encode(Sale::GetSaleByCartId($cartId));
 
-	echo json_encode(Sale::GetSaleByDateTime($start, $end, 30, 1));
+}
+
+if (isset($_POST["get_promotion_by_datetime"])) {
+	require_once 'inc/Promotion.php';
+	require_once 'inc/PaymentDao.php';
+	require_once 'inc/Admin.php';
+	require_once 'inc/CustomerDao.php';
+
+	$start = $_POST["start"];
+	$end = $_POST["end"];
+	
+	echo json_encode(Promotion::GetPromotionsByDateTime($start, $end, 30, 1));
 
 }
 

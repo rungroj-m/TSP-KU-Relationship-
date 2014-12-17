@@ -146,7 +146,7 @@
 	
 	public function getPromotionByDate( $start, $end, $limit, $page) {
 	    $page = $limit * ( $page - 1 );
-	    $STH = $this->db->prepare(  "SELECT * FROM `Promotions` WHERE `EndDate` >= $start AND `StartDate` <= $end LIMIT $limit OFFSET $page" );
+	    $STH = $this->db->prepare(  "SELECT * FROM `Promotions` WHERE `EndDate` >= '$start' AND `StartDate` <= '$end' LIMIT $limit OFFSET $page" );
 	    $STH->execute();
 	    return $STH->fetchAll();
 	}
@@ -183,8 +183,8 @@
 	public function GetSaleByCartId( $cartId, $limit, $page ) {
 	    $page = $limit * ( $page - 1 );
 	    $STH = $this->db->prepare(  "SELECT * FROM
-				      ( Sales s JOIN Cart c ON
-				      s.CartId = c.CartId ) WHERE c.CartId = $cartId  LIMIT $limit OFFSET $page" );
+				      ( Sales s JOIN Carts c ON
+				      s.CartId = c.CartId ) WHERE c.CartId = $cartId LIMIT $limit OFFSET $page" );
 	    $STH->execute();
 	    return $STH->fetch()[0];
 	}

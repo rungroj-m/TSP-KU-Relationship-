@@ -49,7 +49,7 @@
 	    return $result;
 	}
 	
-	private static function GetPromotionsByDateTime( $start, $end, $limit, $page) {
+	public static function GetPromotionsByDateTime( $start, $end, $limit, $page) {
 	    $data = PaymentDao::GetInstance()->getPromotionByDate( $start, $end, $limit, $page);
 	    $result = array();
 	    foreach( $data as &$val ) {
