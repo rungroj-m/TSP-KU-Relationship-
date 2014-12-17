@@ -144,6 +144,13 @@
 	    return $STH->fetchAll();
 	}
 	
+	public function getPromotionByDate( $start, $end, $limit, $page) {
+	    $page = $limit * ( $page - 1 );
+	    $STH = $this->db->prepare(  "SELECT * FROM `Promotions` WHERE `EndDate` >= $start AND `StartDate` <= $end LIMIT $limit OFFSET $page" );
+	    $STH->execute();
+	    return $STH->fetchAll();
+	}
+	
 	public function getCurrentPromotion() {
 	    $STH = $this->db->prepare(  "SELECT * FROM `Promotions` WHERE `StartDate` <= NOW() AND `EndDate` >= NOW()" );
 	    $STH->execute();
