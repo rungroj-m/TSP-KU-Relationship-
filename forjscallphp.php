@@ -539,12 +539,10 @@ if (isset($_POST["remove_wish"])) {
 	require_once ('inc/Product.php');
 	require_once ('inc/ProductDao.php');
 	
-	$customerId = isset($_POST["remove_wish"]);
-	$productId = isset($_POST["product_id"]);
-	echo $customerId . " " .$productId;
+	$customerId = $_POST["remove_wish"];
+	$productId = $_POST["product_id"];
 	$wishlist = WishList::GetWishListFromCustomer(Customer::GetCustomer($customerId));
 	$wishlist -> RemoveProduct(Product::GetProduct($productId),1);
-	////
 }
 
 if (isset($_POST["sign_up_admin"])) {
@@ -1089,9 +1087,14 @@ function recovery($email, $tag) {
 if (isset($_POST["get_transaction_by_customerid"])) {
 	require_once 'inc/Sale.php';
 	require_once 'inc/PaymentDao.php';
+	require_once 'inc/Cart.php';
+	require_once 'inc/InventoryDao.php';
+	require_once 'inc/Customer.php';
+	require_once 'inc/CustomerDao.php';
+	require_once 'inc/Payment.php';
+	require_once 'inc/CreditCard.php';
 	
 	$cid = $_POST["get_transaction_by_customerid"];
-	
 	echo json_encode(Sale::GetSaleByCustomer($cid, 30, 1));
 	
 }
@@ -1099,10 +1102,16 @@ if (isset($_POST["get_transaction_by_customerid"])) {
 if (isset($_POST["get_transaction_by_daterange"])) {
 	require_once 'inc/Sale.php';
 	require_once 'inc/PaymentDao.php';
+	require_once 'inc/Cart.php';
+	require_once 'inc/InventoryDao.php';
+	require_once 'inc/Customer.php';
+	require_once 'inc/CustomerDao.php';
+	require_once 'inc/Payment.php';
+	require_once 'inc/CreditCard.php';
 
 	$start = $_POST["start"];
 	$end = $_POST["end"];
-	echo Sale::GetSaleByDateTime($start, $end, 30, 1);
+	
 	echo json_encode(Sale::GetSaleByDateTime($start, $end, 30, 1));
 
 }

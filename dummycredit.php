@@ -54,7 +54,7 @@
 					console.log("just added " + response);
 				});
 				
-// 				 post("?page=transaction-detail&cartId=" + (cartid - 1), {});
+				 post("?page=transaction-detail&cartId=" + (cartid - 1), {});
 			});
 				   
 		});

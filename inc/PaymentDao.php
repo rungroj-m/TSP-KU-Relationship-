@@ -150,6 +150,14 @@
 	    return $STH->fetchAll();
 	}
 	
+	public function getCurrentPromotionPercent() {
+		$STH = $this->db->prepare(  "SELECT Value FROM `Promotions` WHERE `StartDate` <= NOW() AND `EndDate` >= NOW()" );
+		$STH->execute();
+		if($STH->fetch().length == 0)
+			return 0;
+		return $STH->fetch()[0];
+	}
+	
 	public function checkOverlapPromotion($date) {
 		$STH = $this->db->prepare(  "SELECT COUNT(*) AS num FROM `Promotions` WHERE `StartDate` <= '$date' AND `EndDate` >= '$date'" );
 		$STH->execute();
@@ -158,19 +166,16 @@
 	
 	public function GetSaleByTimeDate( $start, $end, $limit, $page ) {
 	    $page = $limit * ( $page - 1 );
-	    $start = $start->format('Y-m-d H:i:s');
-	    $end = $end->format('Y-m-d H:i:s');
 	    $STH = $this->db->prepare(  "SELECT * FROM
 				      ( Sales s JOIN Payments p ON
-				      s.PaymentId = p.PaymentId ) WHERE p.DateTime > $start AND p.DateTime < $end  LIMIT $limit OFFSET $page" );
+				      s.PaymentId = p.PaymentId ) WHERE p.DateTime > '$start' AND p.DateTime < '$end'  LIMIT $limit OFFSET $page" );
 	    $STH->execute();
 	    return $STH->fetchAll();
 	}
 	
-	public function GetSaleByCustomer( $customerId, $limit, $page ) {
+	public function GetSaleByCustomerId( $customerId, $limit, $page ) {
 	    
 	    $STH = $this->db->prepare(  "SELECT * FROM ( Sales s JOIN Carts c ON s.CartId = c.CartId ) WHERE c.CustomerId = $customerId LIMIT $limit OFFSET $page" );
-	    
 	    /*$STH->bindParam(':limit', $limit );
 	    $STH->bindParam(':page', $page );
 	    $STH->bindParam(':customerId', $customerId );*/
@@ -178,8 +183,8 @@
 	    return $STH->fetchAll();
 	}
     }
-        print_r( PaymentDao::GetInstance()->GetSaleByTimeDate( new DateTime('now'), new DateTime('now'), 2, 1 ) );
+    
+//    ิน print_r( PaymentDao::GetInstance()->GetSaleByTimeDate( new DateTime('now'), new DateTime('now'), 2, 1 ) );
     
     
-  
 ?>

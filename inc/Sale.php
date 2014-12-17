@@ -36,8 +36,8 @@
 	    return $result;
 	}
 	
-	public static function GetSaleByCustomer( $customer, $limit, $page ) {
-	    $datas = PaymentDao::GetInstance()->GetSaleByCustomerId( $customer->id, $limit, $page );
+	public static function GetSaleByCustomer( $cid, $limit, $page ) {
+	    $datas = PaymentDao::GetInstance()->GetSaleByCustomerId( $cid, $limit, $page );
 	    $result = array();
 	    foreach( $datas as &$val ) {
 	    	array_push( $result, Sale::dataToSale( $val ) );

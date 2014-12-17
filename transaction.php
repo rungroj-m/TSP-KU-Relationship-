@@ -50,58 +50,57 @@
 		$.ajax({
 			url: 'forjscallphp.php',
 			type: 'POST',
+			async: false,
 			data: {
 				'get_all_transaction': '',
 			}
 		}).done(function(json_str) {
-			var json_obj = JSON.parse(json_str);
-			for (var i = 0; i < json_obj.length; i++) {
+			var ts = JSON.parse(json_str);
+// 			console.log(ts);
 
-				var cartId =json_obj[i].cart.cartId;
- 				var obj = json_obj[i];
- 				(function(obj) {
- 	 				$.ajax({
-	 					url: 'forjscallphp.php',
-	 					type: 'POST',
-	 					async: false,
-	 					data: {
-	 						'get_lastest_order_status_by_cartid': cartId,
-	 					},
-	 					success: function(oid) {
-		 					if (oid > 0) {
-		 						$.ajax({
-		 							url: 'http://localhost:11111/orders/current/' + oid,
-		 							type: "GET"
-		 						}).done(function(status) {
-		 							var st = JSON.parse(status);
-			 						$("#orders-table").append("\
-			 								<tr>\
-			 									<td><a href=\"?page=transaction-detail&cartId=" + cartId + "\">" + obj.id + "</a></td>\
-			 									<td>" + obj.payment.timeDate.date + "</td>\
-			 									<td>" + obj.cart.customer.firstName + " " + obj.cart.customer.lastName + "</td>\
-			 									<td>" + obj.payment.amount + "</td>\
-			 									<td>" + 000 + "</td>\
-			 									<td><a href=\"?page=tracking&id=" + cartId + "\">" + oid + " " + st.orders.order.status.type + "</a></td>\
-			 								</tr>");
-			 					});
-		 					}
-		 					else {
-		 						$("#orders-table").append("\
-		 								<tr>\
-		 									<td><a href=\"?page=transaction-detail&cartId=" + cartId + "\">" + obj.id + "</a></td>\
-		 									<td>" + obj.payment.timeDate.date + "</td>\
-		 									<td>" + obj.cart.customer.firstName + " " + obj.cart.customer.lastName + "</td>\
-		 									<td>" + obj.payment.amount + "</td>\
-		 									<td>" + 000 + "</td>\
-		 									<td>Unknown</td>\
-		 								</tr>");
-		 					}
-	 	 				}
-	 				});
- 				})(obj);
+			$("#orders-table").empty();
+			$("#orders-table").append("\
+					<tr>\
+						<th>ID</th>\
+						<th>Date</th>\
+						<th>Customer</th>\
+						<th>Total</th>\
+						<th>Promotion</th>\
+						<th>Status</th>\
+					</tr>");
+
+			for (var i = 0; i < ts.length; i++) {
+				console.log(ts[i]);
+				var row = "\
+						<tr>\
+							<td><a href=\"?page=transaction-detail&cartId=" + ts[i].cart.cartId + "\">" + ts[i].cart.cartId + "</a></td>\
+							<td>" + ts[i].payment.timeDate.date + "</td>\
+							<td>" + ts[i].cart.customer.firstName + " " + ts[i].cart.customer.lastName + "</td>\
+							<td>" + ts[i].payment.amount + "</td>\
+							<td>" + 000000 +  "</td>";
+
+				(function(cartId) {
+					$.ajax({
+						url: 'forjscallphp.php',
+						type: "POST",
+						async: false,
+						data: {
+							"get_lastest_order_status_by_cartid": cartId
+						}
+					}).done(function(status) {
+						var st = JSON.parse(status)[0];
+						try {
+							row += "<td><a href=\"?page=tracking&id=" + ts[i].cart.cartId + "\">" + st.StatusType + (st.Description == "Undefined" ? "" : " : " + st.Description) + "</a></td></tr>";
+						} catch (er) {
+							
+						}
+	
+					})
+				})(ts[i].cart.cartId);
 				
+				$("#orders-table").append(row);
 				
-			} // for
+			}
 		});
 
 

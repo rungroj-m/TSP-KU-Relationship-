@@ -115,7 +115,7 @@
 				"get_lastest_order_status_by_cartid": <?php echo $_GET["cartId"] ?>
 			}
 		}).done(function(lasteststatus) {
-// 			var obj = JSON.parse(lasteststatus);
+			var obj = JSON.parse(lasteststatus);
 			console.log(lasteststatus);
 			$("#status").text(obj[0].StatusType);
 		});

@@ -99,18 +99,21 @@
 		});
 	});
 
-	$(document).ready(function() {
-		
 
+	// Get transactions
+	$(document).ready(function() {
 		$.ajax({
 			url: 'forjscallphp.php',
-			type: 'POST',
+			type: "POST",
 			data: {
-				'get_all_transaction': '',
+				"get_transaction_by_daterange": "",
+				"start":"2013-12-17 19:19:22",
+				"end": "2014-12-17 19:19:22"
 			}
-		}).done(function(json_str) {
-			
+		}).done(function(trans) {
+			var tdate = JSON.parse(trans);
+			console.log(tdate);
 		});
-
 	});
+	
 </script>

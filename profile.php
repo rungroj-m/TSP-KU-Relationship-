@@ -178,22 +178,52 @@ input {
 				"get_transaction_by_customerid": $.cookie("customerid")
 			}
 		}).done(function(trans) {
-			console.log(trans);
-		});
-	});
+			var ts = JSON.parse(trans);
+// 			console.log(ts);
 
-	// Get transactions
-	$(document).ready(function() {
-		$.ajax({
-			url: 'forjscallphp.php',
-			type: "POST",
-			data: {
-				"get_transaction_by_daterange": "",
-				"start": "2013-12-17 19:19:22",
-				"end": "2014-12-17 19:19:22"
+			$("#transaction-list").empty();
+			$("#transaction-list").append("\
+					<tr>\
+						<th>ID</th>\
+						<th>Date</th>\
+						<th>Customer</th>\
+						<th>Total</th>\
+						<th>Promotion</th>\
+						<th>Status</th>\
+					</tr>");
+
+			for (var i = 0; i < ts.length; i++) {
+				console.log(ts[i]);
+				var row = "\
+						<tr>\
+							<td><a href=\"?page=transaction-detail&cartId=" + ts[i].cart.cartId + "\">" + ts[i].cart.cartId + "</a></td>\
+							<td>" + ts[i].payment.timeDate.date + "</td>\
+							<td>" + ts[i].cart.customer.firstName + " " + ts[i].cart.customer.lastName + "</td>\
+							<td>" + ts[i].payment.amount + "</td>\
+							<td>" + 000000 +  "</td>";
+
+				(function(cartId) {
+					$.ajax({
+						url: 'forjscallphp.php',
+						type: "POST",
+						async: false,
+						data: {
+							"get_lastest_order_status_by_cartid": cartId
+						}
+					}).done(function(status) {
+						var st = JSON.parse(status)[0];
+						try {
+							row += "<td><a href=\"?page=tracking&id=" + ts[i].cart.cartId + "\">" + st.StatusType + (st.Description == "Undefined" ? "" : " : " + st.Description) + "</a></td></tr>";
+						} catch (er) {
+							
+						}
+	
+					})
+				})(ts[i].cart.cartId);
+				
+				$("#transaction-list").append(row);
+				
 			}
-		}).done(function(trans) {
-			console.log(trans);
 		});
 	});
 

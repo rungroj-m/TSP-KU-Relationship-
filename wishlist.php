@@ -237,7 +237,8 @@
 				"product_id": productId
 			}
 		}).done(function(response) {
-			alert(productId + " removed " +response);
+// 			alert(productId + " removed " +response);
+			console.log(response);
 		});
 		$("#remove-wish-product-confirm").modal('hide');
 	});
