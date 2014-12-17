@@ -157,27 +157,29 @@
 	}
 	
 	public function GetSaleByTimeDate( $start, $end, $limit, $page ) {
+	    $page = $limit * ( $page - 1 );
+	    $start = $start->format('Y-m-d H:i:s');
+	    $end = $end->format('Y-m-d H:i:s');
 	    $STH = $this->db->prepare(  "SELECT * FROM
 				      ( Sales s JOIN Payments p ON
-				      s.PaymentId = p.PaymentId ) WHERE p.DateTime > :start AND p.DateTime < :end  LIMIT :limit OFFSET :page" );
-	    $STH->bindParam(':limit', $limit );
-	    $STH->bindParam(':page', $limit * ( $page - 1 ) );
-	    $STH->bindParam(':start', $start );
-	    $STH->bindParam(':end', $end );
+				      s.PaymentId = p.PaymentId ) WHERE p.DateTime > $start AND p.DateTime < $end  LIMIT $limit OFFSET $page" );
 	    $STH->execute();
 	    return $STH->fetchAll();
 	}
 	
 	public function GetSaleByCustomer( $customerId, $limit, $page ) {
-	    $STH = $this->db->prepare(  "SELECT * FROM
-				      ( Sales s JOIN Carts c ON
-				      s.CartId = c.CartId ) WHERE c.CustomerId = :customerId LIMIT :limit OFFSET :page" );
-	    $STH->bindParam(':limit', $limit );
-	    $STH->bindParam(':page', $limit * ( $page - 1 ) );
-	    $STH->bindParam(':customerId', $customerId );
+	    
+	    $STH = $this->db->prepare(  "SELECT * FROM ( Sales s JOIN Carts c ON s.CartId = c.CartId ) WHERE c.CustomerId = $customerId LIMIT $limit OFFSET $page" );
+	    
+	    /*$STH->bindParam(':limit', $limit );
+	    $STH->bindParam(':page', $page );
+	    $STH->bindParam(':customerId', $customerId );*/
 	    $STH->execute();
 	    return $STH->fetchAll();
 	}
     }
+    
+    print_r( PaymentDao::GetInstance()->GetSaleByTimeDate( new DateTime('now'), new DateTime('now'), 2, 1 ) );
+    
     
 ?>
