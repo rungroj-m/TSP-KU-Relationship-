@@ -62,6 +62,10 @@
 	    $instance->customerDetail = $data['CustomerDetail'];
 	    return $instance;
 	}
+	
+	public static function GetSaleByCartId( $cartId ) {
+	    return Sale::dataToSale( PaymentDao::GetInstance()->GetSaleByCartId( $cartId ) );
+	}
     }
 
 ?>
