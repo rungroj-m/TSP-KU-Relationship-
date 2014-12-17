@@ -178,8 +178,8 @@
 	    return $STH->fetchAll();
 	}
     }
+        print_r( PaymentDao::GetInstance()->GetSaleByTimeDate( new DateTime('now'), new DateTime('now'), 2, 1 ) );
     
-    print_r( PaymentDao::GetInstance()->GetSaleByTimeDate( new DateTime('now'), new DateTime('now'), 2, 1 ) );
     
-    
+  
 ?>
