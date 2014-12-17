@@ -150,6 +150,14 @@
 	    return $STH->fetchAll();
 	}
 	
+	public function getCurrentPromotionPercent() {
+		$STH = $this->db->prepare(  "SELECT Value FROM `Promotions` WHERE `StartDate` <= NOW() AND `EndDate` >= NOW()" );
+		$STH->execute();
+		if($STH->fetch().length == 0)
+			return 0;
+		return $STH->fetch()[0];
+	}
+	
 	public function checkOverlapPromotion($date) {
 		$STH = $this->db->prepare(  "SELECT COUNT(*) AS num FROM `Promotions` WHERE `StartDate` <= '$date' AND `EndDate` >= '$date'" );
 		$STH->execute();

@@ -396,7 +396,7 @@ if (isset($_POST["add_to_cart"])) {
 	$amount = $_POST["quantity"];
 	
 	if ($amount > 0) {
-		if (Inventory::getQuntity($product->id) <= $amount) {}
+		if (Inventory::getQuntity($product->id) < $amount) {}
 		else
 			$cart->AddProduct($product, $amount);
 	}

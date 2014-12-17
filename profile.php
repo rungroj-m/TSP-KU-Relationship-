@@ -112,14 +112,11 @@ input {
 <script type="text/javascript">
 
 	$(document).ready(function() {
-		if ($.cookie("customerid") != undefined) {
+		if ($.cookie("customerid") != undefined && $.cookie("adminlevel") == undefined) {
 			$("#redzone").show();
 		}
 		else
 			document.location.href = "?page=notfound"
-
-		if ($.cookie("adminlevel") != undefined)
-			$("#transaction").hide();
 	});
 	
 	$("#menu li").click(function() {
