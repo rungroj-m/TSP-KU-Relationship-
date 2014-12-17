@@ -52,7 +52,7 @@
 			url: 'forjscallphp.php',
 			type: 'POST',
 			data: {
-				'get_product_in_transaction': 126?>
+				'get_product_in_transaction': 126
 			},
 			success: function(json_str2) {
 				var products = JSON.parse(json_str2);
