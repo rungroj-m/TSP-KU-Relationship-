@@ -41,7 +41,20 @@
 					"get_cartid_by_customerid": $.cookie("customerid")
 				}
 			}).done(function(cartid) {
-				 post("?page=transaction-detail&cartId=" + (cartid - 1), {});
+
+				$.ajax({
+					url: 'forjscallphp.php',
+					type: "POST",
+					async: false,
+					data : {
+						"bind_cartid": "",
+						"cartId": (cartid - 1)
+					}
+				}).done(function(response) {
+					console.log("just added " + response);
+				});
+				
+// 				 post("?page=transaction-detail&cartId=" + (cartid - 1), {});
 			});
 				   
 		});

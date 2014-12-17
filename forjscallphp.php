@@ -718,10 +718,9 @@ if (isset($_POST["bind_cartid"])) {
 	$database="ecomerce";
 	 
 	$db = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
-	$STH = $db->prepare("INSERT INTO `OrderTrackings` (`CartId`, `StatusType`, `Date`, `Description`, `UpdatedBy`) VALUES (:cid, 'ORDER_RETRIEVE', :date, 'Undefined', :by)");
+	$date = date("Y-m-d h:i:sa");
+	$STH = $db->prepare("INSERT INTO `OrderTrackings` (`CartId`, `StatusType`, `Date`, `Description`, `UpdatedBy`) VALUES (:cid, 'ORDER_RETRIEVE', '$date', 'Undefined', 'System')");
 	$STH->bindParam(':cid', $_POST["cartId"]);
-	$STH->bindParam(':date', date("Y-m-d h:i:sa"));
-	$STH->bindParam(':by', "System");
 	$STH->execute();
 }
 
@@ -1085,5 +1084,26 @@ function recovery($email, $tag) {
 	";
 	
 	$flgSend = @mail($strTo,$strSubject,$strMessage,$strHeader);
+}
+
+if (isset($_POST["get_transaction_by_customerid"])) {
+	require_once 'inc/Sale.php';
+	require_once 'inc/PaymentDao.php';
+	
+	$cid = $_POST["get_transaction_by_customerid"];
+	
+	echo json_encode(Sale::GetSaleByCustomer($cid, 30, 1));
+	
+}
+
+if (isset($_POST["get_transaction_by_daterange"])) {
+	require_once 'inc/Sale.php';
+	require_once 'inc/PaymentDao.php';
+
+	$start = $_POST["start"];
+	$end = $_POST["end"];
+	echo Sale::GetSaleByDateTime($start, $end, 30, 1);
+	echo json_encode(Sale::GetSaleByDateTime($start, $end, 30, 1));
+
 }
 

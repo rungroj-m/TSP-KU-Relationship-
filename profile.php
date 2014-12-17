@@ -141,6 +141,7 @@ input {
 		});
 	});
 
+	// Get profile
 	$(document).ready(function() {
 		$.ajax({
 			url: 'forjscallphp.php',
@@ -165,6 +166,34 @@ input {
 
 			$("#signup-password").prop('disabled', true);
 			$("#signup-password-confirm").prop('disabled', true);
+		});
+	});
+
+	// Get transactions
+	$(document).ready(function() {
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"get_transaction_by_customerid": $.cookie("customerid")
+			}
+		}).done(function(trans) {
+			console.log(trans);
+		});
+	});
+
+	// Get transactions
+	$(document).ready(function() {
+		$.ajax({
+			url: 'forjscallphp.php',
+			type: "POST",
+			data: {
+				"get_transaction_by_daterange": "",
+				"start": "2013-12-17 19:19:22",
+				"end": "2014-12-17 19:19:22"
+			}
+		}).done(function(trans) {
+			console.log(trans);
 		});
 	});
 

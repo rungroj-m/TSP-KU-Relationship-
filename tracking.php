@@ -8,7 +8,7 @@
 	
 					<div class="input-group">
 						<span class="input-group-addon">Tracking ID</span>
-						<input type="text" class="form-control" id="id">
+						<input type="text" class="form-control" id="id" value="<?php echo $_GET["id"]; ?>">
 					</div>
 					<br>
 					<button class="btn btn-lg btn-success btn-block" id="button-get">GET</button>
@@ -43,7 +43,7 @@
 						</div>
 						
 						<br>
-						<button class="btn btn-lg btn-primary btn-block" id="button-update" disable>Update</button>
+						<button class="btn btn-lg btn-primary btn-block" id="button-update" disabled>Update</button>
 					</div>
 	
 	</div>
@@ -52,7 +52,20 @@
 
 <script type="text/javascript">
 
+	$(document).ready(function() {
+		<?php if (isset($_GET["id"])) echo "get();"; ?>
+	});
+
 	$("#button-get").click(function() {
+		document.location.href = "?page=tracking&id=" + $("#id").val();
+	});
+
+	$("#id").keypress(function(event) {
+		if (event.which == 13)
+			document.location.href = "?page=tracking&id=" + $("#id").val();
+	});
+
+	function get() {
 		if ($.cookie("adminlevel") != undefined)
 			$("#update-div").show();
 		
@@ -111,6 +124,7 @@
 					    console.log(types[i].substring(1, types[i].length-1) + " " +  current + " " + (types[i].substring(1, types[i].length-1) == current))
 					   
 					    if (found) {
+					    	$("#button-update").removeAttr('disabled');
 							$("#types-dropdown").append("<li><a>" + types[i].substring(1, types[i].length-1) + "</a></li>");
 							if (first) {
 								$("#dropdown qq").text(types[i].substring(1, types[i].length-1));
@@ -129,9 +143,10 @@
 				});
 			});
 		});
-	});
+	}
 
-	$("#button-update").click(function() {$.ajax({
+	$("#button-update").click(function() {
+		$.ajax({
 			url: 'forjscallphp.php',
 			type: "POST",
 			data: {
@@ -141,7 +156,7 @@
 				"by": $.cookie("firstname") + " " + $.cookie("lastname")
 			}
 		}).done(function(response) {
-		    alert(response);
+		    location.reload();
 		});
 	});
 

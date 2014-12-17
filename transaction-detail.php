@@ -54,7 +54,7 @@
 				'get_product_in_transaction': <?php echo $_GET["cartId"];?>
 			},
 			success: function(json_str2) {
-				console.log(json_str2);
+// 				console.log(json_str2);
 				var products = JSON.parse(json_str2);
 				var totalQuan = 0;
 				var total = 0;
@@ -115,7 +115,8 @@
 				"get_lastest_order_status_by_cartid": <?php echo $_GET["cartId"] ?>
 			}
 		}).done(function(lasteststatus) {
-			var obj = JSON.parse(lasteststatus);
+// 			var obj = JSON.parse(lasteststatus);
+			console.log(lasteststatus);
 			$("#status").text(obj[0].StatusType);
 		});
 
