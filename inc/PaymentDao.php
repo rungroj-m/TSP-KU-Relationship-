@@ -180,13 +180,12 @@
 	    return $STH->fetchAll();
 	}
 	
-	public function GetSaleByCartId( $cartId, $limit, $page ) {
-	    $page = $limit * ( $page - 1 );
+	public function GetSaleByCartId( $cartId ) {
 	    $STH = $this->db->prepare(  "SELECT * FROM
 				      ( Sales s JOIN Carts c ON
-				      s.CartId = c.CartId ) WHERE c.CartId = $cartId LIMIT $limit OFFSET $page" );
+				      s.CartId = c.CartId ) WHERE c.CartId = $cartId" );
 	    $STH->execute();
-	    return $STH->fetch()[0];
+	    return $STH->fetch();
 	}
 	
 	public function GetSaleByCustomerId( $customerId, $limit, $page ) {

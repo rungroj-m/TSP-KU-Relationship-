@@ -58,7 +58,7 @@
 	
 	public function updatePassword( $customerId, $pass ) {
 	     $STH = $this->db->prepare( "UPDATE `Customers` SET `Password` = :pw WHERE `CustomerId` = $customerId" );
-	     $STH->bindParam(':pw', md5( $password ) );
+	     $STH->bindParam(':pw', md5( $pass ) );
 	     $STH->execute();
 	}
 	

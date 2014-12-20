@@ -241,6 +241,8 @@
 			console.log(response);
 		});
 		$("#remove-wish-product-confirm").modal('hide');
+
+		location.reload();
 	});
 		
 	function GET_P(){

@@ -258,7 +258,7 @@ input {
 				$("#edit-div").show();
 			}
 			else {
-				alert("Please check the customer id exists.");
+// 				alert("Please check the customer id exists.");
 				$("#edit-div").hide();
 			}
 		});

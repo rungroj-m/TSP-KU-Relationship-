@@ -160,7 +160,7 @@ Brand:
 				"quan": $("#quan").val(),
 				"brand": $("#brand").val()}
 		}).done(function(response) {
-			alert(response);
+// 			alert(response);
 			window.parent.closeModal();
 		});
 	});
@@ -195,7 +195,7 @@ Brand:
 				"quan": $("#quan").val(),
 				"brand": $("#brand").val()}
 		}).done(function(response) {
-			alert(response);
+// 			alert(response);
 			window.parent.closeModal();
 		});
 	});

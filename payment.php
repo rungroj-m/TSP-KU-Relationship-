@@ -328,8 +328,22 @@
 			$("#district").val() + "**" + $("#province").val() + "**" + 
 			$("#country").val() + "**" + $("#zip").val() + "**" + 
 			$("#phone").val();
-			post("?page=dummycredit", {fee: passfee, customer_detail: cd});
+			$.ajax({
+				url: 'forjscallphp.php',
+				type: "POST",
+				data: {
+					"get_customer_detail": $.cookie("customerid")
+				}
+			}).done(function(c) {
+				var cus = JSON.parse(c);
+				if (cus.isblocked)
+					alert("Sorry, you don't have permission to buy items. Please contact admin.");
+				else
+					post("?page=dummycredit", {fee: passfee, customer_detail: cd});
+						
+			});
 		}
+		
 	});
 
 	function post(path, params) {

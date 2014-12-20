@@ -66,6 +66,7 @@
 	public static function GetSaleByCartId( $cartId ) {
 	    return Sale::dataToSale( PaymentDao::GetInstance()->GetSaleByCartId( $cartId ) );
 	}
+	
     }
 
 ?>

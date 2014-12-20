@@ -141,21 +141,23 @@
 
 	// Get transactions
 	$(document).ready(function() {
-		getTransactionByTimeRange();
 
 		$.ajax({
 			url: 'forjscallphp.php',
 			type: 'POST',
+			async: false,
 			data: {
 				'get_all_customer': ''
 			}
 		}).done(function(json_str) {
+			
 			var c = JSON.parse(json_str);
 			
 			$("#users-dropdown").empty();
 			$("#dropdown qq").text("");
 
 			for (var i = 0; i < c.length; i++) {
+				console.log("<li><a>" + c[i].id + ": " + c[i].firstName + " " + c[i].lastName + "</a></li>");
 				$("#users-dropdown").append("<li><a>" + c[i].id + ": " + c[i].firstName + " " + c[i].lastName + "</a></li>");
 			}
 			
@@ -164,6 +166,9 @@
 		    	getTransactionByCustomer();
 		    });
 		});
+
+
+		getTransactionByTimeRange();
 	});
 
 	function getTransactionByTimeRange(start, end) {
@@ -199,14 +204,40 @@
 							<td>" + ts[i].cart.cartId + "</td>\
 							<td>" + ts[i].payment.timeDate.date + "</td>\
 							<td>" + ts[i].cart.customer.firstName + " " + ts[i].cart.customer.lastName + "</td>\
-							<td>" + ts[i].payment.amount + "</td>\
-							<td>" + 000000 +  "</td></tr>";
+							<td>" + ts[i].payment.amount + "</td>";
+				(function(date, amount) {
+					$.ajax({
+						url: 'forjscallphp.php',
+						type: "POST",
+						async: false,
+						data : {
+							"get_promotion_by_datetime": "",
+							"start": date,
+							"end": date
+						}
+					}).done(function(tran) {
+						try {
+			 				console.log(".......V");
+							var val = JSON.parse(tran)[0].value;
+
+			 				console.log(val);
+			 				console.log(".......^");
+							var pro = JSON.parse(tran)[0];
+							row += "<td>" + ((100.0-val)/100*amount).toFixed(2) + " </td>"
+
+							dis += Number(((100.0-val)/100*amount).toFixed(2));
+						} catch (err) {
+							row += "<td></td>";
+						}
+						
+					});
+				})(ts[i].payment.timeDate.date, ts[i].payment.amount);
+
 				$("#orders-table-date").append(row);
 				sum += Number(ts[i].payment.amount);
-				dis += 000000;
 			}
 
-			$("#sum").html("<h2>Shopping: " + ts.length + "</h2><h4>Total: </h4>" + sum + "<h4>Discount: </h4>" + dis + "<h3>Net value: " + (sum-dis) + "</h3> <h3>Vat 7%: " + ((sum-dis)*7.0/100).toFixed(2) + "</h3><h2>Total profit: " + ((sum-dis)*(100-7.0)/100).toFixed(2) + "</h2>");
+			$("#sum").html("<h2>Shopping: " + ts.length + "</h2><h4>Total: </h4>" + sum + "<h4>Discount: </h4>" + dis.toFixed(2) + "<h3>Net value: " + (sum-dis).toFixed(2) + "</h3> <h3>Vat 7%: " + ((sum-dis)*7.0/100).toFixed(2) + "</h3><h2>Total profit: " + ((sum-dis)*(100-7.0)/100).toFixed(2) + "</h2>");
 		});
 	}
 
@@ -219,6 +250,7 @@
 			}
 		}).done(function(trans) {
 			var ts = JSON.parse(trans);
+// 			console.log("vvv")
 // 			console.log(ts);
 
 			$("#orders-table-customer").empty();
@@ -228,7 +260,6 @@
 						<th>Date</th>\
 						<th>Customer</th>\
 						<th>Total</th>\
-						<th>Promotion</th>\
 					</tr>");
 
 			var sum = 0;
@@ -240,14 +271,14 @@
 							<td>" + ts[i].cart.cartId + "</td>\
 							<td>" + ts[i].payment.timeDate.date + "</td>\
 							<td>" + ts[i].cart.customer.firstName + " " + ts[i].cart.customer.lastName + "</td>\
-							<td>" + ts[i].payment.amount + "</td>\
-							<td>" + 000000 +  "</td></tr>";
+							<td>" + ts[i].payment.amount + "</td>";
+				
 				$("#orders-table-customer").append(row);
 				sum += Number(ts[i].payment.amount);
 				dis += 000000;
 			}
 
-			$("#sum2").html("<h2>Shopping: " + ts.length + "</h2><h4>Total: </h4>" + sum + "<h4>Discount: </h4>" + dis + "<h3>Net value: " + (sum-dis) + "</h3> <h3>Vat 7%: " + ((sum-dis)*7.0/100).toFixed(2) + "</h3><h2>Total profit: " + ((sum-dis)*(100-7.0)/100).toFixed(2) + "</h2>");
+			$("#sum2").html("<h2>Shopping: " + ts.length + "</h2><h4>Total: </h4>" + sum + "<h3>Net value: " + (sum-dis) + "</h3> <h3>Vat 7%: " + ((sum-dis)*7.0/100).toFixed(2) + "</h3><h2>Total profit: " + ((sum-dis)*(100-7.0)/100).toFixed(2) + "</h2>");
 		});
 	}
 	

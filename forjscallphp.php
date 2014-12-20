@@ -108,6 +108,7 @@ if (isset($_POST["search_product_for_inventory"])) {
 	
 	$productdescs = array();
 	if ($str == "") {
+// 			echo("test2");
 		if ($cat == "Category" || $cat == "All") {
 				$product = Product::GetAllProductWithLimit(30, $pages);
 				foreach ($product as $p) {
@@ -119,8 +120,9 @@ if (isset($_POST["search_product_for_inventory"])) {
 		}
 	}
 	else {
-		$str = explode(",", $str);
-		array_map( 'trim', $tags_str );
+//		$str = explode(",", $str);
+		$str = array_map( 'trim', explode(",", $str) );
+//		array_map( 'trim', $tags_str );
 		if (!($cat == "Category" || $cat == "All")) {
 			array_push($str, $cat);
 			$productdescs = ProductDescription::SearchByTagsWithLimit($str, 30, $pages);
@@ -668,8 +670,7 @@ if (isset($_POST["save_customer_detail"])) {
 	$customer -> firstName = $_POST["firstname"];
 	$customer -> lastName = $_POST["lastname"];
 	$customer ->  Address = $_POST["address"] . "¿" . $_POST["address2"] . "¿" . $_POST["district"] . "¿" . $_POST["province"] . "¿" . $_POST["country"] . "¿" . $_POST["zip"] . "¿" . $_POST["phone"];
-	echo $customer->updateCustomer();
-	
+	$customer->updateCustomer();
 	if ($_POST["password"] != "")
 		$customer ->updatePassword( $_POST["password"] );
 }

@@ -12,7 +12,7 @@
 
 
 
-<div class="panel panel-default">
+<div class="panel panel-default" id="printed">
 	<div class="panel-heading">
 		<h3 class="panel-title">Receipt</h3>
 	</div>
@@ -39,6 +39,10 @@
 			<div class="col-md-6">
 				<button type="button" class="btn btn-success" id="button-reciept" style="width: 100%">Reciept</button>
 			</div>
+			
+			<div class="col-md-6">
+				<button type="button" class="btn btn-info" id="button-back" style="width: 100%">Shopping</button>
+			</div>
 		</div>
 		
 	</div>
@@ -52,10 +56,11 @@
 			url: 'forjscallphp.php',
 			type: 'POST',
 			data: {
-				'get_product_in_transaction': 126
+				'get_product_in_transaction': <?php echo $_GET["cartId"];?>
 			},
 			success: function(json_str2) {
 				var products = JSON.parse(json_str2);
+				console.log(products);
 				var totalQuan = 0;
 				var total = 0;
 				for (var i = 0; i < products.length; i++) {
@@ -121,7 +126,7 @@
 		});
 
 		$("#button-reciept").click(function() {
-			alert("Will be ok");
+			 window.print();
 		});
 
 		$.ajax({
@@ -131,7 +136,8 @@
 				"get_customer_detail_by_cartid": <?php echo $_GET["cartId"] ?>
 			}
 		}).done(function(customer_detail) {
-// 			console.log(customer_detail);
+			console.log("this")
+			console.log(customer_detail);
 			var res = customer_detail.split("**");
  			$("#customer-name").text(res[0]);
  			$("#customer-address").html("<p>" + res[1] + " " + res[2] + "<br>District: " + res[3] + " Province: " + res[4] + "<br>Country: " + res[5] + " ZIP: " + res[6] + " Phone: " + res[7] + "/<p>");
@@ -144,8 +150,9 @@
 				"get_transaction_by_cartid": <?php echo $_GET["cartId"] ?>
 			}
 		}).done(function(tran) {
+			console.log(tran)
 			var date = JSON.parse(tran).payment.timeDate.date
-			console.log(tran);
+// 			console.log(JSON.parse(tran));
 			$("#date").text(date);
 			
 			$.ajax({
@@ -172,6 +179,10 @@
 		});
 
 		
+	});
+
+	$("#button-back").click(function() {
+		window.location.href = "?page=shopping";
 	});
 
 </script>

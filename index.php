@@ -94,7 +94,7 @@ table {
 
 	<div class="footer">
       <div class="container" align="center" style="margin-top: 30px; margin-bottom: 20px">
-        <p class="text-muted">Made by KU Relationship &copy; 2014</p>
+        <p class="text-muted">Made by KU Relationship &copy; 2014. admin@xtremesportshop.com</p>
       </div>
     </div>
     

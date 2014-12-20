@@ -35,11 +35,10 @@
 				<input type="text" class="form-control" id="signup-firstname" placeholder="First Name" required="">
 				<input type="text" class="form-control" id="signup-lastname" placeholder="Last Name" required="">
 				<label class="checkbox">
-					<input type="checkbox" value="agree">Agree
+					<input type="checkbox" value="agree" id="check">Agree Terms and Conditions <a href="?page=terms">Here.</a>
 				</label>
-				
 				<br>
-				<button class="btn btn-lg btn-info btn-block" type="submit">Sign up</button>
+				<button class="btn btn-lg btn-info btn-block" type="submit" id="su" disabled>Sign up</button>
 			</form>
 			
 			<label>
@@ -156,7 +155,7 @@
 				"lastname": lastname
 			}
 		}).done(function(response) {
-			alert(response);
+// 			alert(response);
 			var registered = $.parseJSON(response);
 			
 			if (registered.username == email) {
@@ -190,8 +189,12 @@
 		
 	};
 
+	$("#check").click(function() {
+		$("#su").prop('disabled', !$('#check').is(':checked'));
+	});
+
 	$("#recovery-form").submit(function () {
-		alert("Available soon");
+// 		alert("Available soon");
 		return false;
 	});
 

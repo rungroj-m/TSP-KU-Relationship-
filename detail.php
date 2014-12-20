@@ -329,6 +329,8 @@
 			
 			$("#clear-cart-confirm").modal('hide');
 		});
+
+		location.reload();
 	});
 
 	$(document).ready(function() {
@@ -428,7 +430,7 @@
 	});
 
 	function addToWish(productId) {
-		alert($.cookie("customerid"));
+// 		alert($.cookie("customerid"));
 		$.ajax({
 			url: 'forjscallphp.php',
 			type: "POST",
@@ -439,7 +441,7 @@
 			}
 		}).done(function(response) {
 			location.reload();
-			alert(productId + " added to wish ");
+// 			alert(productId + " added to wish ");
 		});
 	}
 

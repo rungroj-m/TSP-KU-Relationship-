@@ -199,8 +199,33 @@ input {
 							<td><a href=\"?page=transaction-detail&cartId=" + ts[i].cart.cartId + "\">" + ts[i].cart.cartId + "</a></td>\
 							<td>" + ts[i].payment.timeDate.date + "</td>\
 							<td>" + ts[i].cart.customer.firstName + " " + ts[i].cart.customer.lastName + "</td>\
-							<td>" + ts[i].payment.amount + "</td>\
-							<td>" + 000000 +  "</td>";
+							<td>" + ts[i].payment.amount + "</td>";
+
+				(function(date, amount) {
+					$.ajax({
+						url: 'forjscallphp.php',
+						type: "POST",
+						async: false,
+						data : {
+							"get_promotion_by_datetime": "",
+							"start": date,
+							"end": date
+						}
+					}).done(function(tran) {
+						try {
+			 				console.log(".......V");
+							var val = JSON.parse(tran)[0].value;
+
+			 				console.log(val);
+			 				console.log(".......^");
+							var pro = JSON.parse(tran)[0];
+							row += "<td>" + ((100.0-val)/100*amount).toFixed(2) + " </td>"
+						} catch (err) {
+							row += "<td></td>"
+						}
+						
+					});
+				})(ts[i].payment.timeDate.date, ts[i].payment.amount);
 
 				(function(cartId) {
 					$.ajax({

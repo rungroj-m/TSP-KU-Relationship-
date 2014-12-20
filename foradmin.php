@@ -11,10 +11,6 @@
 			<br>
 			<input type="text" class="form-control" id="signup-firstname" placeholder="First Name" required="">
 			<input type="text" class="form-control" id="signup-lastname" placeholder="Last Name" required="">
-			<label class="checkbox">
-				<input type="checkbox" value="agree">Agree
-			</label>
-			
 			<br>
 			<button class="btn btn-lg btn-info btn-block" type="submit">Sign up</button>
 		</form>

@@ -15,7 +15,7 @@
 				</div>   
 			</div>
 			<div class="col-md-6">
-				<button type="button" class="btn btn-success" id="button-get" style="width: 100%">GET</button>
+				<button type="button" class="btn btn-success" id="button-get" style="width: 100%" disabled>GET</button>
 			</div>
 		</div>
 		
@@ -46,7 +46,40 @@
 			document.location.href = "?page=notfound"
 	});
 
+	$.ajax({
+		url: 'forjscallphp.php',
+		type: "POST",
+		data: {
+			"get_enum_values": ""
+		}
+	}).done(function(response) {
+	    var types = JSON.parse(response);
+		console.log(response)
+		var current = JSON.parse(response)[0].StatusType;
+// 		$("#types-dropdown").empty();
+// 		$("#dropdown qq").text("");
+		
+	    for (var i = 0; i < types.length; i++) {
+			$("#types-dropdown").append("<li><a>" + types[i].substring(1, types[i].length-1) + "</a></li>");
+	    }
+	    
+	    $("#types-dropdown li").click(function() {
+	    	$("#dropdown qq").text($(this).text());
+	    	$("#button-get").removeAttr('disabled');
+	    });
+	});
+
 	$(document).ready(function() {
+		getTransaction("All");
+	});
+
+
+	$("#button-get").click(function() {
+		getTransaction($("#dropdown qq").text());
+	});
+
+	function getTransaction(str) {
+		
 		$.ajax({
 			url: 'forjscallphp.php',
 			type: 'POST',
@@ -70,14 +103,41 @@
 					</tr>");
 
 			for (var i = 0; i < ts.length; i++) {
-				console.log(ts[i]);
+// 				console.log(ts[i]);
 				var row = "\
 						<tr>\
 							<td><a href=\"?page=transaction-detail&cartId=" + ts[i].cart.cartId + "\">" + ts[i].cart.cartId + "</a></td>\
 							<td>" + ts[i].payment.timeDate.date + "</td>\
 							<td>" + ts[i].cart.customer.firstName + " " + ts[i].cart.customer.lastName + "</td>\
-							<td>" + ts[i].payment.amount + "</td>\
-							<td>" + 000000 +  "</td>";
+							<td>" + ts[i].payment.amount + "</td>";
+
+							(function(date, amount) {
+								$.ajax({
+									url: 'forjscallphp.php',
+									type: "POST",
+									async: false,
+									data : {
+										"get_promotion_by_datetime": "",
+										"start": date,
+										"end": date
+									}
+								}).done(function(tran) {
+									try {
+						 				console.log(".......V");
+										var val = JSON.parse(tran)[0].value;
+	
+						 				console.log(val);
+						 				console.log(".......^");
+										var pro = JSON.parse(tran)[0];
+										row += "<td>" + ((100.0-val)/100*amount).toFixed(2) + " </td>"
+									} catch (err) {
+										row += "<td></td>"
+									}
+									
+								});
+							})(ts[i].payment.timeDate.date, ts[i].payment.amount);
+
+				
 
 				(function(cartId) {
 					$.ajax({
@@ -89,28 +149,26 @@
 						}
 					}).done(function(status) {
 						var st = JSON.parse(status)[0];
+
 						try {
+							if (str != "All")
+								if (st.StatusType != str)
+									return;
+							
 							row += "<td><a href=\"?page=tracking&id=" + ts[i].cart.cartId + "\">" + st.StatusType + (st.Description == "Undefined" ? "" : " : " + st.Description) + "</a></td></tr>";
+
 						} catch (er) {
 							
 						}
 	
 					})
 				})(ts[i].cart.cartId);
-				
+
 				$("#orders-table").append(row);
 				
 			}
 		});
-
-
-	});
-
-
-	$("#button-get").click(function() {
-		alert($("#dropdown qq").text());
-		
-	});
+	}
 
 	function post(path, params) {
 	    var method = "POST";

@@ -193,11 +193,7 @@
 	function search(category, search, p) {
 		document.location.href = "?page=inventory" + (category == "-" ? "&c=" + $("#dropdown qq").text() : "&c=" + category) + (search == "-" ? "&s=" + $("#search-box").val() : "&s=" + search) + (p == "-" ? "" : "&p=" + p);                                
 	}
-
-	function search(category, search, p) {
-		document.location.href = "?page=inventory" + (category == "-" ? "&c=" + $("#dropdown qq").text() : "&c=" + category) + (search == "-" ? "&s=" + $("#search-box").val() : "&s=" + search) + (p == "-" ? "" : "&p=" + p);                                
-	}
-
+	
 	$("#menu-add").click(function() {
 		$("#popup").on("shown.bs.modal", function () {
 	        $("#frame").attr("src", "add.php");
@@ -238,7 +234,7 @@
 				"remove": productId
 			}
 		}).done(function(response) {
-			alert(productId + " removed " +response);
+			location.reload();
 		});
 		$("#remove-product-confirm").modal('hide');
 	});
